@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/MISE_QSR_Platform.html" }
+  ]
+}
