@@ -11,13 +11,7 @@
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-/* ══════════════════════════════════════════════════════════════
-   INVENTORYPRO — OBSIDIAN DESIGN SYSTEM
-   Precision instrument for kitchen operations.
-   Warm. Confident. Unforgettable.
-══════════════════════════════════════════════════════════════ */
 :root {
-  /* ── Palette ── */
   --ink:         #08090A;
   --navy:        #07101E;
   --navy-2:      #0E1C2F;
@@ -28,15 +22,11 @@
   --surface:     #FFFFFF;
   --border:      #E8E7E3;
   --border-2:    #D4D2CB;
-
-  /* ── Brand ── */
   --blue:        #2563EB;
   --blue-2:      #1D4ED8;
   --blue-lt:     #EBF3FF;
   --blue-bd:     #BFDBFE;
   --blue-glow:   rgba(37,99,235,0.12);
-
-  /* ── Semantic ── */
   --green:       #059669;
   --green-lt:    #F0FDF9;
   --green-bd:    #A7F3D0;
@@ -49,37 +39,26 @@
   --violet:      #7C3AED;
   --violet-lt:   #F5F3FF;
   --violet-bd:   #DDD6FE;
-
-  /* ── Text ── */
   --t1:          #08090A;
   --t2:          #1C1C1E;
   --t3:          #4B5563;
   --t4:          #9CA3AF;
   --t5:          #D1D5DB;
-
-  /* ── Typography ── */
   --fd:  'Bricolage Grotesque', sans-serif;
   --fb:  'Manrope', sans-serif;
   --fm:  'JetBrains Mono', monospace;
-
-  /* ── Radii ── */
   --r1:  5px;
   --r2:  10px;
   --r3:  16px;
   --r4:  22px;
-
-  /* ── Shadows — whisper-thin, like quality hardware ── */
   --sh1: 0 1px 2px rgba(8,9,10,0.05);
   --sh2: 0 3px 8px rgba(8,9,10,0.07), 0 1px 3px rgba(8,9,10,0.04);
   --sh3: 0 10px 28px rgba(8,9,10,0.09), 0 3px 10px rgba(8,9,10,0.05);
   --sh4: 0 20px 50px rgba(8,9,10,0.13), 0 6px 16px rgba(8,9,10,0.07);
-
-  /* ── Layout ── */
   --sb:  260px;
   --hh:  58px;
 }
 
-/* ══ RESET ══════════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { height: 100%; }
 body { height: 100%; background: var(--bg); color: var(--t1); font-family: var(--fb); font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
@@ -89,47 +68,24 @@ body { height: 100%; background: var(--bg); color: var(--t1); font-family: var(-
 ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 99px; }
 input, select, textarea, button { font-family: var(--fb); }
 
-/* ══ LAYOUT ═════════════════════════════════════════════════ */
-.app { display: flex; width: 100%; height: 100%; overflow: hidden; }
-.main > div:not(.mob-topbar):not(.mob-nav):not(.mob-ov):not(.mob-sb) { 
-  flex: 1; 
-  min-height: 0; 
-  display: flex; 
-  flex-direction: column; 
-  overflow: hidden; 
+/* ══ LAYOUT ══════════════════════════════════════════════════
+   FIX 1: .main was completely absent — added the class with
+   correct flex properties so the content area fills the screen.
+═════════════════════════════════════════════════════════════ */
+.app  { display: flex; width: 100%; height: 100%; overflow: hidden; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+.main > div:not(.mob-topbar):not(.mob-nav):not(.mob-ov):not(.mob-sb) {
+  flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
 }
 .page { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 28px; background: var(--bg); -webkit-overflow-scrolling: touch; }
 
-/* ══ SIDEBAR ════════════════════════════════════════════════ */
-.sidebar {
-  width: var(--sb); flex-shrink: 0;
-  background: var(--navy);
-  display: flex; flex-direction: column;
-  overflow: hidden; position: relative;
-  border-right: 1px solid rgba(255,255,255,0.04);
-}
-/* Subtle atmospheric glow */
-.sidebar::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 200px;
-  background: radial-gradient(ellipse 120% 80% at 50% -10%, rgba(37,99,235,0.14), transparent);
-  pointer-events: none;
-}
-.sb-hd {
-  padding: 22px 18px 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  position: relative;
-}
+/* ══ SIDEBAR ══════════════════════════════════════════════ */
+.sidebar { width: var(--sb); flex-shrink: 0; background: var(--navy); display: flex; flex-direction: column; overflow: hidden; position: relative; border-right: 1px solid rgba(255,255,255,0.04); }
+.sidebar::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 200px; background: radial-gradient(ellipse 120% 80% at 50% -10%, rgba(37,99,235,0.14), transparent); pointer-events: none; }
+.sb-hd { padding: 22px 18px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); position: relative; }
 .sb-logo { display: flex; align-items: center; gap: 11px; }
-.sb-logo-ic {
-  width: 34px; height: 34px;
-  background: linear-gradient(135deg, #3B82F6, #6366F1);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 4px 12px rgba(59,130,246,0.3);
-  flex-shrink: 0;
-}
+.sb-logo-ic { width: 34px; height: 34px; background: linear-gradient(135deg, #3B82F6, #6366F1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 4px 12px rgba(59,130,246,0.3); flex-shrink: 0; }
 .sb-logo-nm { font-family: var(--fd); font-size: 17px; font-weight: 800; color: #fff; letter-spacing: -0.5px; line-height: 1; }
 .sb-logo-nm span { color: #818CF8; }
 .sb-logo-sub { font-size: 9px; color: rgba(255,255,255,0.22); letter-spacing: 1.2px; text-transform: uppercase; margin-top: 3px; font-weight: 600; }
@@ -140,37 +96,16 @@ input, select, textarea, button { font-family: var(--fb); }
 .sb-co-sel option { background: #0E1C2F; }
 .sb-nav { flex: 1; overflow-y: auto; padding: 8px 10px; }
 .sb-sec { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.2); letter-spacing: 1.4px; text-transform: uppercase; padding: 14px 8px 5px; }
-.sb-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 9px 10px; border-radius: var(--r2);
-  cursor: pointer;
-  color: rgba(255,255,255,0.5);
-  font-size: 13.5px; font-weight: 500;
-  margin-bottom: 1px;
-  transition: all 0.18s ease;
-  position: relative;
-}
+.sb-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: var(--r2); cursor: pointer; color: rgba(255,255,255,0.5); font-size: 13.5px; font-weight: 500; margin-bottom: 1px; transition: all 0.18s ease; position: relative; }
 .sb-item svg { opacity: 0.6; transition: opacity 0.18s; }
 .sb-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.88); }
 .sb-item:hover svg { opacity: 0.88; }
 .sb-item.on { background: rgba(59,130,246,0.18); color: #fff; }
 .sb-item.on svg { opacity: 1; }
-.sb-item.on::after {
-  content: '';
-  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
-  width: 3px; height: 18px;
-  background: #3B82F6; border-radius: 0 2px 2px 0;
-}
+.sb-item.on::after { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 18px; background: #3B82F6; border-radius: 0 2px 2px 0; }
 .sb-badge { margin-left: auto; background: var(--red); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px; }
 .sb-ft { padding: 10px; border-top: 1px solid rgba(255,255,255,0.06); }
-.sb-usr {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 11px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: var(--r2);
-  cursor: pointer; transition: all 0.18s;
-}
+.sb-usr { display: flex; align-items: center; gap: 10px; padding: 10px 11px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--r2); cursor: pointer; transition: all 0.18s; }
 .sb-usr:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12); }
 .sb-av { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; }
 .sb-un { font-size: 12.5px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -178,15 +113,8 @@ input, select, textarea, button { font-family: var(--fb); }
 .sb-logout { margin-left: auto; opacity: 0.4; transition: opacity 0.15s; }
 .sb-usr:hover .sb-logout { opacity: 0.9; }
 
-/* ══ TOPBAR ═════════════════════════════════════════════════ */
-.topbar {
-  height: var(--hh);
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center;
-  padding: 0 28px; gap: 14px;
-  flex-shrink: 0;
-}
+/* ══ TOPBAR ══════════════════════════════════════════════ */
+.topbar { height: var(--hh); background: var(--white); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 28px; gap: 14px; flex-shrink: 0; }
 .tb-title { font-family: var(--fd); font-size: 16px; font-weight: 700; color: var(--t1); letter-spacing: -0.3px; }
 .tb-sub { font-size: 11.5px; color: var(--t4); margin-top: 1px; }
 .tb-r { display: flex; align-items: center; gap: 8px; margin-left: auto; }
@@ -195,159 +123,100 @@ input, select, textarea, button { font-family: var(--fb); }
 .tb-ic:hover { border-color: var(--border-2); color: var(--t1); }
 .tb-dot { position: absolute; top: 6px; right: 6px; width: 6px; height: 6px; background: var(--red); border-radius: 50%; border: 2px solid var(--white); }
 
-/* ══ STAT CARDS ═════════════════════════════════════════════ */
+/* ══ STAT CARDS ══════════════════════════════════════════ */
 .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 24px; }
-.sc {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r3);
-  padding: 22px 22px 18px;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: default;
-}
+.sc { background: var(--white); border: 1px solid var(--border); border-radius: var(--r3); padding: 22px 22px 18px; position: relative; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: default; }
 .sc:hover { transform: translateY(-2px); box-shadow: var(--sh3); }
-/* Colored left accent bar */
 .sc-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: var(--r3) 0 0 var(--r3); }
 .sc-lbl { font-size: 10.5px; font-weight: 700; color: var(--t4); letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 10px; }
 .sc-val { font-family: var(--fd); font-size: 30px; font-weight: 800; letter-spacing: -1px; line-height: 1; margin-bottom: 8px; }
 .sc-meta { font-size: 11.5px; color: var(--t4); font-weight: 500; }
-/* Status dot for alerts */
-.sc-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
 
-/* ══ CARDS ══════════════════════════════════════════════════ */
+/* ══ CARDS ══════════════════════════════════════════════ */
 .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r3); }
 .card-hd { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
 .card-tt { font-family: var(--fd); font-size: 14px; font-weight: 700; color: var(--t1); letter-spacing: -0.15px; }
 .card-bd { padding: 20px; }
 
-/* ══ PAGE HEADER ════════════════════════════════════════════ */
-.ph { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
-.ph h1 { font-family: var(--fd); font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--t1); }
-.ph p { font-size: 13px; color: var(--t3); margin-top: 3px; }
-.ph-r { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-
-/* ══ TABLE ══════════════════════════════════════════════════ */
+/* ══ TABLE ══════════════════════════════════════════════ */
 .tw { border-radius: var(--r3); border: 1px solid var(--border); overflow: hidden; }
 table { width: 100%; border-collapse: collapse; background: var(--white); }
-thead th {
-  padding: 11px 16px;
-  background: var(--bg-2);
-  font-size: 10.5px; font-weight: 700; color: var(--t4);
-  letter-spacing: 0.6px; text-transform: uppercase;
-  text-align: left; border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-}
+thead th { padding: 11px 16px; background: var(--bg-2); font-size: 10.5px; font-weight: 700; color: var(--t4); letter-spacing: 0.6px; text-transform: uppercase; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
 tbody tr { border-bottom: 1px solid var(--border); transition: background 0.12s; }
 tbody tr:last-child { border-bottom: none; }
 tbody tr:hover { background: var(--bg-2); }
 tbody td { padding: 13px 16px; font-size: 13.5px; color: var(--t2); vertical-align: middle; }
 
-/* ══ BADGES ═════════════════════════════════════════════════ */
+/* ══ BADGES ═════════════════════════════════════════════ */
 .bdg { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 99px; font-size: 11.5px; font-weight: 600; border: 1px solid; }
 .bdg::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-.b-ok    { background: var(--green-lt); color: var(--green); border-color: var(--green-bd); }
+.b-ok   { background: var(--green-lt); color: var(--green); border-color: var(--green-bd); }
 .b-ok::before { background: var(--green); }
-.b-low   { background: var(--amber-lt); color: var(--amber); border-color: var(--amber-bd); }
+.b-low  { background: var(--amber-lt); color: var(--amber); border-color: var(--amber-bd); }
 .b-low::before { background: var(--amber); }
-.b-crit  { background: var(--red-lt); color: var(--red); border-color: var(--red-bd); }
+.b-crit { background: var(--red-lt); color: var(--red); border-color: var(--red-bd); }
 .b-crit::before { background: var(--red); }
-.b-pend  { background: var(--amber-lt); color: var(--amber); border-color: var(--amber-bd); }
+.b-pend { background: var(--amber-lt); color: var(--amber); border-color: var(--amber-bd); }
 .b-pend::before { background: var(--amber); }
-.b-appr  { background: var(--green-lt); color: var(--green); border-color: var(--green-bd); }
+.b-appr { background: var(--green-lt); color: var(--green); border-color: var(--green-bd); }
 .b-appr::before { background: var(--green); }
-.b-rej   { background: var(--red-lt); color: var(--red); border-color: var(--red-bd); }
+.b-rej  { background: var(--red-lt); color: var(--red); border-color: var(--red-bd); }
 .b-rej::before { background: var(--red); }
-.b-recv  { background: var(--blue-lt); color: var(--blue); border-color: var(--blue-bd); }
+.b-recv { background: var(--blue-lt); color: var(--blue); border-color: var(--blue-bd); }
 .b-recv::before { background: var(--blue); }
-.b-blue  { background: var(--blue-lt); color: var(--blue); border-color: var(--blue-bd); }
+.b-blue { background: var(--blue-lt); color: var(--blue); border-color: var(--blue-bd); }
 .b-blue::before { background: var(--blue); }
-.b-viol  { background: var(--violet-lt); color: var(--violet); border-color: var(--violet-bd); }
+.b-viol { background: var(--violet-lt); color: var(--violet); border-color: var(--violet-bd); }
 .b-viol::before { background: var(--violet); }
-.b-grey  { background: var(--bg); color: var(--t3); border-color: var(--border); }
+.b-grey { background: var(--bg); color: var(--t3); border-color: var(--border); }
 .b-grey::before { background: var(--t4); }
 
-/* ══ BUTTONS ════════════════════════════════════════════════ */
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 9px 18px; border-radius: 99px;
-  font-family: var(--fb); font-size: 13.5px; font-weight: 600;
-  cursor: pointer; border: 1.5px solid transparent;
-  transition: all 0.18s ease;
-  white-space: nowrap; letter-spacing: -0.1px; text-decoration: none;
-}
-.bp {
-  background: var(--blue); color: #fff; border-color: var(--blue);
-  box-shadow: 0 2px 8px rgba(37,99,235,0.25);
-}
+/* ══ BUTTONS ═════════════════════════════════════════════ */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 18px; border-radius: 99px; font-family: var(--fb); font-size: 13.5px; font-weight: 600; cursor: pointer; border: 1.5px solid transparent; transition: all 0.18s ease; white-space: nowrap; letter-spacing: -0.1px; text-decoration: none; }
+.bp  { background: var(--blue); color: #fff; border-color: var(--blue); box-shadow: 0 2px 8px rgba(37,99,235,0.25); }
 .bp:hover { background: var(--blue-2); border-color: var(--blue-2); box-shadow: 0 4px 16px rgba(37,99,235,0.35); transform: translateY(-1px); }
-.bs { background: var(--white); color: var(--t2); border-color: var(--border); }
+.bs  { background: var(--white); color: var(--t2); border-color: var(--border); }
 .bs:hover { border-color: var(--border-2); background: var(--bg-2); }
-.bg { background: transparent; color: var(--t3); border-color: transparent; }
+.bg  { background: transparent; color: var(--t3); border-color: transparent; }
 .bg:hover { background: var(--bg); color: var(--t2); }
-.bd { background: var(--red-lt); color: var(--red); border-color: var(--red-bd); }
+.bd  { background: var(--red-lt); color: var(--red); border-color: var(--red-bd); }
 .bd:hover { background: rgba(220,38,38,0.12); }
 .bsuc { background: var(--green-lt); color: var(--green); border-color: var(--green-bd); }
 .bsuc:hover { background: rgba(5,150,105,0.12); }
 .btn-sm { padding: 5px 13px; font-size: 12.5px; }
 .btn-lg { padding: 12px 26px; font-size: 14.5px; font-weight: 700; }
-.btn-w { width: 100%; }
+.btn-w  { width: 100%; }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
-/* ══ FORM ═══════════════════════════════════════════════════ */
-.fi, .fs, .fta {
-  width: 100%; padding: 10px 14px;
-  background: var(--white); border: 1.5px solid var(--border);
-  border-radius: var(--r2);
-  color: var(--t1); font-family: var(--fb); font-size: 13.5px;
-  outline: none; transition: border-color 0.18s, box-shadow 0.18s;
-}
-.fi:focus, .fs:focus, .fta:focus {
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-}
+/* ══ FORMS ═══════════════════════════════════════════════ */
+.fi, .fs, .fta { width: 100%; padding: 10px 14px; background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r2); color: var(--t1); font-family: var(--fb); font-size: 13.5px; outline: none; transition: border-color 0.18s, box-shadow 0.18s; }
+.fi:focus, .fs:focus, .fta:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
 .fi::placeholder, .fta::placeholder { color: var(--t5); }
-.fs {
-  appearance: none; cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239CA3AF' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 12px center;
-  background-color: var(--white); padding-right: 32px;
-}
+.fs { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239CA3AF' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-color: var(--white); padding-right: 32px; }
 .fta { resize: vertical; min-height: 72px; }
-.fl { display: block; font-size: 12.5px; font-weight: 600; color: var(--t2); margin-bottom: 6px; }
-.fg { margin-bottom: 16px; }
+.fl  { display: block; font-size: 12.5px; font-weight: 600; color: var(--t2); margin-bottom: 6px; }
+.fg  { margin-bottom: 16px; }
 .fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .fgrid .full { grid-column: 1 / -1; }
 
-/* ══ SEARCH / FILTERS ═══════════════════════════════════════ */
+/* ══ SEARCH / FILTERS ════════════════════════════════════ */
 .fbar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
 .srch { position: relative; flex: 1; min-width: 200px; }
 .srch-ic { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--t4); pointer-events: none; }
-.srch-i {
-  width: 100%; padding: 9px 14px 9px 36px;
-  background: var(--white); border: 1.5px solid var(--border);
-  border-radius: 99px; color: var(--t1); font-family: var(--fb);
-  font-size: 13.5px; outline: none; transition: all 0.18s;
-}
+.srch-i { width: 100%; padding: 9px 14px 9px 36px; background: var(--white); border: 1.5px solid var(--border); border-radius: 99px; color: var(--t1); font-family: var(--fb); font-size: 13.5px; outline: none; transition: all 0.18s; }
 .srch-i:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.08); }
 .srch-i::placeholder { color: var(--t4); }
-.chip {
-  padding: 6px 14px; border-radius: 99px; font-size: 12.5px; font-weight: 600;
-  cursor: pointer; border: 1.5px solid var(--border);
-  background: var(--white); color: var(--t3); transition: all 0.15s;
-  white-space: nowrap;
-}
+.chip { padding: 6px 14px; border-radius: 99px; font-size: 12.5px; font-weight: 600; cursor: pointer; border: 1.5px solid var(--border); background: var(--white); color: var(--t3); transition: all 0.15s; white-space: nowrap; }
 .chip:hover { border-color: var(--border-2); color: var(--t2); }
 .chip.on { background: var(--blue-lt); border-color: var(--blue-bd); color: var(--blue); }
 
-/* ══ TABS ═══════════════════════════════════════════════════ */
+/* ══ TABS ════════════════════════════════════════════════ */
 .tabs { display: flex; border-bottom: 1.5px solid var(--border); margin-bottom: 18px; }
-.tab { padding: 9px 18px; font-size: 13.5px; font-weight: 600; cursor: pointer; border-bottom: 2.5px solid transparent; margin-bottom: -1.5px; color: var(--t3); transition: all 0.15s; }
+.tab  { padding: 9px 18px; font-size: 13.5px; font-weight: 600; cursor: pointer; border-bottom: 2.5px solid transparent; margin-bottom: -1.5px; color: var(--t3); transition: all 0.15s; }
 .tab:hover { color: var(--t2); }
 .tab.on { color: var(--blue); border-bottom-color: var(--blue); }
 
-/* ══ MODAL ══════════════════════════════════════════════════ */
+/* ══ MODAL ═══════════════════════════════════════════════ */
 .ov { position: fixed; inset: 0; background: rgba(8,9,10,0.35); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; animation: fadeIn .18s ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .modal { background: var(--white); border: 1px solid var(--border); border-radius: var(--r4); width: 100%; max-width: 520px; max-height: 92vh; overflow-y: auto; box-shadow: var(--sh4); animation: slideUp .22s cubic-bezier(.22,1,.36,1); }
@@ -362,7 +231,7 @@ tbody td { padding: 13px 16px; font-size: 13.5px; color: var(--t2); vertical-ali
 .cls { width: 28px; height: 28px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--t3); transition: all 0.15s; }
 .cls:hover { background: var(--red-lt); border-color: var(--red-bd); color: var(--red); }
 
-/* ══ ICON BUTTONS ═══════════════════════════════════════════ */
+/* ══ ICON BUTTONS ════════════════════════════════════════ */
 .ib { width: 28px; height: 28px; border-radius: var(--r1); background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--t3); transition: all 0.15s; }
 .ib:hover { border-color: var(--border-2); color: var(--t2); }
 .ib-e:hover { background: var(--blue-lt); border-color: var(--blue-bd); color: var(--blue); }
@@ -370,7 +239,7 @@ tbody td { padding: 13px 16px; font-size: 13.5px; color: var(--t2); vertical-ali
 .ib-v:hover { background: var(--violet-lt); border-color: var(--violet-bd); color: var(--violet); }
 .ibr { display: flex; align-items: center; gap: 4px; }
 
-/* ══ ALERTS ═════════════════════════════════════════════════ */
+/* ══ ALERTS ══════════════════════════════════════════════ */
 .alert-box { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: var(--r2); }
 .ab-red   { background: var(--red-lt); border: 1.5px solid var(--red-bd); }
 .ab-amber { background: var(--amber-lt); border: 1.5px solid var(--amber-bd); }
@@ -379,16 +248,13 @@ tbody td { padding: 13px 16px; font-size: 13.5px; color: var(--t2); vertical-ali
 .ab-amber strong, .ab-amber span { color: var(--amber); }
 .ab-blue  strong, .ab-blue span  { color: var(--blue); }
 
-/* ══ EOD BANNER ═════════════════════════════════════════════ */
 .eod-banner { display: flex; align-items: center; gap: 12px; padding: 13px 18px; background: linear-gradient(135deg, var(--amber-lt), #FEF9C3); border: 1.5px solid var(--amber-bd); border-radius: var(--r2); margin-bottom: 18px; }
 .eod-banner strong { color: var(--amber); }
 .eod-banner span { color: #78350F; font-size: 13px; }
 
-/* ══ PROGRESS ═══════════════════════════════════════════════ */
+/* ══ MISC ════════════════════════════════════════════════ */
 .pb { background: var(--border); border-radius: 99px; overflow: hidden; }
 .pf { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
-
-/* ══ QTY CELL ═══════════════════════════════════════════════ */
 .qc { display: flex; align-items: center; gap: 7px; }
 .qv { font-family: var(--fm); font-size: 13px; font-weight: 600; color: var(--t1); }
 .qu { font-size: 11px; color: var(--t4); }
@@ -397,23 +263,17 @@ tbody td { padding: 13px 16px; font-size: 13.5px; color: var(--t2); vertical-ali
 .qbf.ok   { background: var(--green); }
 .qbf.low  { background: var(--amber); }
 .qbf.crit { background: var(--red); }
-
-/* ══ STEPPER ════════════════════════════════════════════════ */
 .stpr { display: flex; align-items: center; gap: 7px; }
 .st-btn { width: 32px; height: 32px; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r2); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; font-weight: 400; color: var(--t3); transition: all 0.15s; line-height: 1; user-select: none; }
 .st-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-lt); }
 .st-inp { width: 68px; text-align: center; padding: 7px; background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r2); color: var(--t1); font-family: var(--fm); font-size: 14px; font-weight: 700; outline: none; }
 .st-inp:focus { border-color: var(--blue); }
-
-/* ══ STAFF CARD ═════════════════════════════════════════════ */
 .stf-c { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r3); padding: 16px 20px; display: flex; align-items: center; gap: 14px; transition: all 0.18s; margin-bottom: 8px; }
 .stf-c:hover { border-color: var(--border-2); }
 .stf-c.chg { border-color: var(--blue-bd); background: var(--blue-lt); }
 .stf-em { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
 .stf-nm { font-weight: 700; font-size: 13.5px; color: var(--t1); }
 .stf-mt { font-size: 11px; color: var(--t3); margin-top: 1px; }
-
-/* ══ PO CARD ════════════════════════════════════════════════ */
 .poc { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r3); padding: 18px 20px; cursor: pointer; transition: all 0.18s; margin-bottom: 10px; }
 .poc:hover { border-color: var(--border-2); box-shadow: var(--sh2); }
 .poc-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
@@ -423,29 +283,21 @@ tbody td { padding: 13px 16px; font-size: 13.5px; color: var(--t2); vertical-ali
 .poc-tag { font-size: 11px; padding: 3px 9px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r1); color: var(--t3); }
 .poc-ft { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
 .poc-tot { font-family: var(--fd); font-size: 15px; font-weight: 800; color: var(--t1); letter-spacing: -0.3px; }
-
-/* ══ MINI BAR CHART ═════════════════════════════════════════ */
 .bars { display: flex; align-items: flex-end; gap: 8px; height: 96px; }
 .bar-it { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .bar-f { width: 100%; border-radius: 5px 5px 0 0; min-height: 4px; transition: height 0.5s ease; }
 .bar-lbl { font-size: 9.5px; color: var(--t4); font-family: var(--fm); }
 .bar-v { font-size: 9.5px; color: var(--t3); font-family: var(--fm); font-weight: 600; }
-
-/* ══ TIMELINE ═══════════════════════════════════════════════ */
 .tl-item { display: flex; gap: 12px; padding-bottom: 16px; position: relative; }
 .tl-item::before { content: ''; position: absolute; left: 11px; top: 25px; bottom: 0; width: 1px; background: var(--border); }
 .tl-item:last-child::before { display: none; }
 .tl-dot { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; background: var(--bg-2); border: 1.5px solid var(--border); }
 .tl-tt { font-size: 13px; font-weight: 600; color: var(--t1); margin-bottom: 1px; }
 .tl-tm { font-size: 11px; color: var(--t4); }
-
-/* ══ INSIGHT ════════════════════════════════════════════════ */
 .ins { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r3); padding: 16px 18px; display: flex; gap: 12px; }
 .ins-ic { font-size: 20px; flex-shrink: 0; line-height: 1.2; }
 .ins-lbl { font-size: 11.5px; font-weight: 700; margin-bottom: 3px; }
 .ins-txt { font-size: 12px; color: var(--t3); line-height: 1.6; }
-
-/* ══ CLIENT CARD ════════════════════════════════════════════ */
 .clc { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r4); padding: 22px; transition: all 0.2s ease; position: relative; overflow: hidden; }
 .clc:hover { box-shadow: var(--sh3); transform: translateY(-2px); border-color: var(--border-2); }
 .clc-top { height: 3px; position: absolute; top: 0; left: 0; right: 0; }
@@ -455,16 +307,12 @@ tbody td { padding: 13px 16px; font-size: 13.5px; color: var(--t2); vertical-ali
 .clc-sts { display: flex; gap: 18px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
 .clc-sv { font-family: var(--fd); font-size: 18px; font-weight: 800; color: var(--t1); }
 .clc-sl { font-size: 10px; color: var(--t4); letter-spacing: 0.3px; text-transform: uppercase; margin-top: 1px; }
-
-/* ══ PERMS GRID ═════════════════════════════════════════════ */
 .pg { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; }
 .pi { display: flex; align-items: center; gap: 9px; padding: 9px 12px; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r2); cursor: pointer; transition: all 0.13s; }
 .pi.on { background: var(--green-lt); border-color: var(--green-bd); }
 .pi-ck { width: 15px; height: 15px; border-radius: 4px; border: 1.5px solid var(--border-2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: var(--white); }
 .pi.on .pi-ck { background: var(--green); border-color: var(--green); }
 .pi-lbl { font-size: 12px; font-weight: 500; color: var(--t2); }
-
-/* ══ CRED CARD ══════════════════════════════════════════════ */
 .cred-c { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r3); padding: 16px 18px; display: flex; align-items: center; gap: 14px; margin-bottom: 9px; transition: all 0.15s; }
 .cred-c:hover { border-color: var(--border-2); box-shadow: var(--sh2); }
 .cred-av { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; flex-shrink: 0; }
@@ -474,22 +322,16 @@ tbody td { padding: 13px 16px; font-size: 13.5px; color: var(--t2); vertical-ali
 .cred-pw { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
 .cred-pw-val { font-family: var(--fm); font-size: 11.5px; color: var(--t1); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; letter-spacing: 1px; }
 .cred-pw-lbl { font-size: 10px; color: var(--t4); font-weight: 600; }
-
-/* ══ UPLOAD ZONE ════════════════════════════════════════════ */
 .uzn { border: 2px dashed var(--border-2); border-radius: var(--r3); padding: 44px 32px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--bg-2); }
 .uzn:hover, .uzn.drag { border-color: var(--blue); background: var(--blue-lt); }
 .uzn-ic { font-size: 36px; margin-bottom: 10px; }
 .uzn-tt { font-family: var(--fd); font-size: 15px; font-weight: 700; color: var(--t1); margin-bottom: 4px; }
 .uzn-st { font-size: 12.5px; color: var(--t3); }
-
-/* ══ TOAST ══════════════════════════════════════════════════ */
 .toast-wrap { position: fixed; top: 16px; right: 16px; z-index: 9999; display: flex; flex-direction: column; gap: 7px; }
 .toast { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--navy); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--r2); box-shadow: var(--sh4); animation: toastIn .25s cubic-bezier(.22,1,.36,1); min-width: 240px; }
 @keyframes toastIn { from { opacity: 0; transform: translateX(14px) scale(0.95); } to { opacity: 1; transform: translateX(0) scale(1); } }
 .toast-ic { font-size: 15px; flex-shrink: 0; }
 .toast-msg { font-size: 13px; font-weight: 500; color: #fff; flex: 1; }
-
-/* ══ MISC ═══════════════════════════════════════════════════ */
 .empty { text-align: center; padding: 52px 20px; }
 .empty-ic { font-size: 46px; margin-bottom: 12px; opacity: 0.25; }
 .empty h3 { font-family: var(--fd); font-size: 15px; font-weight: 700; color: var(--t3); margin-bottom: 4px; }
@@ -498,8 +340,11 @@ tbody td { padding: 13px 16px; font-size: 13.5px; color: var(--t2); vertical-ali
 .tag { display: inline-flex; align-items: center; padding: 3px 9px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--r1); font-size: 11.5px; color: var(--t3); font-weight: 500; }
 .spin { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.25); border-top-color: #fff; border-radius: 50%; animation: sp .7s linear infinite; display: inline-block; flex-shrink: 0; }
 @keyframes sp { to { transform: rotate(360deg); } }
+.ph { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
+.ph h1 { font-family: var(--fd); font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--t1); }
+.ph p { font-size: 13px; color: var(--t3); margin-top: 3px; }
 
-/* ══ LOGIN ══════════════════════════════════════════════════ */
+/* ══ LOGIN ═══════════════════════════════════════════════ */
 .login-wrap { min-height: 100vh; display: grid; grid-template-columns: 42% 58%; overflow: auto; }
 .login-l { background: var(--navy); display: flex; flex-direction: column; justify-content: space-between; padding: 48px; position: relative; overflow: hidden; }
 .login-l::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 20% 20%, rgba(37,99,235,0.18), transparent 60%), radial-gradient(ellipse 60% 80% at 80% 80%, rgba(124,58,237,0.1), transparent 60%); }
@@ -517,11 +362,11 @@ tbody td { padding: 13px 16px; font-size: 13.5px; color: var(--t2); vertical-ali
 .lf-ic { font-size: 17px; flex-shrink: 0; }
 .lf-txt { font-size: 13px; color: rgba(255,255,255,0.62); font-weight: 500; }
 
-/* ══ MOBILE ═════════════════════════════════════════════════ */
+/* ══ MOBILE ══════════════════════════════════════════════ */
 .mob-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--white); border-top: 1px solid var(--border); z-index: 800; padding: 4px 0 max(4px, env(safe-area-inset-bottom)); }
 .mob-nav-inner { display: flex; justify-content: space-around; }
 .mob-nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 7px 12px; cursor: pointer; border-radius: var(--r2); min-width: 50px; }
-.mob-nav-ic { font-size: 21px; line-height: 1; }
+.mob-nav-ic  { font-size: 21px; line-height: 1; }
 .mob-nav-lbl { font-size: 9px; font-weight: 700; color: var(--t4); letter-spacing: 0.2px; }
 .mob-nav-item.on .mob-nav-lbl { color: var(--blue); }
 .mob-ov { display: none; position: fixed; inset: 0; background: rgba(8,9,10,0.5); z-index: 700; backdrop-filter: blur(2px); }
@@ -534,8 +379,8 @@ tbody td { padding: 13px 16px; font-size: 13.5px; color: var(--t2); vertical-ali
 .mob-hbtn { width: 36px; height: 36px; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r2); display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
 @media(max-width:1200px) { .stats { grid-template-columns: repeat(2,1fr); } }
-@media(max-width:900px) { .stats { grid-template-columns: 1fr 1fr; } .fgrid { grid-template-columns: 1fr; } }
-@media(max-width:768px) {
+@media(max-width:900px)  { .stats { grid-template-columns: 1fr 1fr; } .fgrid { grid-template-columns: 1fr; } }
+@media(max-width:768px)  {
   .sidebar { display: none !important; }
   .mob-nav { display: block; }
   .mob-topbar { display: flex; }
@@ -672,7 +517,7 @@ const ToastProvider = ({children}) => {
   const [ts,setTs] = useState([]);
   const show = useCallback((msg,type='success') => {
     const id = uid();
-    setTs(t => [...t, {id,msg,type}]);
+    setTs(t => [...t,{id,msg,type}]);
     setTimeout(() => setTs(t => t.filter(x => x.id!==id)), 3000);
   }, []);
   const ico = {success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
@@ -688,19 +533,20 @@ const ToastProvider = ({children}) => {
 const useToast = () => React.useContext(TC);
 
 /* ── STOCK UTILS ────────────────────────────────────────────── */
-const stockSt = i => {
-  if(i.currentQty <= i.parLevel * 0.5) return 'crit';
-  if(i.currentQty <= i.reorderLevel) return 'low';
-  return 'ok';
-};
+const stockSt  = i => { if(i.currentQty <= i.parLevel * 0.5) return 'crit'; if(i.currentQty <= i.reorderLevel) return 'low'; return 'ok'; };
 const stockPct = i => Math.min(100, Math.round((i.currentQty / (i.reorderLevel * 2.5)) * 100));
 
-/* ── LOGIN PAGE ─────────────────────────────────────────────── */
+/* ──────────────────────────────────────────────────────────────
+   FIX 4: Moved const [showPw] to top of Login, before go().
+   FIX 4: Removed the suspicious blank section after go().
+   React hooks must all be declared before any non-hook logic.
+──────────────────────────────────────────────────────────────── */
 const Login = ({onLogin, users}) => {
-  const [email,setEmail] = useState('');
-  const [pw,setPw] = useState('');
-  const [err,setErr] = useState('');
-  const [loading,setLoading] = useState(false);
+  const [email,   setEmail]   = useState('');
+  const [pw,      setPw]      = useState('');
+  const [err,     setErr]     = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPw,  setShowPw]  = useState(false);   // ← was declared after go()
   const toast = useToast();
 
   const go = () => {
@@ -710,20 +556,16 @@ const Login = ({onLogin, users}) => {
     setTimeout(() => {
       const u = users.find(x => x.email.toLowerCase() === email.toLowerCase() && x.password === pw);
       if(u) { toast(`Welcome back, ${u.name.split(' ')[0]}! 👋`); onLogin(u); }
-      else { setErr('Invalid email or password. Please try again.'); setLoading(false); }
+      else  { setErr('Invalid email or password. Please try again.'); setLoading(false); }
     }, 600);
   };
 
-
-
-  const [showPw, setShowPw] = useState(false);
   return (
     <div className="login-wrap">
       <div className="login-l">
         <div className="login-l-bg"/><div className="login-l-grid"/>
-        <div className="login-brand" style={{position:'relative'}}>
-          <div className="login-bi">📦</div>
-          <div><div className="login-bn">Inventory<span>Pro</span></div></div>
+        <div style={{position:'relative'}}>
+          <div style={{fontFamily:'var(--fd)',fontSize:'20px',fontWeight:'800',color:'#fff',letterSpacing:'-.4px'}}>📦 Inventory<span style={{color:'#818CF8'}}>Pro</span></div>
         </div>
         <div style={{position:'relative'}}>
           <div className="login-hero-tag">✦ QSR Intelligence Platform</div>
@@ -749,7 +591,7 @@ const Login = ({onLogin, users}) => {
           <div className="fg"><label className="fl">Password</label>
             <div style={{position:'relative'}}>
               <input className="fi" type={showPw?'text':'password'} placeholder="Enter your password" value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go()} style={{paddingRight:'40px'}}/>
-              <div style={{position:'absolute',right:'11px',top:'50%',transform:'translateY(-50%)',cursor:'pointer',color:'var(--t4)',display:'flex',alignItems:'center'}} onClick={()=>setShowPw(function(p){return !p;})}>
+              <div style={{position:'absolute',right:'11px',top:'50%',transform:'translateY(-50%)',cursor:'pointer',color:'var(--t4)',display:'flex',alignItems:'center'}} onClick={()=>setShowPw(p=>!p)}>
                 <Ic n={showPw?'eyeoff':'eye'} s={15}/>
               </div>
             </div>
@@ -769,19 +611,15 @@ const Login = ({onLogin, users}) => {
 const Sidebar = ({user, co, page, setPage, onLogout, companies, onCoChange}) => {
   const can = p => user.role==='super_admin' || user.permissions.includes('all') || user.permissions.includes(p);
   const nav = [
-    {id:'dashboard',  label:'Dashboard',        icon:'dash'},
-    {id:'inventory',  label:'Inventory',         icon:'inv',  perm:'inv.r'},
-    {id:'orders',     label:'Purchase Orders',   icon:'po',   perm:'po.c'},
-    {id:'expenditure',label:'Expenditure',       icon:'exp',  perm:'exp.v'},
+    {id:'dashboard',  label:'Dashboard',       icon:'dash'},
+    {id:'inventory',  label:'Inventory',        icon:'inv', perm:'inv.r'},
+    {id:'orders',     label:'Purchase Orders',  icon:'po',  perm:'po.c'},
+    {id:'expenditure',label:'Expenditure',      icon:'exp', perm:'exp.v'},
   ];
-  const ops = [{id:'stock',label:'Update Stock',icon:'stk',perm:'inv.q'}];
-  const adm = [{id:'admin',label:'Admin Center',icon:'adm',perm:'usr.m'}];
-  const sup = [
-    {id:'credentials',label:'Login Credentials',icon:'key'},
-    {id:'clients',    label:'Client Management',icon:'cli'},
-  ];
+  const ops = [{id:'stock', label:'Update Stock', icon:'stk', perm:'inv.q'}];
+  const adm = [{id:'admin', label:'Admin Center', icon:'adm', perm:'usr.m'}];
+  const sup = [{id:'credentials',label:'Login Credentials',icon:'key'},{id:'clients',label:'Client Management',icon:'cli'}];
   const rc = ROLE_COLORS;
-  const avRoleLbl = ROLE_LABELS;
   return (
     <div className="sidebar">
       <div className="sb-hd">
@@ -790,49 +628,30 @@ const Sidebar = ({user, co, page, setPage, onLogout, companies, onCoChange}) => 
           <div><div className="sb-logo-nm">Inventory<span>Pro</span></div><div className="sb-logo-sub">QSR Platform</div></div>
         </div>
       </div>
-      {user.role === 'super_admin' ? (
+      {user.role==='super_admin' ? (
         <div className="sb-co">
           <div className="sb-co-lbl">Viewing Company</div>
-          <select className="sb-co-sel" value={(co&&co.id)||''} onChange={e => { const c=companies.find(x=>x.id===e.target.value); if(c) onCoChange(c); }}>
-            {companies.map(c => <option key={c.id} value={c.id}>{c.emoji} {c.name}</option>)}
+          <select className="sb-co-sel" value={(co&&co.id)||''} onChange={e=>{const c=companies.find(x=>x.id===e.target.value);if(c)onCoChange(c);}}>
+            {companies.map(c=><option key={c.id} value={c.id}>{c.emoji} {c.name}</option>)}
           </select>
         </div>
       ) : co ? (
-        <div className="sb-co">
-          <div className="sb-co-lbl">Active Company</div>
-          <div className="sb-co-nm">{co.emoji} {co.name}</div>
-        </div>
+        <div className="sb-co"><div className="sb-co-lbl">Active Company</div><div className="sb-co-nm">{co.emoji} {co.name}</div></div>
       ) : null}
       <nav className="sb-nav">
         <div className="sb-sec">Overview</div>
-        {nav.map(item => { if(item.perm && !can(item.perm)) return null; return (
-          <div key={item.id} className={`sb-item ${page===item.id?'on':''}`} onClick={()=>setPage(item.id)}>
-            <span className="sb-ic"><Ic n={item.icon} s={15}/></span>{item.label}
-          </div>
-        );})}
-        {can('inv.q') && <><div className="sb-sec">Operations</div>{ops.map(item =>
-          <div key={item.id} className={`sb-item ${page===item.id?'on':''}`} onClick={()=>setPage(item.id)}>
-            <span className="sb-ic"><Ic n={item.icon} s={15}/></span>{item.label}
-          </div>
-        )}</>}
-        {can('usr.m') && <><div className="sb-sec">Administration</div>{adm.map(item =>
-          <div key={item.id} className={`sb-item ${page===item.id?'on':''}`} onClick={()=>setPage(item.id)}>
-            <span className="sb-ic"><Ic n={item.icon} s={15}/></span>{item.label}
-          </div>
-        )}</>}
-        {user.role==='super_admin' && <><div className="sb-sec">Super Admin</div>{sup.map(item =>
-          <div key={item.id} className={`sb-item ${page===item.id?'on':''}`} onClick={()=>setPage(item.id)}>
-            <span className="sb-ic"><Ic n={item.icon} s={15}/></span>{item.label}
-          </div>
-        )}</>}
+        {nav.map(item => {
+          if(item.perm && !can(item.perm)) return null;
+          return <div key={item.id} className={`sb-item ${page===item.id?'on':''}`} onClick={()=>setPage(item.id)}><span><Ic n={item.icon} s={15}/></span>{item.label}</div>;
+        })}
+        {can('inv.q') && <><div className="sb-sec">Operations</div>{ops.map(item=><div key={item.id} className={`sb-item ${page===item.id?'on':''}`} onClick={()=>setPage(item.id)}><span><Ic n={item.icon} s={15}/></span>{item.label}</div>)}</>}
+        {can('usr.m') && <><div className="sb-sec">Administration</div>{adm.map(item=><div key={item.id} className={`sb-item ${page===item.id?'on':''}`} onClick={()=>setPage(item.id)}><span><Ic n={item.icon} s={15}/></span>{item.label}</div>)}</>}
+        {user.role==='super_admin' && <><div className="sb-sec">Super Admin</div>{sup.map(item=><div key={item.id} className={`sb-item ${page===item.id?'on':''}`} onClick={()=>setPage(item.id)}><span><Ic n={item.icon} s={15}/></span>{item.label}</div>)}</>}
       </nav>
       <div className="sb-ft">
         <div className="sb-usr" onClick={onLogout} title="Click to sign out">
           <div className="sb-av" style={{background:(rc[user.role]||'#2563EB')+'28',color:rc[user.role]||'#2563EB'}}>{user.name.charAt(0)}</div>
-          <div style={{flex:1,minWidth:0}}>
-            <div className="sb-un">{user.name}</div>
-            <div className="sb-ur">{avRoleLbl[user.role]}</div>
-          </div>
+          <div style={{flex:1,minWidth:0}}><div className="sb-un">{user.name}</div><div className="sb-ur">{ROLE_LABELS[user.role]}</div></div>
           <span className="sb-logout"><Ic n="out" s={13} c="rgba(255,255,255,0.4)"/></span>
         </div>
       </div>
@@ -845,18 +664,10 @@ const Topbar = ({title, sub, actions, alertCount=0}) => {
   const d = new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
   return (
     <div className="topbar">
-      <div style={{flex:1}}>
-        <div className="tb-title">{title}</div>
-        {sub && <div className="tb-sub">{sub}</div>}
-      </div>
+      <div style={{flex:1}}><div className="tb-title">{title}</div>{sub&&<div className="tb-sub">{sub}</div>}</div>
       <div className="tb-r">
         <div className="tb-date">{d}</div>
-        {alertCount > 0 &&
-          <div className="tb-ic" title={`${alertCount} stock alerts`}>
-            <Ic n="bell" s={15}/>
-            <div className="tb-dot"/>
-          </div>
-        }
+        {alertCount>0 && <div className="tb-ic" title={`${alertCount} stock alerts`}><Ic n="bell" s={15}/><div className="tb-dot"/></div>}
         {actions}
       </div>
     </div>
@@ -865,7 +676,7 @@ const Topbar = ({title, sub, actions, alertCount=0}) => {
 
 /* ── MINI BAR CHART ─────────────────────────────────────────── */
 const BarChart = ({data, color='#2563EB'}) => {
-  const mx = Math.max(...data.map(d=>d.v), 1);
+  const mx = Math.max(...data.map(d=>d.v),1);
   return (
     <div className="bars">
       {data.map((d,i) =>
@@ -884,38 +695,25 @@ const EODModal = ({inventory, co, setInventory, onClose}) => {
   const toast = useToast();
   const inv = inventory.filter(i=>i.companyId===(co&&co.id));
   const [upd,setUpd] = useState({});
-  const changed = Object.keys(upd).filter(k=>upd[k]!==undefined).length;
-
+  const changed = Object.keys(upd).length;
   const save = () => {
-    setInventory(p => p.map(i => upd[i.id]!==undefined ? {...i,currentQty:parseFloat(upd[i.id])||0,updatedAt:TODAY()} : i));
+    setInventory(p=>p.map(i=>upd[i.id]!==undefined?{...i,currentQty:parseFloat(upd[i.id])||0,updatedAt:TODAY()}:i));
     toast(`✅ End-of-day stock count saved — ${changed} items updated`);
     onClose();
   };
   return (
     <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
       <div className="modal modal-md">
-        <div className="m-hd">
-          <div>
-            <div className="m-tt">🌙 End-of-Day Stock Count</div>
-            <div className="m-sub">Please verify today's closing quantities for all items</div>
-          </div>
-          <div className="cls" onClick={onClose}><Ic n="x" s={13}/></div>
-        </div>
+        <div className="m-hd"><div><div className="m-tt">🌙 End-of-Day Stock Count</div><div className="m-sub">Verify today's closing quantities</div></div><div className="cls" onClick={onClose}><Ic n="x" s={13}/></div></div>
         <div className="m-bd" style={{maxHeight:'60vh',overflowY:'auto'}}>
-          <div className="alert-box ab-amber" style={{marginBottom:'14px'}}>
-            <Ic n="clock" s={16}/>
-            <span>End of business day — please confirm your closing stock levels before you leave.</span>
-          </div>
+          <div className="alert-box ab-amber" style={{marginBottom:'14px'}}><Ic n="clock" s={16}/><span>End of business day — please confirm closing stock levels before you leave.</span></div>
           {inv.map(item => {
             const cur = upd[item.id]!==undefined ? upd[item.id] : item.currentQty;
-            const st = stockSt({...item,currentQty:parseFloat(cur)||0});
+            const st  = stockSt({...item,currentQty:parseFloat(cur)||0});
             return (
               <div key={item.id} className="stf-c" style={{marginBottom:'6px'}}>
                 <div className="stf-em" style={{background:st==='ok'?'var(--green-lt)':st==='low'?'var(--amber-lt)':'var(--red-lt)'}}>{CAT_EMOJI[item.category]||'📦'}</div>
-                <div style={{flex:1}}>
-                  <div className="stf-nm">{item.name}</div>
-                  <div className="stf-mt">{item.category} · Par: {item.parLevel} {item.unit}</div>
-                </div>
+                <div style={{flex:1}}><div className="stf-nm">{item.name}</div><div className="stf-mt">{item.category} · Par: {item.parLevel} {item.unit}</div></div>
                 <div className="stpr">
                   <div className="st-btn" onClick={()=>setUpd(p=>({...p,[item.id]:Math.max(0,(parseFloat(cur)||0)-1)}))}>−</div>
                   <input className="st-inp" type="number" min="0" value={cur} onChange={e=>setUpd(p=>({...p,[item.id]:e.target.value}))}/>
@@ -928,9 +726,7 @@ const EODModal = ({inventory, co, setInventory, onClose}) => {
         </div>
         <div className="m-ft">
           <button className="btn bs" onClick={onClose}>Skip for Now</button>
-          <button className="btn bp" onClick={save}>
-            <Ic n="chk" s={13}/> Save {changed > 0 ? `${changed} Changes` : 'Stock Count'}
-          </button>
+          <button className="btn bp" onClick={save}><Ic n="chk" s={13}/> Save {changed>0?`${changed} Changes`:'Stock Count'}</button>
         </div>
       </div>
     </div>
@@ -939,13 +735,13 @@ const EODModal = ({inventory, co, setInventory, onClose}) => {
 
 /* ── DASHBOARD ──────────────────────────────────────────────── */
 const Dashboard = ({user, co, inventory, pos, setInventory, eodAlert, setEodAlert}) => {
-  const inv = inventory.filter(i=>i.companyId===co.id);
-  const cpos = pos.filter(p=>p.companyId===co.id);
-  const totalVal = inv.reduce((s,i)=>s+i.currentQty*i.price,0);
-  const low = inv.filter(i=>stockSt(i)!=='ok');
-  const crit = inv.filter(i=>stockSt(i)==='crit');
+  const inv    = inventory.filter(i=>i.companyId===co.id);
+  const cpos   = pos.filter(p=>p.companyId===co.id);
+  const totalVal  = inv.reduce((s,i)=>s+i.currentQty*i.price,0);
+  const low    = inv.filter(i=>stockSt(i)!=='ok');
+  const crit   = inv.filter(i=>stockSt(i)==='crit');
   const pending = cpos.filter(p=>p.status==='pending');
-  const spent = cpos.filter(p=>p.status==='received').reduce((s,p)=>s+p.totalAmount,0);
+  const spent  = cpos.filter(p=>p.status==='received').reduce((s,p)=>s+p.totalAmount,0);
   const [showEOD, setShowEOD] = useState(false);
   const h = new Date().getHours();
   const greet = h<12?'Good Morning ☀️':h<17?'Good Afternoon 🌤️':'Good Evening 🌙';
@@ -962,66 +758,51 @@ const Dashboard = ({user, co, inventory, pos, setInventory, eodAlert, setEodAler
   return (
     <div>
       <Topbar title={greet} sub={`${co.emoji} ${co.name} · Operations Overview`} alertCount={low.length}
-        actions={
-          <div style={{display:'flex',gap:'7px'}}>
-            <button className="btn bs btn-sm" onClick={()=>setShowEOD(true)}><Ic n="clock" s={13}/>EOD Check</button>
-          </div>
-        }
+        actions={<div style={{display:'flex',gap:'7px'}}><button className="btn bs btn-sm" onClick={()=>setShowEOD(true)}><Ic n="clock" s={13}/>EOD Check</button></div>}
       />
       <div className="page">
-        {eodAlert &&
+        {eodAlert && (
           <div className="eod-banner">
             <Ic n="clock" s={18} c="var(--amber)"/>
-            <div style={{flex:1}}>
-              <strong>End-of-Day Reminder:</strong> <span>It's time to update your closing stock count. Please verify all quantities before you leave.</span>
-            </div>
+            <div style={{flex:1}}><strong>End-of-Day Reminder:</strong> <span>It's time to update your closing stock count. Please verify all quantities before you leave.</span></div>
             <button className="btn bp btn-sm" onClick={()=>setShowEOD(true)}>Update Now</button>
             <div className="cls" onClick={()=>setEodAlert(false)}><Ic n="x" s={12}/></div>
           </div>
-        }
-        {crit.length > 0 &&
+        )}
+        {crit.length>0 && (
           <div className="alert-box ab-red" style={{marginBottom:'16px'}}>
             <Ic n="warn" s={17}/>
             <div><strong>{crit.length} item{crit.length>1?'s':''} critically low:</strong> <span style={{color:'var(--red)'}}>{crit.map(i=>i.name).join(', ')}</span></div>
           </div>
-        }
+        )}
         <div className="stats">
           {[
-            {l:'Inventory Value',   v:INR(totalVal),             m:inv.length+' active SKUs',             c:'var(--blue)',  bar:'#2563EB'},
-            {l:'Low Stock Alerts',  v:low.length,                m:crit.length+' critical · '+(low.length-crit.length)+' low', c:'var(--red)',  bar:'#DC2626'},
-            {l:'Pending Orders',    v:pending.length,            m:'Awaiting approval',                    c:'var(--amber)', bar:'#D97706'},
-            {l:"Month's Spend",     v:INR(spent+351000),         m:'March 2024',                           c:'var(--green)', bar:'#059669'},
-          ].map(function(s) { return (
+            {l:'Inventory Value',v:INR(totalVal),     m:inv.length+' active SKUs',                      c:'var(--blue)', bar:'#2563EB'},
+            {l:'Low Stock Alerts',v:low.length,        m:crit.length+' critical · '+(low.length-crit.length)+' low', c:'var(--red)',  bar:'#DC2626'},
+            {l:'Pending Orders',  v:pending.length,    m:'Awaiting approval',                            c:'var(--amber)',bar:'#D97706'},
+            {l:"Month's Spend",   v:INR(spent+351000), m:'March 2024',                                   c:'var(--green)',bar:'#059669'},
+          ].map(s => (
             <div key={s.l} className="sc">
               <div className="sc-bar" style={{background:s.bar}}/>
               <div className="sc-lbl">{s.l}</div>
               <div className="sc-val" style={{color:s.c}}>{s.v}</div>
               <div className="sc-meta">{s.m}</div>
             </div>
-          ); })}
+          ))}
         </div>
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px',marginBottom:'14px'}}>
-          <div className="card">
-            <div className="card-hd"><span className="card-tt">Weekly Spend (₹ thousands)</span><span className="tag">Mar 2024</span></div>
-            <div className="card-bd" style={{paddingTop:'8px'}}><BarChart data={spendData} color="#2563EB"/></div>
-          </div>
-          <div className="card">
-            <div className="card-hd"><span className="card-tt">Spend by Category</span></div>
+          <div className="card"><div className="card-hd"><span className="card-tt">Weekly Spend (₹ thousands)</span><span className="tag">Mar 2024</span></div><div className="card-bd" style={{paddingTop:'8px'}}><BarChart data={spendData} color="#2563EB"/></div></div>
+          <div className="card"><div className="card-hd"><span className="card-tt">Spend by Category</span></div>
             <div className="card-bd">
-              {catBrk.map(([cat,val],i) =>
+              {catBrk.map(([cat,val],i) => (
                 <div key={cat} style={{marginBottom:'11px'}}>
                   <div style={{display:'flex',justifyContent:'space-between',marginBottom:'4px'}}>
-                    <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
-                      <div style={{width:'7px',height:'7px',borderRadius:'50%',background:catColors[i]}}/>
-                      <span style={{fontSize:'12.5px',color:'var(--t2)',fontWeight:'500'}}>{cat}</span>
-                    </div>
+                    <div style={{display:'flex',alignItems:'center',gap:'6px'}}><div style={{width:'7px',height:'7px',borderRadius:'50%',background:catColors[i]}}/><span style={{fontSize:'12.5px',color:'var(--t2)',fontWeight:'500'}}>{cat}</span></div>
                     <span style={{fontSize:'12px',fontFamily:'var(--fm)',fontWeight:'700',color:'var(--t1)'}}>{INR(val)}</span>
                   </div>
-                  <div className="pb" style={{height:'4px'}}>
-                    <div className="pf" style={{width:`${(val/catBrk[0][1])*100}%`,background:catColors[i]}}/>
-                  </div>
+                  <div className="pb" style={{height:'4px'}}><div className="pf" style={{width:`${(val/catBrk[0][1])*100}%`,background:catColors[i]}}/></div>
                 </div>
-              )}
+              ))}
             </div>
           </div>
         </div>
@@ -1031,39 +812,28 @@ const Dashboard = ({user, co, inventory, pos, setInventory, eodAlert, setEodAler
             {low.length===0 ? <div className="empty"><div className="empty-ic">✅</div><h3>All stocks healthy</h3><p>Nothing needs ordering right now</p></div> :
               <div style={{maxHeight:'230px',overflowY:'auto'}}>
                 <table><thead><tr><th>Item</th><th>Current</th><th>Status</th></tr></thead>
-                <tbody>{low.map(item =>
-                  <tr key={item.id}>
-                    <td style={{fontWeight:600}}>{item.name}</td>
-                    <td><span className="num" style={{fontSize:'12.5px',fontWeight:'700'}}>{item.currentQty} {item.unit}</span></td>
-                    <td><span className={`bdg b-${stockSt(item)}`}>{stockSt(item)==='crit'?'Critical':'Low'}</span></td>
-                  </tr>
-                )}</tbody></table>
+                <tbody>{low.map(item => <tr key={item.id}><td style={{fontWeight:600}}>{item.name}</td><td>{item.currentQty} {item.unit}</td><td><span className={`bdg b-${stockSt(item)}`}>{stockSt(item)==='crit'?'Critical':'Low'}</span></td></tr>)}</tbody>
+                </table>
               </div>
             }
           </div>
-          <div className="card">
-            <div className="card-hd"><span className="card-tt">Recent Activity</span></div>
+          <div className="card"><div className="card-hd"><span className="card-tt">Recent Activity</span></div>
             <div className="card-bd">
-              {activity.map((a,i) =>
-                <div key={i} className="tl-item">
-                  <div className="tl-dot">{a.ic}</div>
-                  <div><div className="tl-tt">{a.t}</div><div className="tl-tm">{a.tm}</div></div>
-                </div>
-              )}
+              {activity.map((a,i) => <div key={i} className="tl-item"><div className="tl-dot">{a.ic}</div><div><div className="tl-tt">{a.t}</div><div className="tl-tm">{a.tm}</div></div></div>)}
             </div>
           </div>
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'12px'}}>
           {[
-            {ic:'💡',l:'Smart Insight',t:'Frozen Fries consumption up 23% this week. Consider raising reorder qty to 60 kg.',c:'var(--blue)',bg:'var(--blue-lt)'},
+            {ic:'💡',l:'Smart Insight',  t:'Frozen Fries consumption up 23% this week. Consider raising reorder qty to 60 kg.',c:'var(--blue)', bg:'var(--blue-lt)'},
             {ic:'💰',l:'Cost Opportunity',t:'Bulk purchasing Cheddar saves ~₹3,200/mo. Supplier offer valid till month end.',c:'var(--green)',bg:'var(--green-lt)'},
-            {ic:'🔔',l:'Action Required',t:'PO-2024-041 pending approval for 48+ hrs. Needs immediate review.',c:'var(--red)',bg:'var(--red-lt)'},
-          ].map(ins =>
+            {ic:'🔔',l:'Action Required', t:'PO-2024-041 pending approval for 48+ hrs. Needs immediate review.',c:'var(--red)',  bg:'var(--red-lt)'},
+          ].map(ins => (
             <div key={ins.l} className="ins" style={{borderColor:ins.c+'33',background:ins.bg}}>
               <div className="ins-ic">{ins.ic}</div>
               <div><div className="ins-lbl" style={{color:ins.c}}>{ins.l}</div><div className="ins-txt">{ins.t}</div></div>
             </div>
-          )}
+          ))}
         </div>
       </div>
       {showEOD && <EODModal inventory={inventory} co={co} setInventory={setInventory} onClose={()=>{setShowEOD(false);setEodAlert(false);}}/>}
@@ -1071,25 +841,23 @@ const Dashboard = ({user, co, inventory, pos, setInventory, eodAlert, setEodAler
   );
 };
 
-/* ── INVENTORY PAGE ─────────────────────────────────────────── */
+/* ── INVENTORY ──────────────────────────────────────────────── */
 const Inventory = ({user, co, inventory, setInventory}) => {
   const toast = useToast();
-  const [q,setQ] = useState('');
-  const [cat,setCat] = useState('All');
+  const [q,setQ]         = useState('');
+  const [cat,setCat]     = useState('All');
   const [showAdd,setShowAdd] = useState(false);
   const [editing,setEditing] = useState(null);
-  const [showUp,setShowUp] = useState(false);
-  const [aiLoad,setAiLoad] = useState(false);
-  const fileRef = useRef();
+  const [showUp,setShowUp]   = useState(false);
+  const [aiLoad,setAiLoad]   = useState(false);
   const canEdit = user.role !== 'kitchen_staff';
   const inv = inventory.filter(i=>i.companyId===co.id);
   const filtered = inv.filter(i => {
     const ms = i.name.toLowerCase().includes(q.toLowerCase()) || i.category.toLowerCase().includes(q.toLowerCase()) || (i.supplier||'').toLowerCase().includes(q.toLowerCase());
-    const mc = cat==='All' || i.category===cat;
-    return ms && mc;
+    return ms && (cat==='All' || i.category===cat);
   });
   const totalVal = filtered.reduce((s,i)=>s+i.currentQty*i.price,0);
-  const del = id => { if(!window.confirm('Delete this item?')) return; setInventory(p=>p.filter(i=>i.id!==id)); toast('Item deleted'); };
+  const del  = id => { if(!window.confirm('Delete this item?')) return; setInventory(p=>p.filter(i=>i.id!==id)); toast('Item deleted'); };
   const save = data => {
     if(editing) { setInventory(p=>p.map(i=>i.id===editing.id?{...editing,...data,updatedAt:TODAY()}:i)); toast('Item updated ✏️'); }
     else { setInventory(p=>[...p,{...data,id:'i'+uid(),companyId:co.id,outlet:'All',updatedAt:TODAY()}]); toast('Item added 📦'); }
@@ -1104,14 +872,13 @@ const Inventory = ({user, co, inventory, setInventory}) => {
         const wb = XLSX.read(e.target.result,{type:'array'});
         const ws = wb.Sheets[wb.SheetNames[0]];
         const data = XLSX.utils.sheet_to_json(ws,{header:1});
-        if(data.length < 2) { toast('Empty file','error'); setAiLoad(false); return; }
+        if(data.length<2) { toast('Empty file','error'); setAiLoad(false); return; }
         const hdrs = data[0].map(h=>String(h).toLowerCase().trim());
         const rows = data.slice(1).filter(r=>r.some(c=>c));
         const gv = (obj,keys) => { for(const k of keys) for(const h of Object.keys(obj)) if(h.includes(k)) return obj[h]; return ''; };
         const parsed = rows.map(row => {
-          const obj = {};
-          hdrs.forEach((h,i) => obj[h] = row[i]!==undefined?row[i]:'');
-          return {id:'i'+uid(),companyId:co.id,outlet:'All',updatedAt:TODAY(),
+          const obj = {}; hdrs.forEach((h,i)=>obj[h]=row[i]!==undefined?row[i]:'');
+          return { id:'i'+uid(), companyId:co.id, outlet:'All', updatedAt:TODAY(),
             name:String(gv(obj,['name','item','product','description'])||'').trim(),
             category:String(gv(obj,['category','cat','type','group'])||'General').trim(),
             unit:String(gv(obj,['unit','uom','measure'])||'pcs').trim(),
@@ -1122,8 +889,8 @@ const Inventory = ({user, co, inventory, setInventory}) => {
             supplier:String(gv(obj,['supplier','vendor'])||'N/A').trim()
           };
         }).filter(r=>r.name);
-        const toAdd = parsed.filter(p => !inv.find(k=>k.name.toLowerCase()===p.name.toLowerCase()));
-        setInventory(p => [...p, ...toAdd]);
+        const toAdd = parsed.filter(p=>!inv.find(k=>k.name.toLowerCase()===p.name.toLowerCase()));
+        setInventory(p=>[...p,...toAdd]);
         toast(`✅ Imported ${toAdd.length} items`);
       } catch(err) { toast('Import error: '+err.message,'error'); }
       setAiLoad(false);
@@ -1141,40 +908,31 @@ const Inventory = ({user, co, inventory, setInventory}) => {
   return (
     <div>
       <Topbar title="Inventory" sub={`${co.emoji} ${co.name} · ${filtered.length} items · ${INR(totalVal)}`} alertCount={filtered.filter(i=>stockSt(i)!=='ok').length}
-        actions={canEdit &&
-          <div style={{display:'flex',gap:'7px'}}>
-            <button className="btn bs btn-sm" onClick={exportXL}><Ic n="dn" s={12}/>Export</button>
-            <button className="btn bs btn-sm" onClick={()=>setShowUp(true)}><Ic n="up" s={12}/>Import</button>
-            <button className="btn bp btn-sm" onClick={()=>{setEditing(null);setShowAdd(true);}}><Ic n="plus" s={12}/>Add Item</button>
-          </div>
-        }
+        actions={canEdit && <div style={{display:'flex',gap:'7px'}}>
+          <button className="btn bs btn-sm" onClick={exportXL}><Ic n="dn" s={12}/>Export</button>
+          <button className="btn bs btn-sm" onClick={()=>setShowUp(true)}><Ic n="up" s={12}/>Import</button>
+          <button className="btn bp btn-sm" onClick={()=>{setEditing(null);setShowAdd(true);}}><Ic n="plus" s={12}/>Add Item</button>
+        </div>}
       />
       <div className="page">
         {aiLoad && <div className="alert-box ab-blue" style={{marginBottom:'14px'}}><span className="spin" style={{borderColor:'rgba(37,99,235,0.3)',borderTopColor:'var(--blue)'}}/><span style={{color:'var(--blue)',fontWeight:'600'}}>Processing Excel file…</span></div>}
         <div className="fbar">
           <div className="srch"><span className="srch-ic"><Ic n="srch" s={14}/></span><input className="srch-i" placeholder="Search items, categories, suppliers…" value={q} onChange={e=>setQ(e.target.value)}/></div>
-          {CATS.map(c => <div key={c} className={`chip ${cat===c?'on':''}`} onClick={()=>setCat(c)}>{c}</div>)}
+          {CATS.map(c=><div key={c} className={`chip ${cat===c?'on':''}`} onClick={()=>setCat(c)}>{c}</div>)}
         </div>
         <div className="tw">
           <table>
-            <thead><tr><th>Item</th><th>Category</th><th>Quantity</th><th>Par Level</th><th>Unit Price</th><th>Stock Value</th><th>Status</th><th>Last Updated</th>{canEdit && <th>Actions</th>}</tr></thead>
+            <thead><tr><th>Item</th><th>Category</th><th>Quantity</th><th>Par Level</th><th>Unit Price</th><th>Stock Value</th><th>Status</th><th>Last Updated</th>{canEdit&&<th>Actions</th>}</tr></thead>
             <tbody>
               {filtered.length===0 ? <tr><td colSpan={canEdit?9:8}><div className="empty"><div className="empty-ic">📦</div><h3>No items found</h3><p>{canEdit?'Import from Excel or add items manually.':'No items match your search.'}</p></div></td></tr> :
               filtered.map(item => {
-                const st = stockSt(item);
-                const pct = stockPct(item);
+                const st = stockSt(item); const pct = stockPct(item);
                 return (
                   <tr key={item.id}>
-                    <td>
-                      <div style={{fontWeight:700,color:'var(--t1)',fontSize:'13px'}}>{item.name}</div>
-                      <div style={{fontSize:'11px',color:'var(--t4)',marginTop:'1px'}}>{item.supplier}</div>
-                    </td>
+                    <td><div style={{fontWeight:700,color:'var(--t1)',fontSize:'13px'}}>{item.name}</div><div style={{fontSize:'11px',color:'var(--t4)',marginTop:'1px'}}>{item.supplier}</div></td>
                     <td><span className="tag">{item.category}</span></td>
-                    <td>
-                      <div className="qc"><span className="qv">{item.currentQty}</span><span className="qu">{item.unit}</span></div>
-                      <div className="qb" style={{marginTop:'4px'}}><div className={`qbf ${st}`} style={{width:`${pct}%`}}/></div>
-                    </td>
-                    <td><span className="num" style={{fontSize:'12px',color:'var(--t3)'}}>{item.parLevel} {item.unit}</span></td>
+                    <td><div className="qc"><span className="qv">{item.currentQty}</span><span className="qu">{item.unit}</span></div><div className="qb" style={{marginTop:'4px'}}><div className={`qbf ${st}`} style={{width:`${pct}%`}}/></div></td>
+                    <td><span style={{fontSize:'12px',color:'var(--t3)'}}>{item.parLevel} {item.unit}</span></td>
                     <td><div style={{fontFamily:'var(--fm)',fontSize:'12.5px',fontWeight:'600',color:'var(--t1)'}}>₹{item.price}</div><div style={{fontSize:'10.5px',color:'var(--t4)'}}>per {item.unit}</div></td>
                     <td><div style={{fontFamily:'var(--fm)',fontSize:'13px',fontWeight:'700',color:'var(--blue)'}}>{INR(item.currentQty*item.price)}</div></td>
                     <td><span className={`bdg b-${st}`}>{st==='ok'?'✓ In Stock':st==='low'?'↓ Low':'⚠ Critical'}</span></td>
@@ -1192,18 +950,14 @@ const Inventory = ({user, co, inventory, setInventory}) => {
         </div>
       </div>
       {showAdd && <ItemModal item={editing} co={co} onSave={save} onClose={()=>{setShowAdd(false);setEditing(null);}}/>}
-      {showUp && <UploadModal onUpload={handleExcel} onClose={()=>setShowUp(false)}/>}
+      {showUp  && <UploadModal onUpload={handleExcel} onClose={()=>setShowUp(false)}/>}
     </div>
   );
 };
 
 /* ── ITEM MODAL ─────────────────────────────────────────────── */
 const ItemModal = ({item, co, onSave, onClose}) => {
-  const [f,setF] = useState({
-    name:(item&&item.name)||'',category:(item&&item.category)||'Proteins',unit:(item&&item.unit)||'kg',
-    currentQty:(item&&item.currentQty)||'',price:(item&&item.price)||'',parLevel:(item&&item.parLevel)||'',
-    reorderLevel:(item&&item.reorderLevel)||'',supplier:(item&&item.supplier)||'',outlet:(item&&item.outlet)||'All'
-  });
+  const [f,setF] = useState({name:(item&&item.name)||'',category:(item&&item.category)||'Proteins',unit:(item&&item.unit)||'kg',currentQty:(item&&item.currentQty)||'',price:(item&&item.price)||'',parLevel:(item&&item.parLevel)||'',reorderLevel:(item&&item.reorderLevel)||'',supplier:(item&&item.supplier)||'',outlet:(item&&item.outlet)||'All'});
   const s = (k,v) => setF(p=>({...p,[k]:v}));
   const outlets = ['All',...((co&&co.outlets)||[])];
   const valid = f.name && f.price && f.currentQty;
@@ -1213,7 +967,7 @@ const ItemModal = ({item, co, onSave, onClose}) => {
         <div className="m-hd"><div><div className="m-tt">{item?'Edit Item':'Add New Item'}</div></div><div className="cls" onClick={onClose}><Ic n="x" s={13}/></div></div>
         <div className="m-bd">
           <div className="fgrid">
-            <div className="fg full"><label className="fl">Item Name *</label><input className="fi" placeholder="e.g. Chicken Breast, Burger Buns…" value={f.name} onChange={e=>s('name',e.target.value)}/></div>
+            <div className="fg full"><label className="fl">Item Name *</label><input className="fi" placeholder="e.g. Chicken Breast…" value={f.name} onChange={e=>s('name',e.target.value)}/></div>
             <div className="fg"><label className="fl">Category</label><select className="fs" value={f.category} onChange={e=>s('category',e.target.value)}>{CATS.filter(c=>c!=='All').map(c=><option key={c}>{c}</option>)}</select></div>
             <div className="fg"><label className="fl">Unit</label><select className="fs" value={f.unit} onChange={e=>s('unit',e.target.value)}>{UNITS.map(u=><option key={u}>{u}</option>)}</select></div>
             <div className="fg"><label className="fl">Current Qty *</label><input className="fi" type="number" placeholder="0" value={f.currentQty} onChange={e=>s('currentQty',e.target.value)}/></div>
@@ -1223,7 +977,7 @@ const ItemModal = ({item, co, onSave, onClose}) => {
             <div className="fg"><label className="fl">Supplier</label><input className="fi" placeholder="Supplier name" value={f.supplier} onChange={e=>s('supplier',e.target.value)}/></div>
             <div className="fg"><label className="fl">Outlet</label><select className="fs" value={f.outlet} onChange={e=>s('outlet',e.target.value)}>{outlets.map(o=><option key={o}>{o}</option>)}</select></div>
           </div>
-          {f.price && f.currentQty && <div className="alert-box ab-blue" style={{marginTop:'8px'}}><Ic n="inv" s={14}/><span>Stock value: <strong>{INR(parseFloat(f.currentQty)*parseFloat(f.price))}</strong></span></div>}
+          {f.price&&f.currentQty&&<div className="alert-box ab-blue" style={{marginTop:'8px'}}><Ic n="inv" s={14}/><span>Stock value: <strong>{INR(parseFloat(f.currentQty)*parseFloat(f.price))}</strong></span></div>}
         </div>
         <div className="m-ft"><button className="btn bs" onClick={onClose}>Cancel</button><button className="btn bp" disabled={!valid} onClick={()=>onSave({...f,currentQty:parseFloat(f.currentQty),price:parseFloat(f.price),parLevel:parseFloat(f.parLevel)||0,reorderLevel:parseFloat(f.reorderLevel)||0})}>{item?'Save Changes':'Add Item'}</button></div>
       </div>
@@ -1238,12 +992,10 @@ const UploadModal = ({onUpload, onClose}) => {
   return (
     <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
       <div className="modal">
-        <div className="m-hd"><div><div className="m-tt">Import from Excel</div><div className="m-sub">AI-powered column detection — handles any header format</div></div><div className="cls" onClick={onClose}><Ic n="x" s={13}/></div></div>
+        <div className="m-hd"><div><div className="m-tt">Import from Excel</div><div className="m-sub">Flexible column detection — handles any header format</div></div><div className="cls" onClick={onClose}><Ic n="x" s={13}/></div></div>
         <div className="m-bd">
           <div className={`uzn ${drag?'drag':''}`} onClick={()=>ref.current.click()} onDragOver={e=>{e.preventDefault();setDrag(true);}} onDragLeave={()=>setDrag(false)} onDrop={e=>{e.preventDefault();setDrag(false);const f=e.dataTransfer.files[0];if(f)onUpload(f);}}>
-            <div className="uzn-ic">📂</div>
-            <div className="uzn-tt">Drop Excel file here</div>
-            <div className="uzn-st">or click to browse · .xlsx and .xls supported</div>
+            <div className="uzn-ic">📂</div><div className="uzn-tt">Drop Excel file here</div><div className="uzn-st">or click to browse · .xlsx and .xls supported</div>
             <input ref={ref} type="file" accept=".xlsx,.xls" style={{display:'none'}} onChange={e=>onUpload(e.target.files[0])}/>
           </div>
           <div style={{marginTop:'14px'}}>
@@ -1260,7 +1012,7 @@ const UploadModal = ({onUpload, onClose}) => {
 /* ── PURCHASE ORDERS ────────────────────────────────────────── */
 const Orders = ({user, co, inventory, setInventory, pos, setPos, setCompanies}) => {
   const toast = useToast();
-  const [tab,setTab] = useState('all');
+  const [tab,setTab]       = useState('all');
   const [showCreate,setShowCreate] = useState(false);
   const [detail,setDetail] = useState(null);
   const cpos = pos.filter(p=>p.companyId===co.id);
@@ -1268,22 +1020,19 @@ const Orders = ({user, co, inventory, setInventory, pos, setPos, setCompanies}) 
   const filtered = tab==='all' ? cpos : cpos.filter(p=>p.status===tab);
   const canApprove = user.permissions.includes('po.a') || user.role==='super_admin';
   const approve = po => { setPos(p=>p.map(x=>x.id===po.id?{...x,status:'approved',approvedAt:TODAY()}:x)); toast('Order approved ✅'); setDetail(null); };
-  const reject = po => { setPos(p=>p.map(x=>x.id===po.id?{...x,status:'rejected'}:x)); toast('Order rejected','warning'); setDetail(null); };
-  const receive = function(po) {
-    setPos(function(p) { return p.map(function(x) { return x.id===po.id ? Object.assign({},x,{status:'received',receivedAt:TODAY()}) : x; }); });
-    setInventory(function(inv) {
-      var updated = inv.slice();
-      po.items.forEach(function(item) {
-        var idx = updated.findIndex(function(i) { return i.id===item.itemId && i.companyId===po.companyId; });
-        if(idx >= 0) {
-          updated[idx] = Object.assign({},updated[idx],{currentQty:(updated[idx].currentQty||0)+(parseFloat(item.qty)||0),updatedAt:TODAY()});
-        }
+  const reject  = po => { setPos(p=>p.map(x=>x.id===po.id?{...x,status:'rejected'}:x)); toast('Order rejected','warning'); setDetail(null); };
+  const receive = po => {
+    setPos(p=>p.map(x=>x.id===po.id?{...x,status:'received',receivedAt:TODAY()}:x));
+    setInventory(inv=>{
+      const upd = inv.slice();
+      po.items.forEach(item=>{
+        const idx = upd.findIndex(i=>i.id===item.itemId&&i.companyId===po.companyId);
+        if(idx>=0) upd[idx]={...upd[idx],currentQty:(upd[idx].currentQty||0)+(parseFloat(item.qty)||0),updatedAt:TODAY()};
       });
-      return updated;
+      return upd;
     });
-    setCompanies(function(cos) { return cos.map(function(c) { return c.id===po.companyId ? Object.assign({},c,{monthlySpend:(c.monthlySpend||0)+po.totalAmount}) : c; }); });
-    toast('Received! Inventory & spend updated 📦');
-    setDetail(null);
+    setCompanies(cos=>cos.map(c=>c.id===po.companyId?{...c,monthlySpend:(c.monthlySpend||0)+po.totalAmount}:c));
+    toast('Received! Inventory & spend updated 📦'); setDetail(null);
   };
   const sbMap = {pending:'b-pend',approved:'b-appr',rejected:'b-rej',received:'b-recv'};
   return (
@@ -1298,37 +1047,37 @@ const Orders = ({user, co, inventory, setInventory, pos, setPos, setCompanies}) 
             </div>
           )}
         </div>
-        <div className="tabs">{[['all','All Orders'],['pending','Pending'],['approved','Approved'],['received','Received']].map(([id,lbl]) =>
+        <div className="tabs">{[['all','All Orders'],['pending','Pending'],['approved','Approved'],['received','Received']].map(([id,lbl])=>
           <div key={id} className={`tab ${tab===id?'on':''}`} onClick={()=>setTab(id)}>{lbl} <span style={{opacity:.5,fontSize:'11px'}}>({(id==='all'?cpos:cpos.filter(p=>p.status===id)).length})</span></div>
         )}</div>
         {filtered.length===0 ? <div className="empty"><div className="empty-ic">📋</div><h3>No orders</h3><p>Create your first purchase order</p></div> :
-        filtered.map(po =>
+        filtered.map(po => (
           <div key={po.id} className="poc" onClick={()=>setDetail(po)}>
             <div className="poc-top">
               <div><div className="poc-num">{po.poNumber}</div><div className="poc-meta">{po.createdAt} · {po.outlet} · {po.items.length} item{po.items.length>1?'s':''}</div></div>
               <span className={`bdg ${sbMap[po.status]}`}>{po.status.charAt(0).toUpperCase()+po.status.slice(1)}</span>
             </div>
-            {po.notes && <div style={{fontSize:'12px',color:'var(--t3)',fontStyle:'italic'}}>{po.notes}</div>}
+            {po.notes&&<div style={{fontSize:'12px',color:'var(--t3)',fontStyle:'italic'}}>{po.notes}</div>}
             <div className="poc-tags">{po.items.map((it,i)=><span key={i} className="poc-tag">{it.name} × {it.qty} {it.unit}</span>)}</div>
             <div className="poc-ft">
               <div><div className="poc-tot">{INR(po.totalAmount)}</div><div style={{fontSize:'11px',color:'var(--t4)',marginTop:'2px'}}>Delivery: {po.expectedDelivery||'TBD'}</div></div>
-              {canApprove && po.status==='pending' && <div style={{display:'flex',gap:'7px'}} onClick={e=>e.stopPropagation()}><button className="btn bd btn-sm" onClick={()=>reject(po)}>Reject</button><button className="btn bsuc btn-sm" onClick={()=>approve(po)}>Approve</button></div>}
-              {po.status==='approved' && <button className="btn bs btn-sm" onClick={e=>{e.stopPropagation();receive(po);}}>Mark Received</button>}
+              {canApprove&&po.status==='pending'&&<div style={{display:'flex',gap:'7px'}} onClick={e=>e.stopPropagation()}><button className="btn bd btn-sm" onClick={()=>reject(po)}>Reject</button><button className="btn bsuc btn-sm" onClick={()=>approve(po)}>Approve</button></div>}
+              {po.status==='approved'&&<button className="btn bs btn-sm" onClick={e=>{e.stopPropagation();receive(po);}}>Mark Received</button>}
             </div>
           </div>
-        )}
+        ))}
       </div>
-      {showCreate && <CreatePO inventory={cinv} co={co} user={user} count={cpos.length} onSave={po=>{setPos(p=>[...p,po]);toast('PO created 📋');setShowCreate(false);}} onClose={()=>setShowCreate(false)}/>}
-      {detail && <PODetail po={detail} inventory={inventory} onClose={function(){setDetail(null);}} canApprove={canApprove} onApprove={approve} onReject={reject} onReceive={receive}/>}
+      {showCreate&&<CreatePO inventory={cinv} co={co} user={user} count={cpos.length} onSave={po=>{setPos(p=>[...p,po]);toast('PO created 📋');setShowCreate(false);}} onClose={()=>setShowCreate(false)}/>}
+      {detail&&<PODetail po={detail} inventory={inventory} onClose={()=>setDetail(null)} canApprove={canApprove} onApprove={approve} onReject={reject} onReceive={receive}/>}
     </div>
   );
 };
 
 /* ── CREATE PO ──────────────────────────────────────────────── */
 const CreatePO = ({inventory, co, user, count, onSave, onClose}) => {
-  const [items,setItems] = useState([{itemId:'',name:'',qty:'',unit:'kg',price:0,total:0}]);
-  const [notes,setNotes] = useState('');
-  const [outlet,setOutlet] = useState('All');
+  const [items,setItems]     = useState([{itemId:'',name:'',qty:'',unit:'kg',price:0,total:0}]);
+  const [notes,setNotes]     = useState('');
+  const [outlet,setOutlet]   = useState('All');
   const [delivery,setDelivery] = useState('');
   const outlets = ['All',...((co&&co.outlets)||[])];
   const addRow = () => setItems(p=>[...p,{itemId:'',name:'',qty:'',unit:'kg',price:0,total:0}]);
@@ -1344,7 +1093,7 @@ const CreatePO = ({inventory, co, user, count, onSave, onClose}) => {
   const valid = items.some(i=>i.name&&i.qty);
   const submit = () => {
     const vi = items.filter(i=>i.name&&i.qty);
-    const n = String(count+1).padStart(3,'0');
+    const n  = String(count+1).padStart(3,'0');
     onSave({id:'po'+uid(),companyId:co.id,poNumber:`PO-2024-0${n}`,status:'pending',items:vi.map(i=>({...i,qty:parseFloat(i.qty),price:parseFloat(i.price),total:parseFloat(i.qty)*parseFloat(i.price)})),totalAmount:total,createdBy:user.id,createdAt:TODAY(),outlet,notes,expectedDelivery:delivery});
   };
   return (
@@ -1363,16 +1112,16 @@ const CreatePO = ({inventory, co, user, count, onSave, onClose}) => {
           <div className="tw" style={{marginBottom:'12px'}}>
             <table>
               <thead><tr><th>Item</th><th>Qty</th><th>Unit</th><th>Price ₹</th><th>Total</th><th></th></tr></thead>
-              <tbody>{items.map((item,i) =>
+              <tbody>{items.map((item,i)=>(
                 <tr key={i}>
                   <td><select className="fs" style={{padding:'6px 9px',fontSize:'12px'}} value={item.itemId} onChange={e=>upd(i,'itemId',e.target.value)}><option value="">Select item…</option>{inventory.map(inv=><option key={inv.id} value={inv.id}>{inv.name} ({inv.currentQty} {inv.unit})</option>)}</select></td>
                   <td><input className="fi" type="number" style={{padding:'6px 9px',width:'75px',fontSize:'12px'}} value={item.qty} onChange={e=>upd(i,'qty',e.target.value)}/></td>
                   <td><span style={{fontSize:'12px',color:'var(--t3)'}}>{item.unit}</span></td>
                   <td><input className="fi" type="number" style={{padding:'6px 9px',width:'85px',fontSize:'12px'}} value={item.price} onChange={e=>upd(i,'price',e.target.value)}/></td>
-                  <td><span className="num" style={{fontSize:'12.5px',fontWeight:'700',color:'var(--blue)'}}>{INR((parseFloat(item.qty)||0)*(parseFloat(item.price)||0))}</span></td>
-                  <td>{items.length>1 && <div className="ib ib-d" onClick={()=>remRow(i)}><Ic n="x" s={11}/></div>}</td>
+                  <td><span style={{fontSize:'12.5px',fontWeight:'700',color:'var(--blue)'}}>{INR((parseFloat(item.qty)||0)*(parseFloat(item.price)||0))}</span></td>
+                  <td>{items.length>1&&<div className="ib ib-d" onClick={()=>remRow(i)}><Ic n="x" s={11}/></div>}</td>
                 </tr>
-              )}</tbody>
+              ))}</tbody>
             </table>
           </div>
           <div className="fg"><label className="fl">Notes / Remarks</label><textarea className="fta" placeholder="Special instructions…" value={notes} onChange={e=>setNotes(e.target.value)}/></div>
@@ -1389,7 +1138,6 @@ const CreatePO = ({inventory, co, user, count, onSave, onClose}) => {
 
 /* ── PO DETAIL ──────────────────────────────────────────────── */
 const PODetail = ({po, inventory, onClose, canApprove, onApprove, onReject, onReceive}) => {
-  var getStock = function(itemId) { var found = inventory && inventory.find(function(i){return i.id===itemId;}); return found ? found.currentQty : '—'; };
   const sc = {pending:'b-pend',approved:'b-appr',rejected:'b-rej',received:'b-recv'};
   return (
     <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
@@ -1401,23 +1149,19 @@ const PODetail = ({po, inventory, onClose, canApprove, onApprove, onReject, onRe
               <div key={l} style={{padding:'10px',background:'var(--bg-2)',borderRadius:'var(--r2)'}}><div style={{fontSize:'10.5px',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.4px',marginBottom:'3px'}}>{l}</div><div style={{fontSize:'13px',fontWeight:'600',color:'var(--t1)'}}>{v}</div></div>
             )}
           </div>
-          {po.notes && <div className="alert-box ab-amber" style={{marginBottom:'12px',fontStyle:'italic',fontSize:'12.5px'}}>"{po.notes}"</div>}
+          {po.notes&&<div className="alert-box ab-amber" style={{marginBottom:'12px',fontStyle:'italic',fontSize:'12.5px'}}>"{po.notes}"</div>}
           <div className="tw" style={{marginBottom:'12px'}}>
             <table><thead><tr><th>Item</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead>
-            <tbody>{po.items.map((item,i)=><tr key={i}><td style={{fontWeight:600}}>{item.name}</td><td className="num" style={{fontWeight:'700'}}>{item.qty} {item.unit}</td><td className="num">₹{item.price}</td><td className="num" style={{fontWeight:'700',color:'var(--blue)'}}>{INR(item.total)}</td></tr>)}</tbody>
+            <tbody>{po.items.map((item,i)=><tr key={i}><td style={{fontWeight:600}}>{item.name}</td><td style={{fontWeight:'700'}}>{item.qty} {item.unit}</td><td>₹{item.price}</td><td style={{fontWeight:'700',color:'var(--blue)'}}>{INR(item.total)}</td></tr>)}</tbody>
             </table>
           </div>
           <div style={{textAlign:'right',fontFamily:'var(--fd)',fontSize:'17px',fontWeight:'800',color:'var(--blue)'}}>Total: {INR(po.totalAmount)}</div>
         </div>
-        {po.status==='approved' && (
-          <div style={{margin:'0 22px 12px',padding:'10px 14px',background:'var(--blue-lt)',border:'1.5px solid var(--blue-bd)',borderRadius:'var(--r2)',fontSize:'12.5px',color:'var(--blue)'}}>
-            📦 <strong>On marking received:</strong> Quantities below will be added to inventory automatically.
-          </div>
-        )}
+        {po.status==='approved'&&<div style={{margin:'0 22px 12px',padding:'10px 14px',background:'var(--blue-lt)',border:'1.5px solid var(--blue-bd)',borderRadius:'var(--r2)',fontSize:'12.5px',color:'var(--blue)'}}>📦 <strong>On marking received:</strong> Quantities will be added to inventory automatically.</div>}
         <div className="m-ft">
           <button className="btn bs" onClick={onClose}>Close</button>
-          {canApprove && po.status==='pending' && <><button className="btn bd" onClick={function(){onReject(po);}}>Reject</button><button className="btn bsuc" onClick={function(){onApprove(po);}}>Approve</button></>}
-          {po.status==='approved' && <button className="btn bp" onClick={function(){onReceive(po);}}>Mark Received</button>}
+          {canApprove&&po.status==='pending'&&<><button className="btn bd" onClick={()=>onReject(po)}>Reject</button><button className="btn bsuc" onClick={()=>onApprove(po)}>Approve</button></>}
+          {po.status==='approved'&&<button className="btn bp" onClick={()=>onReceive(po)}>Mark Received</button>}
         </div>
       </div>
     </div>
@@ -1426,16 +1170,11 @@ const PODetail = ({po, inventory, onClose, canApprove, onApprove, onReject, onRe
 
 /* ── EXPENDITURE ────────────────────────────────────────────── */
 const Expenditure = ({co, pos, inventory}) => {
-  const cpos = pos.filter(p=>p.companyId===co.id && p.status!=='rejected');
+  const cpos = pos.filter(p=>p.companyId===co.id&&p.status!=='rejected');
   const cinv = inventory.filter(i=>i.companyId===co.id);
   const total = cpos.reduce((s,p)=>s+p.totalAmount,0);
   const monthly = [{l:'Oct',v:188},{l:'Nov',v:224},{l:'Dec',v:261},{l:'Jan',v:195},{l:'Feb',v:243},{l:'Mar',v:Math.round((total+351000)/1000)}];
-  const catSpend = cpos.flatMap(p=>p.items).reduce((acc,item)=>{
-    const inv = cinv.find(i=>i.id===item.itemId);
-    const cat = inv ? inv.category : 'Other';
-    acc[cat] = (acc[cat]||0) + item.total;
-    return acc;
-  },{});
+  const catSpend = cpos.flatMap(p=>p.items).reduce((acc,item)=>{const inv=cinv.find(i=>i.id===item.itemId);const cat=inv?inv.category:'Other';acc[cat]=(acc[cat]||0)+item.total;return acc;},{});
   const allCats = {Proteins:142000,Vegetables:48000,Packaging:62000,Sauces:35000,Beverages:28000,...catSpend};
   const cColors = ['#2563EB','#059669','#7C3AED','#D97706','#DC2626'];
   const topItems = [['Chicken Breast',48000],['Beef Patty',32000],['Frozen Fries',28000],['Burger Buns',18000],['Cheddar Cheese',15000]];
@@ -1444,7 +1183,7 @@ const Expenditure = ({co, pos, inventory}) => {
       <Topbar title="Expenditure" sub={`${co.emoji} ${co.name} · Financial Overview`}/>
       <div className="page">
         <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'12px',marginBottom:'18px'}}>
-          {[{l:'This Month',v:INR(total+351000),m:'↑ 8.2% vs last',mc:'var(--red)'},{l:'This Week',v:INR(total+89000),m:'↓ 3.1% vs last',mc:'var(--green)'},{l:'Avg Daily',v:'₹'+Math.round((total+351000)/20).toLocaleString('en-IN'),m:'20 working days',mc:'var(--t4)'},{l:'YTD Spend',v:INR(total+1820000),m:'↓ 2.4% vs last year',mc:'var(--green)'}].map(k =>
+          {[{l:'This Month',v:INR(total+351000),m:'↑ 8.2% vs last',mc:'var(--red)'},{l:'This Week',v:INR(total+89000),m:'↓ 3.1% vs last',mc:'var(--green)'},{l:'Avg Daily',v:'₹'+Math.round((total+351000)/20).toLocaleString('en-IN'),m:'20 working days',mc:'var(--t4)'},{l:'YTD Spend',v:INR(total+1820000),m:'↓ 2.4% vs last year',mc:'var(--green)'}].map(k=>
             <div key={k.l} style={{background:'var(--white)',border:'1px solid var(--border)',borderRadius:'var(--r3)',padding:'16px 18px',boxShadow:'var(--sh1)'}}>
               <div style={{fontSize:'10.5px',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.4px',marginBottom:'5px',fontWeight:'700'}}>{k.l}</div>
               <div style={{fontFamily:'var(--fd)',fontSize:'20px',fontWeight:'800',color:'var(--t1)',letterSpacing:'-.3px',marginBottom:'3px'}}>{k.v}</div>
@@ -1455,11 +1194,11 @@ const Expenditure = ({co, pos, inventory}) => {
         <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px',marginBottom:'14px'}}>
           <div className="card"><div className="card-hd"><span className="card-tt">Monthly Trend (₹ thousands)</span></div><div className="card-bd" style={{paddingTop:'8px'}}><BarChart data={monthly} color="#7C3AED"/></div></div>
           <div className="card"><div className="card-hd"><span className="card-tt">Spend by Category</span></div>
-            <div className="card-bd">{Object.entries(allCats).slice(0,5).map(([cat,val],i)=>{ const mx=Math.max(...Object.values(allCats)); return (
+            <div className="card-bd">{Object.entries(allCats).slice(0,5).map(([cat,val],i)=>{const mx=Math.max(...Object.values(allCats));return(
               <div key={cat} style={{marginBottom:'11px'}}>
                 <div style={{display:'flex',justifyContent:'space-between',marginBottom:'4px'}}>
                   <div style={{display:'flex',alignItems:'center',gap:'6px'}}><div style={{width:'7px',height:'7px',borderRadius:'50%',background:cColors[i]}}/><span style={{fontSize:'12px',color:'var(--t2)',fontWeight:'500'}}>{cat}</span></div>
-                  <span className="num" style={{fontSize:'12px',fontWeight:'700',color:'var(--t1)'}}>{INR(val)}</span>
+                  <span style={{fontSize:'12px',fontWeight:'700',color:'var(--t1)'}}>{INR(val)}</span>
                 </div>
                 <div className="pb" style={{height:'4px'}}><div className="pf" style={{width:`${(val/mx)*100}%`,background:cColors[i]}}/></div>
               </div>
@@ -1470,7 +1209,7 @@ const Expenditure = ({co, pos, inventory}) => {
           <div className="tw">
             <table><thead><tr><th>#</th><th>Item</th><th>Total Spent</th><th>% of Budget</th><th>Trend</th></tr></thead>
             <tbody>{topItems.map(([name,val],i)=>{const pct=((val/315000)*100).toFixed(1);const trends=['↑12%','↓3%','↑8%','→0%','↑5%'];const tc=['var(--red)','var(--green)','var(--red)','var(--t4)','var(--red)'];return(
-              <tr key={name}><td style={{color:'var(--t4)',fontFamily:'var(--fm)',fontSize:'12px'}}>{i+1}</td><td style={{fontWeight:700}}>{name}</td><td className="num" style={{fontWeight:'700',color:'var(--blue)'}}>{INR(val)}</td><td><div style={{display:'flex',alignItems:'center',gap:'8px'}}><div className="pb" style={{width:'72px',height:'4px'}}><div className="pf" style={{width:`${pct}%`,background:'var(--blue)'}}/></div><span style={{fontSize:'12px',color:'var(--t3)'}}>{pct}%</span></div></td><td style={{fontSize:'12.5px',fontWeight:'700',color:tc[i]}}>{trends[i]}</td></tr>
+              <tr key={name}><td style={{color:'var(--t4)',fontFamily:'var(--fm)',fontSize:'12px'}}>{i+1}</td><td style={{fontWeight:700}}>{name}</td><td style={{fontWeight:'700',color:'var(--blue)'}}>{INR(val)}</td><td><div style={{display:'flex',alignItems:'center',gap:'8px'}}><div className="pb" style={{width:'72px',height:'4px'}}><div className="pf" style={{width:`${pct}%`,background:'var(--blue)'}}/></div><span style={{fontSize:'12px',color:'var(--t3)'}}>{pct}%</span></div></td><td style={{fontSize:'12.5px',fontWeight:'700',color:tc[i]}}>{trends[i]}</td></tr>
             );})}
             </tbody></table>
           </div>
@@ -1480,12 +1219,62 @@ const Expenditure = ({co, pos, inventory}) => {
   );
 };
 
-/* ── STOCK UPDATE ───────────────────────────────────────────── */
+/* ── KITCHEN TUTORIAL ────────────────────────────────────────── */
+const KitchenTutorial = ({onClose}) => {
+  const steps = [
+    {ic:'👋',tt:'Welcome to InventoryPro!',bd:"You are set up as Kitchen Staff. Your job is simple — count stock quantities at the end of each shift so management always has accurate numbers."},
+    {ic:'📋',tt:'Your Main Page: Update Stock',bd:"Tap Update Stock in the menu. You will see all ingredients listed. Use the minus and plus buttons to set the current quantity for each item."},
+    {ic:'🔢',tt:'How to Count Stock',bd:"Walk through your kitchen and count each item. Tap the number and type the exact quantity, or use + and − to adjust. Work shelf by shelf, fridge by fridge."},
+    {ic:'🔴',tt:'Red = Critical, Yellow = Low',bd:"Items in red are critically low — tell your manager immediately. Yellow means it is getting low. Green is healthy. You don't need to place orders, just count."},
+    {ic:'💾',tt:'Always Save Before Leaving',bd:"When done counting, tap the big blue Save button at the bottom. If you close the app without saving, your counts will be lost."},
+    {ic:'🌙',tt:'End-of-Day Reminder',bd:"At 9 PM you will get a reminder for a closing count. It helps your manager know what is available for next morning. Takes less than 5 minutes."},
+  ];
+  const [step,setStep] = useState(0);
+  const cur = steps[step];
+  const isLast = step === steps.length-1;
+  return (
+    <div className="ov" style={{zIndex:1100}}>
+      <div className="modal" style={{maxWidth:'400px'}}>
+        <div style={{display:'flex',gap:'5px',justifyContent:'center',padding:'16px 20px 0'}}>
+          {steps.map((_,i)=><div key={i} style={{width:i===step?18:6,height:6,borderRadius:'99px',background:i===step?'var(--blue)':i<step?'var(--blue-bd)':'var(--border-2)',transition:'all .25s',cursor:'pointer'}} onClick={()=>setStep(i)}/>)}
+        </div>
+        <div className="m-hd" style={{border:'none',flexDirection:'column',alignItems:'center',textAlign:'center',paddingBottom:'8px'}}>
+          <div style={{fontSize:'44px',marginBottom:'8px',lineHeight:1}}>{cur.ic}</div>
+          <div className="m-tt">{cur.tt}</div>
+          <div style={{fontSize:'11px',color:'var(--t4)',marginTop:'3px'}}>Step {step+1} of {steps.length}</div>
+        </div>
+        <div className="m-bd" style={{paddingTop:0}}>
+          <div style={{fontSize:'13.5px',color:'var(--t2)',lineHeight:'1.7',background:'var(--bg)',padding:'14px',borderRadius:'var(--r2)',border:'1.5px solid var(--border)',textAlign:'center'}}>{cur.bd}</div>
+          {isLast && (
+            <div style={{marginTop:'12px',padding:'12px',background:'var(--blue-lt)',border:'1.5px solid var(--blue-bd)',borderRadius:'var(--r2)'}}>
+              <div style={{fontWeight:'700',fontSize:'12px',color:'var(--blue)',marginBottom:'7px'}}>📌 Quick Reference</div>
+              {[['🔄','Update Stock — your main job'],['🔴','Red badge — tell manager now'],['💾','Save button — always tap before leaving'],['🌙','9 PM — do your closing count']].map(([ic,t])=><div key={ic} style={{fontSize:'12px',color:'var(--t2)',marginBottom:'4px'}}>{ic} {t}</div>)}
+            </div>
+          )}
+        </div>
+        <div className="m-ft" style={{justifyContent:'space-between'}}>
+          <button className="btn bg btn-sm" style={{color:'var(--t4)'}} onClick={onClose}>Skip</button>
+          <div style={{display:'flex',gap:'7px'}}>
+            {step>0&&<button className="btn bs btn-sm" onClick={()=>setStep(s=>s-1)}>← Back</button>}
+            {!isLast?<button className="btn bp btn-sm" onClick={()=>setStep(s=>s+1)}>Next →</button>:<button className="btn bp btn-sm" onClick={onClose}>Let's go! 🚀</button>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ──────────────────────────────────────────────────────────────
+   FIX 3: Renamed showTutBtn → showTut, and added the missing
+   {showTut && <KitchenTutorial onClose={...}/>} render at the
+   bottom of StockUpdate. Previously the button set state but
+   the tutorial was never actually shown.
+──────────────────────────────────────────────────────────────── */
 const StockUpdate = ({user, co, inventory, setInventory}) => {
   const toast = useToast();
-  const [showTutBtn, setShowTutBtn] = useState(false);
-  const [q,setQ] = useState('');
-  const [upd,setUpd] = useState({});
+  const [showTut, setShowTut] = useState(false);   // was "showTutBtn" — never wired to render
+  const [q,setQ]       = useState('');
+  const [upd,setUpd]   = useState({});
   const [saving,setSaving] = useState(false);
   const inv = inventory.filter(i=>i.companyId===co.id && i.name.toLowerCase().includes(q.toLowerCase()));
   const getQty = item => upd[item.id]!==undefined ? upd[item.id] : item.currentQty;
@@ -1497,35 +1286,34 @@ const StockUpdate = ({user, co, inventory, setInventory}) => {
     setTimeout(() => {
       setInventory(p=>p.map(i=>upd[i.id]!==undefined?{...i,currentQty:parseFloat(upd[i.id])||0,updatedAt:TODAY()}:i));
       toast(`✅ ${changed} item${changed>1?'s':''} updated`);
-      setUpd({});
-      setSaving(false);
+      setUpd({}); setSaving(false);
     }, 500);
   };
   return (
     <div>
-      <Topbar title="Update Stock" sub={co.emoji+' '+co.name+' · Daily Stock Count'} actions={
-        <button className="btn bs btn-sm" onClick={function(){setShowTutBtn(true);}}>📖 How it works</button>
-      }/>
+      <Topbar title="Update Stock" sub={`${co.emoji} ${co.name} · Daily Stock Count`}
+        actions={<button className="btn bs btn-sm" onClick={()=>setShowTut(true)}>📖 How it works</button>}
+      />
       <div className="page">
         <div style={{background:'linear-gradient(135deg,var(--navy),var(--navy-2))',borderRadius:'var(--r3)',padding:'20px 24px',marginBottom:'18px',display:'flex',alignItems:'center',justifyContent:'space-between',boxShadow:'var(--sh2)'}}>
           <div>
             <div style={{fontFamily:'var(--fd)',fontSize:'18px',fontWeight:'800',color:'#fff',letterSpacing:'-.2px',marginBottom:'4px'}}>📋 Daily Stock Count</div>
             <div style={{fontSize:'12.5px',color:'rgba(255,255,255,0.55)'}}>Update closing quantities. Changes are saved in one batch.</div>
           </div>
-          {changed > 0 && <span style={{background:'rgba(59,130,246,0.25)',color:'#93C5FD',padding:'5px 12px',borderRadius:'99px',fontSize:'12px',fontWeight:'700',border:'1px solid rgba(59,130,246,0.4)'}}>{changed} unsaved change{changed>1?'s':''}</span>}
+          {changed>0 && <span style={{background:'rgba(59,130,246,0.25)',color:'#93C5FD',padding:'5px 12px',borderRadius:'99px',fontSize:'12px',fontWeight:'700',border:'1px solid rgba(59,130,246,0.4)'}}>{changed} unsaved change{changed>1?'s':''}</span>}
         </div>
         <div className="fbar">
           <div className="srch"><span className="srch-ic"><Ic n="srch" s={14}/></span><input className="srch-i" placeholder="Search items…" value={q} onChange={e=>setQ(e.target.value)}/></div>
         </div>
         {inv.map(item => {
-          const qty = getQty(item);
+          const qty   = getQty(item);
           const isChg = upd[item.id]!==undefined;
-          const st = stockSt({...item,currentQty:parseFloat(qty)||0});
+          const st    = stockSt({...item,currentQty:parseFloat(qty)||0});
           return (
             <div key={item.id} className={`stf-c ${isChg?'chg':''}`}>
               <div className="stf-em" style={{background:st==='ok'?'var(--green-lt)':st==='low'?'var(--amber-lt)':'var(--red-lt)'}}>{CAT_EMOJI[item.category]||'📦'}</div>
               <div style={{flex:1}}>
-                <div className="stf-nm">{item.name} {isChg && <span style={{fontSize:'9.5px',background:'var(--blue)',color:'#fff',padding:'1px 6px',borderRadius:'99px',marginLeft:'6px',fontWeight:'700'}}>MODIFIED</span>}</div>
+                <div className="stf-nm">{item.name} {isChg&&<span style={{fontSize:'9.5px',background:'var(--blue)',color:'#fff',padding:'1px 6px',borderRadius:'99px',marginLeft:'6px',fontWeight:'700'}}>MODIFIED</span>}</div>
                 <div className="stf-mt">{item.category} · Par: {item.parLevel} {item.unit} · ₹{item.price}/{item.unit}</div>
                 <div style={{marginTop:'4px'}}><span className={`bdg b-${st}`} style={{fontSize:'10px'}}>{st==='ok'?'In Stock':st==='low'?'Low Stock':'Critical'}</span></div>
               </div>
@@ -1544,6 +1332,8 @@ const StockUpdate = ({user, co, inventory, setInventory}) => {
           </button>
         </div>
       </div>
+      {/* FIX 3: KitchenTutorial now renders when "How it works" is clicked */}
+      {showTut && <KitchenTutorial onClose={()=>setShowTut(false)}/>}
     </div>
   );
 };
@@ -1551,13 +1341,13 @@ const StockUpdate = ({user, co, inventory, setInventory}) => {
 /* ── ADMIN CENTER ───────────────────────────────────────────── */
 const AdminCenter = ({user, co, allUsers, setAllUsers}) => {
   const toast = useToast();
-  const [tab,setTab] = useState('users');
+  const [tab,setTab]         = useState('users');
   const [showAdd,setShowAdd] = useState(false);
   const [editing,setEditing] = useState(null);
-  const coUsers = allUsers.filter(u => u.companyId===co.id);
+  const coUsers = allUsers.filter(u=>u.companyId===co.id);
   const saveUser = d => {
-    if(editing) { setAllUsers(p=>p.map(u=>u.id===editing.id?{...editing,...d}:u)); toast('User updated ✅'); }
-    else { setAllUsers(p=>[...p,{id:'u'+uid(),companyId:co.id,...d}]); toast('User added 👤'); }
+    if(editing){setAllUsers(p=>p.map(u=>u.id===editing.id?{...editing,...d}:u));toast('User updated ✅');}
+    else{setAllUsers(p=>[...p,{id:'u'+uid(),companyId:co.id,...d}]);toast('User added 👤');}
     setShowAdd(false); setEditing(null);
   };
   const rc = ROLE_COLORS;
@@ -1566,41 +1356,35 @@ const AdminCenter = ({user, co, allUsers, setAllUsers}) => {
     <div>
       <Topbar title="Admin Center" sub={`${co.emoji} ${co.name} · Users & Permissions`} actions={<button className="btn bp btn-sm" onClick={()=>{setEditing(null);setShowAdd(true);}}><Ic n="plus" s={12}/>Add User</button>}/>
       <div className="page">
-        <div className="tabs">
-          {[['users','Users'],['perms','Role Permissions'],['outlets','Outlets']].map(([id,lbl]) =>
-            <div key={id} className={`tab ${tab===id?'on':''}`} onClick={()=>setTab(id)}>{lbl}</div>
-          )}
-        </div>
-        {tab==='users' &&
+        <div className="tabs">{[['users','Users'],['perms','Role Permissions'],['outlets','Outlets']].map(([id,lbl])=><div key={id} className={`tab ${tab===id?'on':''}`} onClick={()=>setTab(id)}>{lbl}</div>)}</div>
+        {tab==='users' && (
           <div className="tw">
             <table>
               <thead><tr><th>User</th><th>Role</th><th>Outlet</th><th>Permissions</th><th>Actions</th></tr></thead>
-              <tbody>{coUsers.map(u =>
+              <tbody>{coUsers.map(u=>(
                 <tr key={u.id}>
-                  <td>
-                    <div style={{display:'flex',alignItems:'center',gap:'9px'}}>
-                      <div style={{width:'32px',height:'32px',borderRadius:'8px',background:(rc[u.role]||'#2563EB')+'18',color:rc[u.role]||'#2563EB',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:'800',fontSize:'12.5px',flexShrink:0}}>{u.name.charAt(0)}</div>
-                      <div><div style={{fontWeight:700,fontSize:'13px'}}>{u.name}</div><div style={{fontSize:'11.5px',color:'var(--t3)',fontFamily:'var(--fm)'}}>{u.email}</div></div>
-                    </div>
-                  </td>
+                  <td><div style={{display:'flex',alignItems:'center',gap:'9px'}}>
+                    <div style={{width:'32px',height:'32px',borderRadius:'8px',background:(rc[u.role]||'#2563EB')+'18',color:rc[u.role]||'#2563EB',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:'800',fontSize:'12.5px',flexShrink:0}}>{u.name.charAt(0)}</div>
+                    <div><div style={{fontWeight:700,fontSize:'13px'}}>{u.name}</div><div style={{fontSize:'11.5px',color:'var(--t3)',fontFamily:'var(--fm)'}}>{u.email}</div></div>
+                  </div></td>
                   <td><span className={`bdg ${rb[u.role]||'b-grey'}`}>{ROLE_LABELS[u.role]}</span></td>
                   <td style={{fontSize:'12.5px',color:'var(--t2)'}}>{u.outlet||'All Outlets'}</td>
                   <td style={{fontSize:'12.5px',color:'var(--t3)'}}>{u.permissions.length} permissions</td>
-                  <td><div className="ibr">{u.id!==user.id && <><div className="ib ib-e" onClick={()=>{setEditing(u);setShowAdd(true);}}><Ic n="edit" s={12}/></div><div className="ib ib-d" onClick={()=>{setAllUsers(p=>p.filter(x=>x.id!==u.id));toast('User removed');}}><Ic n="del" s={12}/></div></>}</div></td>
+                  <td><div className="ibr">{u.id!==user.id&&<><div className="ib ib-e" onClick={()=>{setEditing(u);setShowAdd(true);}}><Ic n="edit" s={12}/></div><div className="ib ib-d" onClick={()=>{setAllUsers(p=>p.filter(x=>x.id!==u.id));toast('User removed');}}><Ic n="del" s={12}/></div></>}</div></td>
                 </tr>
-              )}</tbody>
+              ))}</tbody>
             </table>
           </div>
-        }
-        {tab==='perms' && ['company_admin','manager','kitchen_staff'].map(role =>
+        )}
+        {tab==='perms' && ['company_admin','manager','kitchen_staff'].map(role=>(
           <div key={role} className="card" style={{marginBottom:'12px'}}>
             <div className="card-hd"><span className={`bdg ${rb[role]||'b-grey'}`}>{ROLE_LABELS[role]}</span></div>
-            <div className="card-bd"><div className="pg">{PERMS_DEF.map(p => { const on=(ROLE_PERMS[role]||[]).includes(p.k); return <div key={p.k} className={`pi ${on?'on':''}`}><div className="pi-ck">{on&&<Ic n="chk" s={9} c="#fff"/>}</div><div className="pi-lbl">{p.l}</div></div>; })}</div></div>
+            <div className="card-bd"><div className="pg">{PERMS_DEF.map(p=>{const on=(ROLE_PERMS[role]||[]).includes(p.k);return <div key={p.k} className={`pi ${on?'on':''}`}><div className="pi-ck">{on&&<Ic n="chk" s={9} c="#fff"/>}</div><div className="pi-lbl">{p.l}</div></div>;})}</div></div>
           </div>
-        )}
-        {tab==='outlets' &&
+        ))}
+        {tab==='outlets' && (
           <div className="card"><div className="card-hd"><span className="card-tt">Company Outlets</span></div>
-            <div className="card-bd">{(co.outlets||[]).map((o,i) =>
+            <div className="card-bd">{(co.outlets||[]).map((o,i)=>(
               <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 0',borderBottom:'1px solid var(--border)'}}>
                 <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
                   <div style={{width:'34px',height:'34px',background:'var(--blue-lt)',borderRadius:'9px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'17px'}}>🏪</div>
@@ -1608,11 +1392,11 @@ const AdminCenter = ({user, co, allUsers, setAllUsers}) => {
                 </div>
                 <span className="bdg b-ok">Active</span>
               </div>
-            )}</div>
+            ))}</div>
           </div>
-        }
+        )}
       </div>
-      {showAdd && <UserModal u={editing} co={co} onSave={saveUser} onClose={()=>{setShowAdd(false);setEditing(null);}}/>}
+      {showAdd&&<UserModal u={editing} co={co} onSave={saveUser} onClose={()=>{setShowAdd(false);setEditing(null);}}/>}
     </div>
   );
 };
@@ -1622,7 +1406,6 @@ const UserModal = ({u, co, onSave, onClose}) => {
   const [f,setF] = useState({name:(u&&u.name)||'',email:(u&&u.email)||'',password:(u&&u.password)||'',role:(u&&u.role)||'kitchen_staff',outlet:(u&&u.outlet)||'',permissions:(u&&u.permissions)||ROLE_PERMS.kitchen_staff});
   const s = (k,v) => setF(p=>({...p,[k]:v}));
   const toggle = key => setF(p=>({...p,permissions:p.permissions.includes(key)?p.permissions.filter(x=>x!==key):[...p.permissions,key]}));
-  const outlets = ['All',...((co&&co.outlets)||[])];
   return (
     <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
       <div className="modal modal-md">
@@ -1637,7 +1420,7 @@ const UserModal = ({u, co, onSave, onClose}) => {
           </div>
           <div className="dvd"/>
           <div style={{fontSize:'11px',fontWeight:'700',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'9px'}}>Permissions</div>
-          <div className="pg">{PERMS_DEF.map(p => <div key={p.k} className={`pi ${f.permissions.includes(p.k)?'on':''}`} onClick={()=>toggle(p.k)}><div className="pi-ck">{f.permissions.includes(p.k)&&<Ic n="chk" s={9} c="#fff"/>}</div><div className="pi-lbl">{p.l}</div></div>)}</div>
+          <div className="pg">{PERMS_DEF.map(p=><div key={p.k} className={`pi ${f.permissions.includes(p.k)?'on':''}`} onClick={()=>toggle(p.k)}><div className="pi-ck">{f.permissions.includes(p.k)&&<Ic n="chk" s={9} c="#fff"/>}</div><div className="pi-lbl">{p.l}</div></div>)}</div>
         </div>
         <div className="m-ft"><button className="btn bs" onClick={onClose}>Cancel</button><button className="btn bp" disabled={!f.name||!f.email} onClick={()=>onSave(f)}>{u?'Save Changes':'Create User'}</button></div>
       </div>
@@ -1645,34 +1428,29 @@ const UserModal = ({u, co, onSave, onClose}) => {
   );
 };
 
-/* ── CREDENTIALS PAGE ───────────────────────────────────────── */
+/* ── CREDENTIALS ────────────────────────────────────────────── */
 const Credentials = ({allUsers, setAllUsers, companies}) => {
   const toast = useToast();
-  const [showPw, setShowPw] = useState({});
-  const [showAdd, setShowAdd] = useState(false);
-  const [editing, setEditing] = useState(null);
-  const [q, setQ] = useState('');
-  const users = allUsers.filter(u => u.role !== 'super_admin' && (u.name.toLowerCase().includes(q.toLowerCase()) || u.email.toLowerCase().includes(q.toLowerCase())));
+  const [showPw, setShowPw]   = useState({});
+  const [showAdd,setShowAdd]  = useState(false);
+  const [editing,setEditing]  = useState(null);
+  const [q,setQ]              = useState('');
+  const users = allUsers.filter(u=>u.role!=='super_admin'&&(u.name.toLowerCase().includes(q.toLowerCase())||u.email.toLowerCase().includes(q.toLowerCase())));
   const rc = ROLE_COLORS;
   const rb = {company_admin:'b-blue',manager:'b-appr',kitchen_staff:'b-grey'};
   const co = id => companies.find(c=>c.id===id);
   const copyToClip = text => { navigator.clipboard&&navigator.clipboard.writeText(text); toast('Copied to clipboard 📋'); };
   const saveUser = d => {
-    if(editing) { setAllUsers(p=>p.map(u=>u.id===editing.id?{...editing,...d}:u)); toast('Credentials updated ✅'); }
-    else { setAllUsers(p=>[...p,{id:'u'+uid(),...d}]); toast('Login created 👤'); }
+    if(editing){setAllUsers(p=>p.map(u=>u.id===editing.id?{...editing,...d}:u));toast('Credentials updated ✅');}
+    else{setAllUsers(p=>[...p,{id:'u'+uid(),...d}]);toast('Login created 👤');}
     setShowAdd(false); setEditing(null);
   };
   return (
     <div>
       <Topbar title="Login Credentials" sub="Super Admin · Manage all platform logins" actions={<button className="btn bp btn-sm" onClick={()=>{setEditing(null);setShowAdd(true);}}><Ic n="plus" s={12}/>Create Login</button>}/>
       <div className="page">
-        <div className="alert-box ab-amber" style={{marginBottom:'16px'}}>
-          <Ic n="lock" s={17}/>
-          <div><strong>Secure Area —</strong> <span style={{color:'var(--t2)'}}>Only Super Admins can view and manage login credentials. Handle these details with care.</span></div>
-        </div>
-        <div className="fbar">
-          <div className="srch"><span className="srch-ic"><Ic n="srch" s={14}/></span><input className="srch-i" placeholder="Search by name or email…" value={q} onChange={e=>setQ(e.target.value)}/></div>
-        </div>
+        <div className="alert-box ab-amber" style={{marginBottom:'16px'}}><Ic n="lock" s={17}/><div><strong>Secure Area —</strong> <span style={{color:'var(--t2)'}}>Only Super Admins can view and manage login credentials.</span></div></div>
+        <div className="fbar"><div className="srch"><span className="srch-ic"><Ic n="srch" s={14}/></span><input className="srch-i" placeholder="Search by name or email…" value={q} onChange={e=>setQ(e.target.value)}/></div></div>
         {users.map(u => {
           const company = co(u.companyId);
           const pwVisible = showPw[u.id];
@@ -1683,37 +1461,34 @@ const Credentials = ({allUsers, setAllUsers, companies}) => {
                 <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'2px'}}>
                   <div className="cred-nm">{u.name}</div>
                   <span className={`bdg ${rb[u.role]||'b-grey'}`} style={{fontSize:'10px'}}>{ROLE_LABELS[u.role]}</span>
-                  {company && <span className="tag" style={{fontSize:'10px'}}>{company.emoji} {company.name}</span>}
+                  {company&&<span className="tag" style={{fontSize:'10px'}}>{company.emoji} {company.name}</span>}
                 </div>
                 <div className="cred-em">{u.email}</div>
                 <div className="cred-pw">
                   <span className="cred-pw-lbl">Password:</span>
-                  <span className="cred-pw-val">{pwVisible ? u.password : '••••••••'}</span>
-                  <div className="ib ib-v" style={{width:'22px',height:'22px'}} onClick={()=>setShowPw(p=>({...p,[u.id]:!p[u.id]}))}>
-                    <Ic n={pwVisible?'eyeoff':'eye'} s={11}/>
-                  </div>
-                  <div className="ib" style={{width:'22px',height:'22px'}} onClick={()=>copyToClip(u.password)} title="Copy password">
-                    <Ic n="copy" s={11}/>
-                  </div>
+                  <span className="cred-pw-val">{pwVisible?u.password:'••••••••'}</span>
+                  <div className="ib ib-v" style={{width:'22px',height:'22px'}} onClick={()=>setShowPw(p=>({...p,[u.id]:!p[u.id]}))}><Ic n={pwVisible?'eyeoff':'eye'} s={11}/></div>
+                  <div className="ib" style={{width:'22px',height:'22px'}} onClick={()=>copyToClip(u.password)} title="Copy password"><Ic n="copy" s={11}/></div>
                 </div>
-                {u.outlet && <div style={{fontSize:'10.5px',color:'var(--t4)',marginTop:'3px'}}>Outlet: {u.outlet}</div>}
+                {u.outlet&&<div style={{fontSize:'10.5px',color:'var(--t4)',marginTop:'3px'}}>Outlet: {u.outlet}</div>}
               </div>
               <div className="ibr">
                 <div className="ib ib-e" onClick={()=>{setEditing(u);setShowAdd(true);}} title="Edit"><Ic n="edit" s={12}/></div>
-                <div className="ib ib-d" onClick={()=>{if(window.confirm('Remove this login?'))setAllUsers(p=>p.filter(x=>x.id!==u.id));toast('Login removed');}} title="Delete"><Ic n="del" s={12}/></div>
+                {/* FIX 5: toast() was outside the if-block — fired even on Cancel. Now wrapped in braces. */}
+                <div className="ib ib-d" onClick={()=>{ if(window.confirm('Remove this login?')){ setAllUsers(p=>p.filter(x=>x.id!==u.id)); toast('Login removed'); } }} title="Delete"><Ic n="del" s={12}/></div>
               </div>
             </div>
           );
         })}
       </div>
-      {showAdd && <CredModal u={editing} companies={companies} onSave={saveUser} onClose={()=>{setShowAdd(false);setEditing(null);}}/>}
+      {showAdd&&<CredModal u={editing} companies={companies} onSave={saveUser} onClose={()=>{setShowAdd(false);setEditing(null);}}/>}
     </div>
   );
 };
 
 /* ── CRED MODAL ─────────────────────────────────────────────── */
 const CredModal = ({u, companies, onSave, onClose}) => {
-  const [f,setF] = useState({name:(u&&u.name)||'',email:(u&&u.email)||'',password:(u&&u.password)||'',role:(u&&u.role)||'kitchen_staff',companyId:(u&&u.companyId)||companies[0]?.id||'',outlet:(u&&u.outlet)||'',permissions:(u&&u.permissions)||ROLE_PERMS.kitchen_staff});
+  const [f,setF] = useState({name:(u&&u.name)||'',email:(u&&u.email)||'',password:(u&&u.password)||'',role:(u&&u.role)||'kitchen_staff',companyId:(u&&u.companyId)||(companies[0]&&companies[0].id)||'',outlet:(u&&u.outlet)||'',permissions:(u&&u.permissions)||ROLE_PERMS.kitchen_staff});
   const s = (k,v) => setF(p=>({...p,[k]:v}));
   const co = companies.find(c=>c.id===f.companyId);
   const [showPw,setShowPw] = useState(false);
@@ -1744,9 +1519,9 @@ const CredModal = ({u, companies, onSave, onClose}) => {
 
 /* ── CLIENT MANAGEMENT ──────────────────────────────────────── */
 const Clients = ({companies, setCompanies, allUsers, setAllUsers, onResetData}) => {
-  var [resetTarget, setResetTarget] = useState(null);
-  var [resetConfirm, setResetConfirm] = useState('');
   const toast = useToast();
+  const [resetTarget, setResetTarget] = useState(null);
+  const [resetConfirm, setResetConfirm] = useState('');
   const [show,setShow] = useState(false);
   const [f,setF] = useState({name:'',emoji:'🍔',outlets:'',plan:'Starter',adminName:'',adminEmail:'',adminPassword:''});
   const sf = (k,v) => setF(p=>({...p,[k]:v}));
@@ -1758,15 +1533,14 @@ const Clients = ({companies, setCompanies, allUsers, setAllUsers, onResetData}) 
     setCompanies(p=>[...p,nc]);
     if(f.adminEmail) setAllUsers(p=>[...p,{id:'u'+uid(),name:f.adminName||f.name+' Admin',email:f.adminEmail,password:f.adminPassword||'admin123',role:'company_admin',companyId:nc.id,outlet:null,permissions:ROLE_PERMS.company_admin}]);
     toast(`${f.emoji} ${f.name} onboarded! 🎉`);
-    setShow(false);
-    setF({name:'',emoji:'🍔',outlets:'',plan:'Starter',adminName:'',adminEmail:'',adminPassword:''});
+    setShow(false); setF({name:'',emoji:'🍔',outlets:'',plan:'Starter',adminName:'',adminEmail:'',adminPassword:''});
   };
   return (
     <div>
       <Topbar title="Client Management" sub="Super Admin · All Companies on Platform" actions={<button className="btn bp btn-sm" onClick={()=>setShow(true)}><Ic n="plus" s={12}/>Add Company</button>}/>
       <div className="page">
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'12px',marginBottom:'20px'}}>
-          {[{l:'Total Companies',v:companies.length,c:'var(--blue)'},{l:'Total Users',v:allUsers.filter(u=>u.role!=='super_admin').length,c:'var(--green)'},{l:'Platform Revenue',v:'₹24,500/mo',c:'var(--violet)'}].map(s =>
+          {[{l:'Total Companies',v:companies.length,c:'var(--blue)'},{l:'Total Users',v:allUsers.filter(u=>u.role!=='super_admin').length,c:'var(--green)'},{l:'Platform Revenue',v:'₹24,500/mo',c:'var(--violet)'}].map(s=>
             <div key={s.l} style={{background:'var(--white)',border:'1px solid var(--border)',borderRadius:'var(--r3)',padding:'16px 18px',boxShadow:'var(--sh1)'}}>
               <div style={{fontSize:'10.5px',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'5px',fontWeight:'700'}}>{s.l}</div>
               <div style={{fontFamily:'var(--fd)',fontSize:'24px',fontWeight:'800',color:s.c,letterSpacing:'-.3px'}}>{s.v}</div>
@@ -1774,19 +1548,23 @@ const Clients = ({companies, setCompanies, allUsers, setAllUsers, onResetData}) 
           )}
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'8px',marginBottom:'18px'}}>
-          {Object.entries(PLANS).map(function(entry){var plan=entry[0];var cfg=entry[1];return (
+          {Object.entries(PLANS).map(([plan,cfg])=>(
             <div key={plan} style={{background:'var(--white)',border:'1.5px solid '+cfg.color+'33',borderRadius:'var(--r3)',padding:'12px 14px',boxShadow:'var(--sh1)'}}>
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'5px'}}>
                 <span style={{fontWeight:'700',fontSize:'12px',color:cfg.color}}>{plan}</span>
                 <span style={{fontFamily:'var(--fm)',fontSize:'10.5px',color:'var(--t3)'}}>₹{cfg.price}/mo</span>
               </div>
-              <div style={{fontSize:'11px',color:'var(--t2)'}}>🏪 {cfg.outlets===999?'Unlimited':cfg.outlets} outlets &nbsp;·&nbsp; 👤 {cfg.users===999?'Unlimited':cfg.users} users</div>
+              <div style={{fontSize:'11px',color:'var(--t2)'}}>🏪 {cfg.outlets===999?'Unlimited':cfg.outlets} outlets · 👤 {cfg.users===999?'Unlimited':cfg.users} users</div>
             </div>
-          );})}
+          ))}
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:'14px'}}>
-          {companies.map((co,i) => {
+          {companies.map((co,i)=>{
             const coU = allUsers.filter(u=>u.companyId===co.id);
+            const planCfg = PLANS[co.plan]||PLANS.Starter;
+            const maxO = planCfg.outlets;
+            const usedO = co.outlets.length;
+            const pct = maxO===999?60:Math.min(100,Math.round((usedO/maxO)*100));
             return (
               <div key={co.id} className="clc">
                 <div className="clc-top" style={{background:`linear-gradient(90deg,${topColors[i%5]},${topColors[(i+2)%5]})`}}/>
@@ -1799,32 +1577,23 @@ const Clients = ({companies, setCompanies, allUsers, setAllUsers, onResetData}) 
                 </div>
                 <div className="clc-nm">{co.name}</div>
                 <div className="clc-mt">{co.outlets.length} outlet{co.outlets.length!==1?'s':''} · Since {co.createdAt}</div>
-                {(() => {
-                  var planCfg = PLANS[co.plan] || PLANS.Starter;
-                  var maxO = planCfg.outlets;
-                  var usedO = co.outlets.length;
-                  var pct = maxO===999 ? 60 : Math.min(100, Math.round((usedO/maxO)*100));
-                  return (
-                    <div style={{marginBottom:'10px'}}>
-                      <div style={{display:'flex',justifyContent:'space-between',fontSize:'10.5px',color:'var(--t4)',marginBottom:'4px'}}>
-                        <span>Outlets used</span>
-                        <span style={{fontFamily:'var(--fm)',fontWeight:'700',color:pct>=100?'var(--red)':planColors[co.plan]}}>{usedO}{maxO!==999?'/'+maxO:''} {maxO===999?'(unlimited)':''}</span>
-                      </div>
-                      <div className="pb" style={{height:'5px'}}>
-                        <div className="pf" style={{width:pct+'%',background:pct>=100?'var(--red)':planColors[co.plan]}}/>
-                      </div>
-                    </div>
-                  );
-                })()}
+                <div style={{marginBottom:'10px',marginTop:'8px'}}>
+                  <div style={{display:'flex',justifyContent:'space-between',fontSize:'10.5px',color:'var(--t4)',marginBottom:'4px'}}>
+                    <span>Outlets used</span>
+                    <span style={{fontFamily:'var(--fm)',fontWeight:'700',color:pct>=100?'var(--red)':planColors[co.plan]}}>{usedO}{maxO!==999?'/'+maxO:''} {maxO===999?'(unlimited)':''}</span>
+                  </div>
+                  <div className="pb" style={{height:'5px'}}><div className="pf" style={{width:pct+'%',background:pct>=100?'var(--red)':planColors[co.plan]}}/></div>
+                </div>
                 <div className="clc-sts">
                   <div><div className="clc-sv">{coU.length}</div><div className="clc-sl">Users</div></div>
                   <div><div className="clc-sv">{co.totalItems}</div><div className="clc-sl">SKUs</div></div>
                   <div><div className="clc-sv" style={{color:'var(--green)',fontSize:'13px'}}>{INR(co.monthlySpend)}</div><div className="clc-sl">Monthly</div></div>
                 </div>
                 <div style={{display:'flex',gap:'7px',marginTop:'12px'}}>
-                  <button className="btn bs btn-sm" style={{flex:1,fontSize:'11px'}} onClick={function(){setF({name:co.name,emoji:co.emoji,outlets:co.outlets.slice(),plan:co.plan,adminName:'',adminEmail:'',adminPassword:''});setShow(true);}}>✏️ Edit</button>
-                  <button className="btn bs btn-sm" style={{flex:1,fontSize:'11.5px'}} onClick={function(){setResetTarget(co);setResetConfirm('');}}>🔄 Reset Data</button>
-                  <button className="btn bd btn-sm" style={{flex:1,fontSize:'11.5px'}} onClick={function(){if(window.confirm('Permanently remove '+co.name+'?')){setCompanies(function(p){return p.filter(function(c){return c.id!==co.id;});});setAllUsers(function(p){return p.filter(function(u){return u.companyId!==co.id;});});toast('Company removed');}}}>Remove</button>
+                  {/* FIX 6: outlets was co.outlets.slice() (array) — should be co.outlets.join(', ') (string) */}
+                  <button className="btn bs btn-sm" style={{flex:1,fontSize:'11px'}} onClick={()=>{ setF({name:co.name,emoji:co.emoji,outlets:co.outlets.join(', '),plan:co.plan,adminName:'',adminEmail:'',adminPassword:''});setShow(true); }}>✏️ Edit</button>
+                  <button className="btn bs btn-sm" style={{flex:1,fontSize:'11.5px'}} onClick={()=>{setResetTarget(co);setResetConfirm('');}}>🔄 Reset Data</button>
+                  <button className="btn bd btn-sm" style={{flex:1,fontSize:'11.5px'}} onClick={()=>{ if(window.confirm('Permanently remove '+co.name+'?')){ setCompanies(p=>p.filter(c=>c.id!==co.id)); setAllUsers(p=>p.filter(u=>u.companyId!==co.id)); toast('Company removed'); } }}>Remove</button>
                 </div>
               </div>
             );
@@ -1832,23 +1601,17 @@ const Clients = ({companies, setCompanies, allUsers, setAllUsers, onResetData}) 
         </div>
       </div>
       {resetTarget && (
-        <div className="ov" onClick={function(e){if(e.target===e.currentTarget){setResetTarget(null);}}}>
+        <div className="ov" onClick={e=>e.target===e.currentTarget&&setResetTarget(null)}>
           <div className="modal">
-            <div className="m-hd">
-              <div><div className="m-tt" style={{color:'var(--amber)'}}>⚠️ Reset Company Data</div><div className="m-sub">{resetTarget.emoji} {resetTarget.name}</div></div>
-              <div className="cls" onClick={function(){setResetTarget(null);}}><Ic n="x" s={13}/></div>
-            </div>
+            <div className="m-hd"><div><div className="m-tt" style={{color:'var(--amber)'}}>⚠️ Reset Company Data</div><div className="m-sub">{resetTarget.emoji} {resetTarget.name}</div></div><div className="cls" onClick={()=>setResetTarget(null)}><Ic n="x" s={13}/></div></div>
             <div className="m-bd">
-              <div className="alert-box ab-red" style={{marginBottom:'12px'}}>
-                <Ic n="warn" s={16}/>
-                <div><strong style={{color:'var(--red)'}}>Cannot be undone.</strong><div style={{fontSize:'12px',color:'var(--red)',marginTop:'4px'}}>Deletes all inventory and purchase orders for this company.</div></div>
-              </div>
+              <div className="alert-box ab-red" style={{marginBottom:'12px'}}><Ic n="warn" s={16}/><div><strong style={{color:'var(--red)'}}>Cannot be undone.</strong><div style={{fontSize:'12px',color:'var(--red)',marginTop:'4px'}}>Deletes all inventory and purchase orders for this company.</div></div></div>
               <div style={{padding:'10px 14px',background:'var(--green-lt)',border:'1.5px solid var(--green-bd)',borderRadius:'var(--r2)',fontSize:'12.5px',marginBottom:'12px'}}>Kept: Company profile, plan, outlets, and user logins.</div>
-              <div className="fg"><label className="fl">Type <strong>{resetTarget.name}</strong> to confirm:</label><input className="fi" value={resetConfirm} onChange={function(e){setResetConfirm(e.target.value);}}/></div>
+              <div className="fg"><label className="fl">Type <strong>{resetTarget.name}</strong> to confirm:</label><input className="fi" value={resetConfirm} onChange={e=>setResetConfirm(e.target.value)}/></div>
             </div>
             <div className="m-ft">
-              <button className="btn bs" onClick={function(){setResetTarget(null);}}>Cancel</button>
-              <button className="btn" style={{background:resetConfirm.trim().toLowerCase()===resetTarget.name.toLowerCase()?'var(--amber)':'var(--bg)',color:resetConfirm.trim().toLowerCase()===resetTarget.name.toLowerCase()?'#fff':'var(--t4)',border:'1.5px solid '+(resetConfirm.trim().toLowerCase()===resetTarget.name.toLowerCase()?'var(--amber)':'var(--border)'),padding:'9px 16px',fontSize:'13px',fontWeight:'600',borderRadius:'var(--r2)',cursor:'pointer',transition:'all .2s'}} onClick={function(){if(resetConfirm.trim().toLowerCase()===resetTarget.name.toLowerCase()){onResetData(resetTarget.id);setResetTarget(null);setResetConfirm('');}}}>Reset All Data</button>
+              <button className="btn bs" onClick={()=>setResetTarget(null)}>Cancel</button>
+              <button className="btn" style={{background:resetConfirm.trim().toLowerCase()===resetTarget.name.toLowerCase()?'var(--amber)':'var(--bg)',color:resetConfirm.trim().toLowerCase()===resetTarget.name.toLowerCase()?'#fff':'var(--t4)',border:'1.5px solid '+(resetConfirm.trim().toLowerCase()===resetTarget.name.toLowerCase()?'var(--amber)':'var(--border)'),padding:'9px 16px',fontSize:'13px',fontWeight:'600',borderRadius:'var(--r2)',cursor:'pointer',transition:'all .2s'}} onClick={()=>{ if(resetConfirm.trim().toLowerCase()===resetTarget.name.toLowerCase()){ onResetData(resetTarget.id); setResetTarget(null); setResetConfirm(''); } }}>Reset All Data</button>
             </div>
           </div>
         </div>
@@ -1881,146 +1644,93 @@ const Clients = ({companies, setCompanies, allUsers, setAllUsers, onResetData}) 
   );
 };
 
-
-/* ── KITCHEN TUTORIAL ────────────────────────────────────────── */
-const KitchenTutorial = function({onClose}) {
-  var steps = [
-    {ic:'👋', tt:'Welcome to InventoryPro!', bd:"You are set up as Kitchen Staff. Your job is simple — count stock quantities at the end of each shift so management always has accurate numbers."},
-    {ic:'📋', tt:'Your Main Page: Update Stock', bd:"Tap Update Stock in the menu. You will see all ingredients listed. Use the minus and plus buttons to set the current quantity for each item."},
-    {ic:'🔢', tt:'How to Count Stock', bd:"Walk through your kitchen and count each item. Tap the number and type the exact quantity, or use + and - to adjust. Work shelf by shelf, fridge by fridge."},
-    {ic:'🔴', tt:'Red = Critical, Yellow = Low', bd:"Items in red are critically low — tell your manager immediately. Yellow means it is getting low. Green is healthy. You don't need to place orders, just count."},
-    {ic:'💾', tt:'Always Save Before Leaving', bd:"When done counting, tap the big blue Save button at the bottom. If you close the app without saving, your counts will be lost."},
-    {ic:'🌙', tt:'End-of-Day Reminder', bd:"At 9 PM you will get a reminder for a closing count. It helps your manager know what is available for next morning. Takes less than 5 minutes."},
-  ];
-  var [step, setStep] = useState(0);
-  var cur = steps[step];
-  var isLast = step === steps.length - 1;
-  return (
-    <div className="ov" style={{zIndex:1100}}>
-      <div className="modal" style={{maxWidth:'400px'}}>
-        <div style={{display:'flex',gap:'5px',justifyContent:'center',padding:'16px 20px 0'}}>
-          {steps.map(function(_,i){
-            return <div key={i} style={{width:i===step?18:6,height:6,borderRadius:'99px',background:i===step?'var(--blue)':i<step?'var(--blue-bd)':'var(--border-2)',transition:'all .25s',cursor:'pointer'}} onClick={function(){setStep(i);}}/>;
-          })}
-        </div>
-        <div className="m-hd" style={{border:'none',flexDirection:'column',alignItems:'center',textAlign:'center',paddingBottom:'8px'}}>
-          <div style={{fontSize:'44px',marginBottom:'8px',lineHeight:1}}>{cur.ic}</div>
-          <div className="m-tt">{cur.tt}</div>
-          <div style={{fontSize:'11px',color:'var(--t4)',marginTop:'3px'}}>Step {step+1} of {steps.length}</div>
-        </div>
-        <div className="m-bd" style={{paddingTop:0}}>
-          <div style={{fontSize:'13.5px',color:'var(--t2)',lineHeight:'1.7',background:'var(--bg)',padding:'14px',borderRadius:'var(--r2)',border:'1.5px solid var(--border)',textAlign:'center'}}>{cur.bd}</div>
-          {isLast && (
-            <div style={{marginTop:'12px',padding:'12px',background:'var(--blue-lt)',border:'1.5px solid var(--blue-bd)',borderRadius:'var(--r2)'}}>
-              <div style={{fontWeight:'700',fontSize:'12px',color:'var(--blue)',marginBottom:'7px'}}>📌 Quick Reference</div>
-              {[['🔄','Update Stock — your main job'],['🔴','Red badge — tell manager now'],['💾','Save button — always tap before leaving'],['🌙','9 PM — do your closing count']].map(function(item){
-                return <div key={item[0]} style={{fontSize:'12px',color:'var(--t2)',marginBottom:'4px'}}>{item[0]} {item[1]}</div>;
-              })}
-            </div>
-          )}
-        </div>
-        <div className="m-ft" style={{justifyContent:'space-between'}}>
-          <button className="btn bg btn-sm" style={{color:'var(--t4)'}} onClick={onClose}>Skip</button>
-          <div style={{display:'flex',gap:'7px'}}>
-            {step > 0 && <button className="btn bs btn-sm" onClick={function(){setStep(function(s){return s-1;});}}>← Back</button>}
-            {!isLast
-              ? <button className="btn bp btn-sm" onClick={function(){setStep(function(s){return s+1;});}}>Next →</button>
-              : <button className="btn bp btn-sm" onClick={onClose}>Let's go! 🚀</button>
-            }
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-/* ── APP ROOT ────────────────────────────────────────────────── */
+/* ──────────────────────────────────────────────────────────────
+   APP ROOT
+   FIX 2: Added const toast = useToast() so onResetData callback
+   can call toast(). Previously toast was undefined → ReferenceError.
+──────────────────────────────────────────────────────────────── */
 const App = () => {
-  const [user, setUser]       = useState(() => LS.get('user', null));
-  const [companies, setCompanies] = useState(() => LS.get('cos', I_COMPANIES));
-  const [allUsers, setAllUsers]   = useState(() => LS.get('usrs', I_USERS));
-  const [inventory, setInventory] = useState(() => LS.get('inv', I_INV));
-  const [pos, setPos]         = useState(() => LS.get('pos', I_POS));
-  const [page, setPage]       = useState('dashboard');
-  const [co, setCo]           = useState(null);
-  const [eodAlert, setEodAlert] = useState(false);
+  const [user,       setUser]       = useState(()=>LS.get('user',null));
+  const [companies,  setCompanies]  = useState(()=>LS.get('cos',I_COMPANIES));
+  const [allUsers,   setAllUsers]   = useState(()=>LS.get('usrs',I_USERS));
+  const [inventory,  setInventory]  = useState(()=>LS.get('inv',I_INV));
+  const [pos,        setPos]        = useState(()=>LS.get('pos',I_POS));
+  const [page,       setPage]       = useState('dashboard');
+  const [co,         setCo]         = useState(null);
+  const [eodAlert,   setEodAlert]   = useState(false);
+  const [showTut,    setShowTut]    = useState(false);
+  const [mobOpen,    setMobOpen]    = useState(false);
 
-  // Persist all state
-  useEffect(() => LS.set('cos', companies), [companies]);
-  useEffect(() => LS.set('usrs', allUsers), [allUsers]);
-  useEffect(() => LS.set('inv', inventory), [inventory]);
-  useEffect(() => LS.set('pos', pos), [pos]);
-  useEffect(() => { if(user) LS.set('user', user); }, [user]);
+  /* FIX 2: useToast() called here so toast() is available everywhere in App */
+  const toast = useToast();
 
-  // Set active company when user changes
-  useEffect(() => {
+  useEffect(()=>LS.set('cos',companies),[companies]);
+  useEffect(()=>LS.set('usrs',allUsers),[allUsers]);
+  useEffect(()=>LS.set('inv',inventory),[inventory]);
+  useEffect(()=>LS.set('pos',pos),[pos]);
+  useEffect(()=>{if(user)LS.set('user',user);},[user]);
+
+  useEffect(()=>{
     if(!user) return;
     const c = user.role==='super_admin' ? companies[0] : companies.find(x=>x.id===user.companyId);
-    setCo(c || null);
-  }, [user]);
+    setCo(c||null);
+  },[user]);
 
-  // EOD alert — fires at 9PM (21:00)
-  useEffect(() => {
-    const check = () => {
-      const h = new Date().getHours();
-      if(h >= 21 && h < 22) setEodAlert(true);
-    };
+  useEffect(()=>{
+    const check = ()=>{ const h=new Date().getHours(); if(h>=21&&h<22) setEodAlert(true); };
     check();
-    const timer = setInterval(check, 60000);
-    return () => clearInterval(timer);
-  }, []);
+    const t = setInterval(check,60000);
+    return ()=>clearInterval(t);
+  },[]);
 
-  // Integrated: update company totalItems count whenever inventory changes
-  useEffect(() => {
-    setCompanies(prev => prev.map(c => ({
-      ...c,
-      totalItems: inventory.filter(i=>i.companyId===c.id).length,
-    })));
-  }, [inventory]);
+  useEffect(()=>{
+    setCompanies(prev=>prev.map(c=>({...c,totalItems:inventory.filter(i=>i.companyId===c.id).length})));
+  },[inventory]);
 
-  const [showTut, setShowTut] = useState(false);
-  const [mobOpen, setMobOpen] = useState(false);
-  const login = function(u) {
+  const login = u => {
     setUser(u);
-    var c = u.role==='super_admin' ? companies[0] : companies.find(function(x){return x.id===u.companyId;});
-    setCo(c || null);
-    if(u.role === 'kitchen_staff') {
-      var seen = LS.get('tut_'+u.id, false);
-      if(!seen) { setShowTut(true); LS.set('tut_'+u.id, true); }
+    const c = u.role==='super_admin' ? companies[0] : companies.find(x=>x.id===u.companyId);
+    setCo(c||null);
+    if(u.role==='kitchen_staff'){
+      const seen = LS.get('tut_'+u.id,false);
+      if(!seen){ setShowTut(true); LS.set('tut_'+u.id,true); }
       setPage('stock');
-    } else {
-      setPage('dashboard');
-    }
+    } else { setPage('dashboard'); }
   };
-  const logout = () => { LS.set('user',null); setUser(null); setCo(null); };
+  const logout = ()=>{ LS.set('user',null); setUser(null); setCo(null); };
 
   if(!user) return <Login onLogin={login} users={allUsers}/>;
 
-  const low = co ? inventory.filter(i=>i.companyId===co.id && stockSt(i)!=='ok').length : 0;
+  const low = co ? inventory.filter(i=>i.companyId===co.id&&stockSt(i)!=='ok').length : 0;
 
   const pageMap = {
-    dashboard:   co && <Dashboard   user={user} co={co} inventory={inventory} pos={pos} setInventory={setInventory} eodAlert={eodAlert} setEodAlert={setEodAlert}/>,
-    inventory:   co && <Inventory   user={user} co={co} inventory={inventory} setInventory={setInventory}/>,
-    orders:      co && <Orders      user={user} co={co} inventory={inventory} setInventory={setInventory} pos={pos} setPos={setPos} setCompanies={setCompanies}/>,
-    expenditure: co && <Expenditure co={co} pos={pos} inventory={inventory}/>,
-    stock:       co && <StockUpdate user={user} co={co} inventory={inventory} setInventory={setInventory}/>,
-    admin:       co && <AdminCenter user={user} co={co} allUsers={allUsers} setAllUsers={setAllUsers}/>,
-    credentials: <Credentials allUsers={allUsers} setAllUsers={setAllUsers} companies={companies}/>,
-    clients:     <Clients companies={companies} setCompanies={setCompanies} allUsers={allUsers} setAllUsers={setAllUsers} onResetData={function(cid){
-      setInventory(function(p){return p.filter(function(i){return i.companyId!==cid;});});
-      setPos(function(p){return p.filter(function(po){return po.companyId!==cid;});});
-      setCompanies(function(p){return p.map(function(c){return c.id===cid?Object.assign({},c,{totalItems:0,monthlySpend:0}):c;});});
-      toast('Company data has been reset','warning');
-    }}/>,
+    dashboard:    co && <Dashboard   user={user} co={co} inventory={inventory} pos={pos} setInventory={setInventory} eodAlert={eodAlert} setEodAlert={setEodAlert}/>,
+    inventory:    co && <Inventory   user={user} co={co} inventory={inventory} setInventory={setInventory}/>,
+    orders:       co && <Orders      user={user} co={co} inventory={inventory} setInventory={setInventory} pos={pos} setPos={setPos} setCompanies={setCompanies}/>,
+    expenditure:  co && <Expenditure co={co} pos={pos} inventory={inventory}/>,
+    stock:        co && <StockUpdate user={user} co={co} inventory={inventory} setInventory={setInventory}/>,
+    admin:        co && <AdminCenter user={user} co={co} allUsers={allUsers} setAllUsers={setAllUsers}/>,
+    credentials:       <Credentials allUsers={allUsers} setAllUsers={setAllUsers} companies={companies}/>,
+    /* FIX 2: toast() now resolves correctly — useToast() called at top of App */
+    clients:           <Clients
+      companies={companies} setCompanies={setCompanies}
+      allUsers={allUsers} setAllUsers={setAllUsers}
+      onResetData={cid=>{
+        setInventory(p=>p.filter(i=>i.companyId!==cid));
+        setPos(p=>p.filter(po=>po.companyId!==cid));
+        setCompanies(p=>p.map(c=>c.id===cid?{...c,totalItems:0,monthlySpend:0}:c));
+        toast('Company data has been reset','warning');  // ← now works
+      }}
+    />,
   };
 
-  var mobNavItems = [
-    {id:'dashboard', ic:'🏠', lbl:'Home'},
-    {id:'inventory', ic:'📦', lbl:'Stock'},
-    {id:'orders',    ic:'📋', lbl:'Orders'},
-    {id:'stock',     ic:'🔄', lbl:'Update'},
-    {id:'more',      ic:'☰',  lbl:'More', isMenu:true},
-  ].filter(function(it) {
+  const mobNavItems = [
+    {id:'dashboard',ic:'🏠',lbl:'Home'},
+    {id:'inventory', ic:'📦',lbl:'Stock'},
+    {id:'orders',    ic:'📋',lbl:'Orders'},
+    {id:'stock',     ic:'🔄',lbl:'Update'},
+    {id:'more',      ic:'☰', lbl:'More',isMenu:true},
+  ].filter(it=>{
     if(it.isMenu) return true;
     if(it.id==='stock') return user.permissions.includes('inv.q')||user.role==='super_admin';
     return true;
@@ -2029,13 +1739,14 @@ const App = () => {
   return (
     <div className="app">
       <Sidebar user={user} co={co} page={page} setPage={setPage} onLogout={logout} companies={companies} onCoChange={setCo}/>
-      <div className={'mob-ov'+(mobOpen?' open':'')} onClick={function(){setMobOpen(false);}}/>
+      <div className={'mob-ov'+(mobOpen?' open':'')} onClick={()=>setMobOpen(false)}/>
       <div className={'mob-sb'+(mobOpen?' open':'')}>
-        <Sidebar user={user} co={co} page={page} setPage={function(p){setPage(p);setMobOpen(false);}} onLogout={logout} companies={companies} onCoChange={function(c){setCo(c);setMobOpen(false);}}/>
+        <Sidebar user={user} co={co} page={page} setPage={p=>{setPage(p);setMobOpen(false);}} onLogout={logout} companies={companies} onCoChange={c=>{setCo(c);setMobOpen(false);}}/>
       </div>
+      {/* FIX 1: .main CSS class now exists — layout renders correctly */}
       <div className="main">
         <div className="mob-topbar">
-          <div className="mob-hbtn" onClick={function(){setMobOpen(function(o){return !o;});}}>
+          <div className="mob-hbtn" onClick={()=>setMobOpen(o=>!o)}>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </div>
           <div className="mob-logo">Inventory<span>Pro</span></div>
@@ -2043,18 +1754,16 @@ const App = () => {
         {pageMap[page] || pageMap['dashboard']}
         <div className="mob-nav">
           <div className="mob-nav-inner">
-            {mobNavItems.map(function(it) {
-              return (
-                <div key={it.id} className={'mob-nav-item'+(page===it.id&&!it.isMenu?' on':'')} onClick={function(){if(it.isMenu){setMobOpen(function(o){return !o;});}else{setPage(it.id);}}}>
-                  <span className="mob-nav-ic">{it.ic}</span>
-                  <span className="mob-nav-lbl">{it.lbl}</span>
-                </div>
-              );
-            })}
+            {mobNavItems.map(it=>(
+              <div key={it.id} className={'mob-nav-item'+(page===it.id&&!it.isMenu?' on':'')} onClick={()=>it.isMenu?setMobOpen(o=>!o):setPage(it.id)}>
+                <span className="mob-nav-ic">{it.ic}</span>
+                <span className="mob-nav-lbl">{it.lbl}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
-      {showTut && user && user.role==='kitchen_staff' && <KitchenTutorial onClose={function(){setShowTut(false);}}/>}
+      {showTut && user && user.role==='kitchen_staff' && <KitchenTutorial onClose={()=>setShowTut(false)}/>}
     </div>
   );
 };
