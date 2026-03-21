@@ -493,6 +493,15 @@ const ROLE_PERMS = {
 const ROLE_LABELS = {super_admin:'Super Admin',company_admin:'Admin',manager:'Manager',kitchen_staff:'Kitchen Staff'};
 const ROLE_COLORS = {super_admin:'#7C3AED',company_admin:'#2563EB',manager:'#059669',kitchen_staff:'#D97706'};
 const CAT_EMOJI = {Proteins:'🥩',Vegetables:'🥬',Dairy:'🧀',Beverages:'🥤',Packaging:'📦',Sauces:'🫙',Bakery:'🍞',Pantry:'🥫',Sides:'🍟'};
+
+/* ── PLAN CONFIGURATION ─────────────────────────────────────── */
+const PLANS = {
+  Starter:      { outlets: 2,  users: 5,   label: 'Starter',      color: '#2563EB', price: '₹2,999/mo' },
+  Professional: { outlets: 10, users: 25,  label: 'Professional', color: '#D97706', price: '₹7,999/mo' },
+  Enterprise:   { outlets: 999,users: 999, label: 'Enterprise',   color: '#059669', price: '₹19,999/mo' },
+};
+const planLimit = (co, field) => PLANS[co?.plan]?.[field] ?? 2;
+
 const INR = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(n);
 const uid = () => Math.random().toString(36).slice(2,9);
 const TODAY = () => new Date().toISOString().split('T')[0];
@@ -605,6 +614,7 @@ const stockPct = i => Math.min(100, Math.round((i.currentQty / (i.reorderLevel *
 const Login = ({onLogin, users}) => {
   const [email,setEmail] = useState('');
   const [pw,setPw] = useState('');
+  const [showPw,setShowPw] = useState(false);
   const [err,setErr] = useState('');
   const [loading,setLoading] = useState(false);
   const toast = useToast();
@@ -620,10 +630,9 @@ const Login = ({onLogin, users}) => {
     }, 600);
   };
 
-
-
   return (
     <div className="login-wrap">
+      {/* Left panel — branding (hidden on mobile) */}
       <div className="login-l">
         <div className="login-l-bg"/><div className="login-l-grid"/>
         <div className="login-brand" style={{position:'relative'}}>
@@ -633,29 +642,47 @@ const Login = ({onLogin, users}) => {
         <div style={{position:'relative'}}>
           <div className="login-hero-tag">✦ QSR Intelligence Platform</div>
           <div className="login-h1-hero">Your kitchen,<br/><em>perfectly managed.</em></div>
-          <div className="login-sub-hero">Real-time inventory, smart purchasing, and team access control — built for QSR brands that scale fast.</div>
+          <div className="login-sub-hero">Real-time inventory, smart purchasing, and role-based team access — built for QSR brands that scale fast.</div>
         </div>
         <div className="login-feat" style={{position:'relative'}}>
-          {[['📊','Live inventory value & stock alerts'],['🛒','End-to-end purchase order workflow'],['👥','Role-based access for your entire team'],['🔔','End-of-day stock update reminders']].map(([ic,t]) =>
+          {[['📊','Live inventory value & low stock alerts'],['🛒','End-to-end purchase order workflow'],['👥','Role-based access for your entire team'],['🔔','End-of-day stock update reminders']].map(([ic,t]) =>
             <div key={t} className="lf-item"><span className="lf-ic">{ic}</span><span className="lf-txt">{t}</span></div>
           )}
         </div>
       </div>
+      {/* Right panel — form */}
       <div className="login-r">
         <div className="login-form">
-          <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'24px',paddingBottom:'20px',borderBottom:'1px solid var(--border)'}}>
-            <div style={{width:'34px',height:'34px',background:'linear-gradient(135deg,#3B82F6,#818CF8)',borderRadius:'9px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'16px',boxShadow:'0 2px 10px rgba(59,130,246,0.3)'}}>📦</div>
-            <div style={{fontFamily:'var(--fd)',fontSize:'18px',fontWeight:'800',color:'var(--t1)',letterSpacing:'-.3px'}}>Inventory<span style={{color:'#818CF8'}}>Pro</span></div>
+          {/* Logo — visible on mobile only via CSS */}
+          <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'28px',paddingBottom:'20px',borderBottom:'1px solid var(--border)'}}>
+            <div style={{width:'36px',height:'36px',background:'linear-gradient(135deg,#3B82F6,#818CF8)',borderRadius:'10px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'17px',boxShadow:'0 3px 12px rgba(59,130,246,0.3)',flexShrink:0}}>📦</div>
+            <div>
+              <div style={{fontFamily:'var(--fd)',fontSize:'18px',fontWeight:'800',color:'var(--t1)',letterSpacing:'-.3px',lineHeight:1}}>Inventory<span style={{color:'#818CF8'}}>Pro</span></div>
+              <div style={{fontSize:'10.5px',color:'var(--t4)',letterSpacing:'.5px',textTransform:'uppercase',marginTop:'2px'}}>QSR Intelligence Platform</div>
+            </div>
           </div>
-          <div className="login-h1">Sign in to your account</div>
-          <div className="login-sub-t">Enter your credentials to access the platform</div>
-          <div className="fg"><label className="fl">Email Address</label><input className="fi" type="email" placeholder="you@company.com" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go()}/></div>
-          <div className="fg"><label className="fl">Password</label><input className="fi" type="password" placeholder="••••••••" value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go()}/></div>
+          <div className="login-h1">Welcome back</div>
+          <div className="login-sub-t" style={{marginBottom:'22px'}}>Sign in to continue to your account</div>
+          <div className="fg">
+            <label className="fl">Email Address</label>
+            <input className="fi" type="email" placeholder="you@company.com" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go()} autoComplete="email" autoCapitalize="none"/>
+          </div>
+          <div className="fg">
+            <label className="fl">Password</label>
+            <div style={{position:'relative'}}>
+              <input className="fi" type={showPw?'text':'password'} placeholder="Enter your password" value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go()} style={{paddingRight:'40px'}} autoComplete="current-password"/>
+              <div style={{position:'absolute',right:'11px',top:'50%',transform:'translateY(-50%)',cursor:'pointer',color:'var(--t4)',display:'flex'}} onClick={()=>setShowPw(p=>!p)}>
+                <Ic n={showPw?'eyeoff':'eye'} s={15}/>
+              </div>
+            </div>
+          </div>
           {err && <div className="alert-box ab-red" style={{marginBottom:'14px'}}><Ic n="warn" s={16}/><span style={{fontSize:'13px'}}>{err}</span></div>}
-          <button className="btn bp btn-lg btn-w" onClick={go} disabled={loading}>
-            {loading ? <><span className="spin" style={{borderColor:'rgba(255,255,255,0.3)',borderTopColor:'#fff'}}/> Signing in…</> : 'Sign In →'}
+          <button className="btn bp btn-lg btn-w" onClick={go} disabled={loading} style={{marginTop:'4px'}}>
+            {loading ? <><span className="spin" style={{borderColor:'rgba(255,255,255,0.3)',borderTopColor:'#fff'}}/>&nbsp;Signing in…</> : 'Sign In →'}
           </button>
-
+          <div style={{marginTop:'20px',textAlign:'center',fontSize:'12px',color:'var(--t4)'}}>
+            Contact your administrator if you need access.
+          </div>
         </div>
       </div>
     </div>
@@ -1472,19 +1499,58 @@ const AdminCenter = ({user, co, allUsers, setAllUsers}) => {
             <div className="card-bd"><div className="pg">{PERMS_DEF.map(p => { const on=(ROLE_PERMS[role]||[]).includes(p.k); return <div key={p.k} className={`pi ${on?'on':''}`}><div className="pi-ck">{on&&<Ic n="chk" s={9} c="#fff"/>}</div><div className="pi-lbl">{p.l}</div></div>; })}</div></div>
           </div>
         )}
-        {tab==='outlets' &&
-          <div className="card"><div className="card-hd"><span className="card-tt">Company Outlets</span></div>
-            <div className="card-bd">{(co.outlets||[]).map((o,i) =>
-              <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 0',borderBottom:'1px solid var(--border)'}}>
-                <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
-                  <div style={{width:'34px',height:'34px',background:'var(--blue-lt)',borderRadius:'9px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'17px'}}>🏪</div>
-                  <div><div style={{fontWeight:700,fontSize:'13px'}}>{o}</div><div style={{fontSize:'11px',color:'var(--t3)'}}>Active</div></div>
+        {tab==='outlets' && (() => {
+          const planCfg = PLANS[co.plan] || PLANS.Starter;
+          const maxO = planCfg.outlets;
+          const usedO = (co.outlets||[]).length;
+          const pct = maxO===999?0:Math.min(100,Math.round((usedO/maxO)*100));
+          const [newOutlet, setNewOutlet] = React.useState('');
+          const canAdd = usedO < maxO;
+          const addO = () => {
+            if(!newOutlet.trim()) return;
+            if(!canAdd) { return; }
+            setAllUsers(pu => pu); // trigger re-render trick
+            // Update via setAllUsers isn't right here — we need setCompanies
+            // This is handled in AdminCenter props
+          };
+          return (
+            <div>
+              {/* Plan info */}
+              <div className="alert-box ab-blue" style={{marginBottom:'14px'}}>
+                <Ic n="lock" s={15}/>
+                <div>
+                  <strong style={{color:'var(--blue)'}}>{co.plan} Plan</strong>
+                  <span style={{color:'var(--t2)',fontSize:'12.5px'}}> — {maxO===999?'Unlimited outlets included':'Outlets: '+usedO+' used of '+maxO+' allowed'}</span>
+                  {maxO!==999 && <div style={{marginTop:'6px'}}><div className="pb" style={{height:'5px',width:'200px'}}><div className="pf" style={{width:`${pct}%`,background:pct>=100?'var(--red)':'var(--blue)'}}/></div></div>}
                 </div>
-                <span className="bdg b-ok">Active</span>
               </div>
-            )}</div>
-          </div>
-        }
+              <div className="card">
+                <div className="card-hd">
+                  <span className="card-tt">Outlets ({usedO}{maxO!==999?'/'+maxO:''})</span>
+                  {!canAdd && <span className="bdg b-red" style={{fontSize:'10px'}}>Plan limit reached</span>}
+                </div>
+                <div className="card-bd">
+                  {(co.outlets||[]).map((o,i) =>
+                    <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0',borderBottom:'1px solid var(--border)'}}>
+                      <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+                        <div style={{width:'34px',height:'34px',background:'var(--blue-lt)',borderRadius:'9px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'17px'}}>🏪</div>
+                        <div><div style={{fontWeight:700,fontSize:'13px'}}>{o}</div><div style={{fontSize:'11px',color:'var(--t3)'}}>Active outlet</div></div>
+                      </div>
+                      <span className="bdg b-ok">Active</span>
+                    </div>
+                  )}
+                  {co.outlets.length===0 && <div style={{textAlign:'center',padding:'20px',color:'var(--t4)',fontSize:'13px'}}>No outlets configured yet</div>}
+                </div>
+              </div>
+              {!canAdd && (
+                <div className="alert-box ab-amber" style={{marginTop:'12px'}}>
+                  <Ic n="warn" s={15}/>
+                  <span style={{fontSize:'12.5px',color:'var(--amber)'}}>Outlet limit reached for <strong>{co.plan}</strong> plan. Ask your Super Admin to upgrade to Professional or Enterprise to add more outlets.</span>
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </div>
       {showAdd && <UserModal u={editing} co={co} onSave={saveUser} onClose={()=>{setShowAdd(false);setEditing(null);}}/>}
     </div>
@@ -1619,79 +1685,215 @@ const CredModal = ({u, companies, onSave, onClose}) => {
 /* ── CLIENT MANAGEMENT ──────────────────────────────────────── */
 const Clients = ({companies, setCompanies, allUsers, setAllUsers}) => {
   const toast = useToast();
-  const [show,setShow] = useState(false);
-  const [f,setF] = useState({name:'',emoji:'🍔',outlets:'',plan:'Starter',adminName:'',adminEmail:'',adminPassword:''});
-  const sf = (k,v) => setF(p=>({...p,[k]:v}));
-  const emojis = ['🍔','🍕','🌮','🍜','🥩','🍗','🌯','🧆','🍣','🥗','🍛','🔥','🥢','🫕','🍖'];
-  const planColors = {Starter:'#2563EB',Professional:'#D97706',Enterprise:'#059669'};
+  const [show, setShow] = useState(false);
+  const [editCo, setEditCo] = useState(null); // for editing existing company
+  const emojis = ['🍔','🍕','🌮','🍜','🥩','🍗','🌯','🧆','🍣','🥗','🍛','🔥','🥢','🫕','🍖','☕','🧋','🍱'];
+  const planColors = {Starter:'#2563EB', Professional:'#D97706', Enterprise:'#059669'};
   const topColors = ['#2563EB','#059669','#7C3AED','#D97706','#DC2626'];
-  const add = () => {
-    const nc = {id:'c'+uid(),name:f.name,emoji:f.emoji,outlets:f.outlets.split(',').map(s=>s.trim()).filter(Boolean),plan:f.plan,status:'active',createdAt:TODAY(),totalItems:0,monthlySpend:0};
-    setCompanies(p=>[...p,nc]);
-    if(f.adminEmail) setAllUsers(p=>[...p,{id:'u'+uid(),name:f.adminName||f.name+' Admin',email:f.adminEmail,password:f.adminPassword||'admin123',role:'company_admin',companyId:nc.id,outlet:null,permissions:ROLE_PERMS.company_admin}]);
-    toast(`${f.emoji} ${f.name} onboarded! 🎉`);
-    setShow(false);
-    setF({name:'',emoji:'🍔',outlets:'',plan:'Starter',adminName:'',adminEmail:'',adminPassword:''});
+  const blank = {name:'',emoji:'🍔',outlets:[],plan:'Starter',adminName:'',adminEmail:'',adminPassword:''};
+  const [f, setF] = useState(blank);
+  const sf = (k,v) => setF(p=>({...p,[k]:v}));
+
+  const openAdd = () => { setEditCo(null); setF(blank); setShow(true); };
+  const openEdit = co => { setEditCo(co); setF({...co, adminName:'', adminEmail:'', adminPassword:''}); setShow(true); };
+
+  const maxOutlets = f.plan ? PLANS[f.plan]?.outlets : 2;
+  const canAddOutlet = (f.outlets||[]).length < maxOutlets;
+
+  const addOutlet = () => {
+    if(!canAddOutlet) { toast(`${f.plan} plan allows max ${maxOutlets} outlet${maxOutlets===1?'':'s'}. Upgrade to add more.`, 'warning'); return; }
+    setF(p => ({...p, outlets: [...(p.outlets||[]), '']}));
   };
+  const updateOutlet = (i, val) => setF(p => ({...p, outlets: p.outlets.map((o,idx) => idx===i ? val : o)}));
+  const removeOutlet = i => setF(p => ({...p, outlets: p.outlets.filter((_,idx) => idx!==i)}));
+
+  const save = () => {
+    const cleanOutlets = (f.outlets||[]).map(o=>o.trim()).filter(Boolean);
+    if(editCo) {
+      setCompanies(p => p.map(c => c.id===editCo.id ? {...c, ...f, outlets:cleanOutlets} : c));
+      toast(`${f.emoji} ${f.name} updated ✏️`);
+    } else {
+      const nc = {id:'c'+uid(), name:f.name, emoji:f.emoji, outlets:cleanOutlets, plan:f.plan, status:'active', createdAt:TODAY(), totalItems:0, monthlySpend:0};
+      setCompanies(p => [...p, nc]);
+      if(f.adminEmail) setAllUsers(p => [...p, {id:'u'+uid(), name:f.adminName||f.name+' Admin', email:f.adminEmail, password:f.adminPassword||'admin123', role:'company_admin', companyId:nc.id, outlet:null, permissions:ROLE_PERMS.company_admin}]);
+      toast(`${f.emoji} ${f.name} onboarded! 🎉`);
+    }
+    setShow(false);
+  };
+
   return (
     <div>
-      <Topbar title="Client Management" sub="Super Admin · All Companies on Platform" actions={<button className="btn bp btn-sm" onClick={()=>setShow(true)}><Ic n="plus" s={12}/>Add Company</button>}/>
+      <Topbar title="Client Management" sub="Super Admin · All Companies on Platform"
+        actions={<button className="btn bp btn-sm" onClick={openAdd}><Ic n="plus" s={12}/>Add Company</button>}
+      />
       <div className="page">
+        {/* Summary stats */}
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'12px',marginBottom:'20px'}}>
           {[{l:'Total Companies',v:companies.length,c:'var(--blue)'},{l:'Total Users',v:allUsers.filter(u=>u.role!=='super_admin').length,c:'var(--green)'},{l:'Platform Revenue',v:'₹24,500/mo',c:'var(--violet)'}].map(s =>
             <div key={s.l} style={{background:'var(--white)',border:'1px solid var(--border)',borderRadius:'var(--r3)',padding:'16px 18px',boxShadow:'var(--sh1)'}}>
               <div style={{fontSize:'10.5px',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'5px',fontWeight:'700'}}>{s.l}</div>
-              <div style={{fontFamily:'var(--fd)',fontSize:'24px',fontWeight:'800',color:s.c,letterSpacing:'-.3px'}}>{s.v}</div>
+              <div style={{fontFamily:'var(--fd)',fontSize:'22px',fontWeight:'800',color:s.c,letterSpacing:'-.3px'}}>{s.v}</div>
             </div>
           )}
         </div>
+
+        {/* Plan limits info strip */}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'10px',marginBottom:'20px'}}>
+          {Object.entries(PLANS).map(([plan, cfg]) => (
+            <div key={plan} style={{background:'var(--white)',border:`1.5px solid ${cfg.color}33`,borderRadius:'var(--r3)',padding:'12px 16px',boxShadow:'var(--sh1)'}}>
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'6px'}}>
+                <span style={{fontWeight:'700',fontSize:'12.5px',color:cfg.color}}>{plan}</span>
+                <span style={{fontFamily:'var(--fm)',fontSize:'11px',color:'var(--t3)',fontWeight:'600'}}>{cfg.price}</span>
+              </div>
+              <div style={{fontSize:'11.5px',color:'var(--t2)',lineHeight:'1.6'}}>
+                <div>🏪 {cfg.outlets===999?'Unlimited':cfg.outlets} outlet{cfg.outlets===1?'':'s'}</div>
+                <div>👤 {cfg.users===999?'Unlimited':cfg.users} users</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Company cards */}
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:'14px'}}>
-          {companies.map((co,i) => {
+          {companies.map((co, i) => {
             const coU = allUsers.filter(u=>u.companyId===co.id);
+            const planCfg = PLANS[co.plan] || PLANS.Starter;
+            const outletPct = Math.min(100, Math.round((co.outlets.length / planCfg.outlets) * 100));
             return (
-              <div key={co.id} className="clc">
-                <div className="clc-top" style={{background:`linear-gradient(90deg,${topColors[i%5]},${topColors[(i+2)%5]})`}}/>
+              <div key={co.id} style={{background:'var(--white)',border:'1.5px solid var(--border)',borderRadius:'20px',padding:'20px',boxShadow:'var(--sh1)',transition:'all .2s',position:'relative',overflow:'hidden'}}>
+                <div style={{height:'3px',position:'absolute',top:0,left:0,right:0,background:`linear-gradient(90deg,${topColors[i%5]},${topColors[(i+2)%5]})`}}/>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginTop:'6px',marginBottom:'8px'}}>
-                  <div className="clc-em">{co.emoji}</div>
-                  <div style={{display:'flex',gap:'5px',alignItems:'center'}}>
+                  <div style={{fontSize:'30px'}}>{co.emoji}</div>
+                  <div style={{display:'flex',gap:'5px',alignItems:'center',flexWrap:'wrap',justifyContent:'flex-end'}}>
                     <span className="bdg" style={{background:planColors[co.plan]+'18',color:planColors[co.plan],borderColor:planColors[co.plan]+'33',fontSize:'10px'}}>{co.plan}</span>
                     <span className={`bdg ${co.status==='active'?'b-ok':'b-pend'}`} style={{fontSize:'10px'}}>{co.status}</span>
                   </div>
                 </div>
-                <div className="clc-nm">{co.name}</div>
-                <div className="clc-mt">{co.outlets.length} outlet{co.outlets.length!==1?'s':''} · Since {co.createdAt}</div>
-                <div className="clc-sts">
-                  <div><div className="clc-sv">{coU.length}</div><div className="clc-sl">Users</div></div>
-                  <div><div className="clc-sv">{co.totalItems}</div><div className="clc-sl">SKUs</div></div>
-                  <div><div className="clc-sv" style={{color:'var(--green)',fontSize:'13px'}}>{INR(co.monthlySpend)}</div><div className="clc-sl">Monthly</div></div>
+                <div style={{fontFamily:'var(--fd)',fontSize:'16px',fontWeight:'800',color:'var(--t1)',letterSpacing:'-.2px',marginBottom:'2px'}}>{co.name}</div>
+                <div style={{fontSize:'12px',color:'var(--t3)',marginBottom:'12px'}}>{co.outlets.length} outlet{co.outlets.length!==1?'s':''} · Since {co.createdAt}</div>
+
+                {/* Outlet usage bar */}
+                {planCfg.outlets !== 999 && (
+                  <div style={{marginBottom:'12px'}}>
+                    <div style={{display:'flex',justifyContent:'space-between',fontSize:'10.5px',color:'var(--t4)',marginBottom:'4px'}}>
+                      <span>Outlets used</span>
+                      <span style={{fontFamily:'var(--fm)',fontWeight:'700',color:outletPct>=100?'var(--red)':planColors[co.plan]}}>{co.outlets.length}/{planCfg.outlets}</span>
+                    </div>
+                    <div className="pb" style={{height:'5px'}}>
+                      <div className="pf" style={{width:`${outletPct}%`,background:outletPct>=100?'var(--red)':planColors[co.plan]}}/>
+                    </div>
+                    {outletPct >= 100 && <div style={{fontSize:'10px',color:'var(--red)',marginTop:'3px',fontWeight:'600'}}>At outlet limit — upgrade plan to add more</div>}
+                  </div>
+                )}
+
+                {/* Outlets list */}
+                <div style={{display:'flex',flexWrap:'wrap',gap:'4px',marginBottom:'12px'}}>
+                  {co.outlets.map((o,i) => <span key={i} className="tag" style={{fontSize:'10.5px'}}>🏪 {o}</span>)}
+                  {co.outlets.length === 0 && <span style={{fontSize:'11px',color:'var(--t4)'}}>No outlets added yet</span>}
                 </div>
-                <button className="btn bd btn-sm btn-w" style={{marginTop:'12px',fontSize:'11.5px'}} onClick={()=>{if(window.confirm('Remove this company and all its data?')){setCompanies(p=>p.filter(c=>c.id!==co.id));toast('Company removed');}}}>Remove Company</button>
+
+                <div style={{display:'flex',gap:'8px',paddingTop:'12px',borderTop:'1px solid var(--border)'}}>
+                  <div style={{flex:1}}><div style={{fontFamily:'var(--fd)',fontSize:'17px',fontWeight:'800',color:'var(--t1)'}}>{coU.length}</div><div style={{fontSize:'10px',color:'var(--t4)'}}>Users</div></div>
+                  <div style={{flex:1}}><div style={{fontFamily:'var(--fd)',fontSize:'17px',fontWeight:'800',color:'var(--t1)'}}>{co.totalItems}</div><div style={{fontSize:'10px',color:'var(--t4)'}}>SKUs</div></div>
+                  <div style={{flex:1}}><div style={{fontFamily:'var(--fd)',fontSize:'13px',fontWeight:'800',color:'var(--green)'}}>{INR(co.monthlySpend)}</div><div style={{fontSize:'10px',color:'var(--t4)'}}>Monthly</div></div>
+                </div>
+                <div style={{display:'flex',gap:'7px',marginTop:'12px'}}>
+                  <button className="btn bs btn-sm" style={{flex:1}} onClick={()=>openEdit(co)}><Ic n="edit" s={12}/>Manage</button>
+                  <button className="btn bd btn-sm" onClick={()=>{if(window.confirm('Remove this company?')){setCompanies(p=>p.filter(c=>c.id!==co.id));toast('Company removed');}}}><Ic n="del" s={12}/></button>
+                </div>
               </div>
             );
           })}
         </div>
       </div>
+
+      {/* Add / Edit Company Modal */}
       {show && (
         <div className="ov" onClick={e=>e.target===e.currentTarget&&setShow(false)}>
           <div className="modal modal-md">
-            <div className="m-hd"><div><div className="m-tt">Add New Company</div></div><div className="cls" onClick={()=>setShow(false)}><Ic n="x" s={13}/></div></div>
-            <div className="m-bd">
-              <div style={{fontSize:'11px',fontWeight:'700',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'10px'}}>Company Details</div>
+            <div className="m-hd">
+              <div>
+                <div className="m-tt">{editCo ? `Edit: ${editCo.name}` : 'Add New Company'}</div>
+                <div className="m-sub">{editCo ? 'Update company details and outlet configuration' : 'Set up a new client on the platform'}</div>
+              </div>
+              <div className="cls" onClick={()=>setShow(false)}><Ic n="x" s={13}/></div>
+            </div>
+            <div className="m-bd" style={{maxHeight:'72vh',overflowY:'auto'}}>
+
+              {/* Company Info */}
+              <div style={{fontSize:'10.5px',fontWeight:'700',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'10px'}}>Company Details</div>
               <div className="fgrid">
                 <div className="fg"><label className="fl">Company Name</label><input className="fi" placeholder="e.g. Pizza Hub" value={f.name} onChange={e=>sf('name',e.target.value)}/></div>
                 <div className="fg"><label className="fl">Brand Emoji</label><select className="fs" value={f.emoji} onChange={e=>sf('emoji',e.target.value)}>{emojis.map(e=><option key={e}>{e}</option>)}</select></div>
-                <div className="fg full"><label className="fl">Outlets (comma-separated)</label><input className="fi" placeholder="Connaught Place, Koramangala" value={f.outlets} onChange={e=>sf('outlets',e.target.value)}/></div>
-                <div className="fg"><label className="fl">Plan</label><select className="fs" value={f.plan} onChange={e=>sf('plan',e.target.value)}><option>Starter</option><option>Professional</option><option>Enterprise</option></select></div>
               </div>
+
+              {/* Plan Selection */}
+              <div className="fg">
+                <label className="fl">Subscription Plan</label>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'8px'}}>
+                  {Object.entries(PLANS).map(([plan, cfg]) => (
+                    <div key={plan} onClick={()=>sf('plan',plan)} style={{padding:'10px 12px',background:f.plan===plan?cfg.color+'12':'var(--bg)',border:`1.5px solid ${f.plan===plan?cfg.color:' var(--border)'}`,borderRadius:'var(--r2)',cursor:'pointer',transition:'all .15s'}}>
+                      <div style={{fontWeight:'700',fontSize:'12px',color:f.plan===plan?cfg.color:'var(--t2)',marginBottom:'2px'}}>{plan}</div>
+                      <div style={{fontSize:'10.5px',color:'var(--t3)'}}>🏪 {cfg.outlets===999?'∞':cfg.outlets} outlets</div>
+                      <div style={{fontSize:'10.5px',color:'var(--t3)'}}>👤 {cfg.users===999?'∞':cfg.users} users</div>
+                      <div style={{fontFamily:'var(--fm)',fontSize:'10px',color:f.plan===plan?cfg.color:'var(--t4)',marginTop:'4px',fontWeight:'600'}}>{cfg.price}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <div className="dvd"/>
-              <div style={{fontSize:'11px',fontWeight:'700',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'10px'}}>Admin User</div>
-              <div className="fgrid">
-                <div className="fg"><label className="fl">Admin Name</label><input className="fi" placeholder="Admin name" value={f.adminName} onChange={e=>sf('adminName',e.target.value)}/></div>
-                <div className="fg"><label className="fl">Admin Email</label><input className="fi" type="email" placeholder="admin@company.com" value={f.adminEmail} onChange={e=>sf('adminEmail',e.target.value)}/></div>
-                <div className="fg"><label className="fl">Password</label><input className="fi" placeholder="Temporary password" value={f.adminPassword} onChange={e=>sf('adminPassword',e.target.value)}/></div>
+
+              {/* Outlets */}
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'10px'}}>
+                <div>
+                  <div style={{fontSize:'10.5px',fontWeight:'700',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px'}}>Outlets</div>
+                  <div style={{fontSize:'10.5px',color:'var(--t4)',marginTop:'2px'}}>{(f.outlets||[]).length} of {maxOutlets===999?'unlimited':maxOutlets} used on {f.plan} plan</div>
+                </div>
+                <button className="btn bs btn-sm" onClick={addOutlet} disabled={!canAddOutlet} style={{opacity:canAddOutlet?1:.5}}>
+                  <Ic n="plus" s={12}/>Add Outlet
+                </button>
               </div>
+
+              {!canAddOutlet && (
+                <div className="alert-box ab-amber" style={{marginBottom:'10px'}}>
+                  <Ic n="warn" s={15}/>
+                  <span style={{fontSize:'12.5px'}}>
+                    <strong>{f.plan} plan limit reached ({maxOutlets} outlets).</strong> Select Professional or Enterprise to add more.
+                  </span>
+                </div>
+              )}
+
+              {(f.outlets||[]).length === 0 && (
+                <div style={{padding:'16px',background:'var(--bg)',borderRadius:'var(--r2)',border:'1.5px dashed var(--border)',textAlign:'center',fontSize:'12.5px',color:'var(--t4)',marginBottom:'10px'}}>
+                  No outlets added yet. Click "Add Outlet" to begin.
+                </div>
+              )}
+
+              {(f.outlets||[]).map((o, i) => (
+                <div key={i} style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'7px'}}>
+                  <span style={{width:'20px',fontSize:'14px',flexShrink:0,textAlign:'center'}}>🏪</span>
+                  <input className="fi" style={{flex:1}} placeholder={`Outlet ${i+1} name (e.g. Koramangala)`} value={o} onChange={e=>updateOutlet(i,e.target.value)}/>
+                  <div className="ib ib-d" onClick={()=>removeOutlet(i)}><Ic n="x" s={12}/></div>
+                </div>
+              ))}
+
+              {!editCo && <>
+                <div className="dvd"/>
+                <div style={{fontSize:'10.5px',fontWeight:'700',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'10px'}}>Admin Login</div>
+                <div className="fgrid">
+                  <div className="fg"><label className="fl">Admin Name</label><input className="fi" placeholder="Full name" value={f.adminName} onChange={e=>sf('adminName',e.target.value)}/></div>
+                  <div className="fg"><label className="fl">Admin Email</label><input className="fi" type="email" placeholder="admin@company.com" value={f.adminEmail} onChange={e=>sf('adminEmail',e.target.value)}/></div>
+                  <div className="fg full"><label className="fl">Temporary Password</label><input className="fi" placeholder="Set a password" value={f.adminPassword} onChange={e=>sf('adminPassword',e.target.value)}/></div>
+                </div>
+              </>}
             </div>
-            <div className="m-ft"><button className="btn bs" onClick={()=>setShow(false)}>Cancel</button><button className="btn bp" disabled={!f.name} onClick={add}>Create Company</button></div>
+            <div className="m-ft">
+              <button className="btn bs" onClick={()=>setShow(false)}>Cancel</button>
+              <button className="btn bp" disabled={!f.name} onClick={save}>
+                {editCo ? 'Save Changes' : 'Create Company'}
+              </button>
+            </div>
           </div>
         </div>
       )}
