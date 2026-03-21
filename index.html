@@ -1635,55 +1635,6 @@ const Clients = ({companies, setCompanies, allUsers, setAllUsers}) => {
   );
 };
 
-/* ── HOW TO SELL MODAL ──────────────────────────────────────── */
-const SellModal = ({onClose}) => {
-  const steps = [
-    {ic:'🌐',t:'Deploy on Vercel',b:'Upload index.html to GitHub. Connect to Vercel → Framework: Other, Build: blank. Your platform goes live instantly with a custom URL. Custom domain: Settings → Domains.'},
-    {ic:'🔥',t:'Connect Firebase (Real-time DB)',b:'Replace localStorage calls with Firestore. Each company gets its own collection. Multiple users see updates in real-time across devices — no refresh needed.'},
-    {ic:'💳',t:'Add Razorpay / Stripe Billing',b:'Create 3 plans: Starter (₹2,999/mo), Professional (₹7,999/mo), Enterprise (₹19,999/mo). Gate features behind plan tier. Monthly auto-billing handles revenue.'},
-    {ic:'📧',t:'Email Notifications via SendGrid',b:'Trigger emails on low stock, PO approvals, and EOD reminders. Use SendGrid free tier (100 emails/day). Add WhatsApp alerts via Twilio for QSR managers.'},
-    {ic:'🤝',t:'First 5 Customers Strategy',b:'Cold email 50 QSR chains on Zomato/Swiggy in your city. Offer 3-month free trial. Once they depend on it, monetize. Target: 20-50 outlet chains first.'},
-    {ic:'📈',t:'Scale to ₹1L/month',b:'15 Professional clients = ₹1.2L/mo. Add features: mobile app (React Native wrapper), supplier integrations, auto-PO generation, WhatsApp bot for kitchen staff.'},
-  ];
-  return (
-    <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
-      <div className="modal modal-lg" style={{maxWidth:'720px'}}>
-        <div className="m-hd">
-          <div>
-            <div className="m-tt">🚀 How to Launch & Sell Inventory Pro</div>
-            <div className="m-sub">Your complete go-to-market roadmap — from file to revenue</div>
-          </div>
-          <div className="cls" onClick={onClose}><Ic n="x" s={13}/></div>
-        </div>
-        <div className="m-bd" style={{maxHeight:'72vh',overflowY:'auto'}}>
-          {steps.map((s,i) =>
-            <div key={i} style={{display:'flex',gap:'14px',padding:'14px 0',borderBottom:i<steps.length-1?'1px solid var(--border)':'none'}}>
-              <div style={{width:'38px',height:'38px',borderRadius:'10px',background:'var(--blue-lt)',border:'1.5px solid var(--blue-bd)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'18px',flexShrink:0}}>{s.ic}</div>
-              <div>
-                <div style={{fontWeight:'700',fontSize:'13.5px',color:'var(--t1)',marginBottom:'4px'}}>Step {i+1}: {s.t}</div>
-                <div style={{fontSize:'12.5px',color:'var(--t3)',lineHeight:'1.6'}}>{s.b}</div>
-              </div>
-            </div>
-          )}
-          <div style={{marginTop:'16px',padding:'16px',background:'linear-gradient(135deg,var(--blue-lt),var(--violet-lt))',border:'1.5px solid var(--blue-bd)',borderRadius:'var(--r3)'}}>
-            <div style={{fontFamily:'var(--fd)',fontSize:'15px',fontWeight:'800',color:'var(--blue)',marginBottom:'5px'}}>💰 Revenue Potential</div>
-            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'12px',marginTop:'10px'}}>
-              {[['Starter','₹2,999/mo','1-2 outlets, 5 users'],['Professional','₹7,999/mo','5-10 outlets, 20 users'],['Enterprise','₹19,999/mo','Unlimited + custom features']].map(([plan,price,desc])=>
-                <div key={plan} style={{background:'var(--white)',borderRadius:'var(--r2)',padding:'12px',border:'1px solid var(--border)'}}>
-                  <div style={{fontSize:'12px',fontWeight:'700',color:'var(--t2)',marginBottom:'4px'}}>{plan}</div>
-                  <div style={{fontFamily:'var(--fd)',fontSize:'18px',fontWeight:'800',color:'var(--blue)',marginBottom:'3px'}}>{price}</div>
-                  <div style={{fontSize:'11px',color:'var(--t4)'}}>{desc}</div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="m-ft"><button className="btn bp" onClick={onClose}>Got it — let's build 🚀</button></div>
-      </div>
-    </div>
-  );
-};
-
 /* ── APP ROOT ────────────────────────────────────────────────── */
 const App = () => {
   const [user, setUser]       = useState(() => LS.get('user', null));
@@ -1694,7 +1645,6 @@ const App = () => {
   const [page, setPage]       = useState('dashboard');
   const [co, setCo]           = useState(null);
   const [eodAlert, setEodAlert] = useState(false);
-  const [showSell, setShowSell] = useState(false);
 
   // Persist all state
   useEffect(() => LS.set('cos', companies), [companies]);
@@ -1758,15 +1708,7 @@ const App = () => {
       <div className="main">
         {pageMap[page] || pageMap['dashboard']}
       </div>
-      {/* Sell modal trigger — floating button for super admin */}
-      {user.role==='super_admin' && (
-        <div style={{position:'fixed',bottom:'20px',right:'20px',zIndex:500}}>
-          <button className="btn bp" onClick={()=>setShowSell(true)} style={{boxShadow:'0 6px 24px rgba(37,99,235,0.4)',gap:'8px'}}>
-            🚀 How to Sell This
-          </button>
-        </div>
-      )}
-      {showSell && <SellModal onClose={()=>setShowSell(false)}/>}
+
     </div>
   );
 };
