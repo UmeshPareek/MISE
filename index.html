@@ -939,7 +939,6 @@ const Dashboard = ({user, co, inventory, pos, setInventory, eodAlert, setEodAler
           )}
         </div>
       </div>
-      {showTutBtn && <KitchenTutorial onClose={function(){setShowTutBtn(false);}}/> }
       {showEOD && <EODModal inventory={inventory} co={co} setInventory={setInventory} onClose={()=>{setShowEOD(false);setEodAlert(false);}}/>}
     </div>
   );
