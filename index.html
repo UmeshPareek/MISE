@@ -1672,12 +1672,30 @@ const Clients = ({companies, setCompanies, allUsers, setAllUsers, onResetData}) 
                 </div>
                 <div className="clc-nm">{co.name}</div>
                 <div className="clc-mt">{co.outlets.length} outlet{co.outlets.length!==1?'s':''} · Since {co.createdAt}</div>
+                {(() => {
+                  var planCfg = PLANS[co.plan] || PLANS.Starter;
+                  var maxO = planCfg.outlets;
+                  var usedO = co.outlets.length;
+                  var pct = maxO===999 ? 60 : Math.min(100, Math.round((usedO/maxO)*100));
+                  return (
+                    <div style={{marginBottom:'10px'}}>
+                      <div style={{display:'flex',justifyContent:'space-between',fontSize:'10.5px',color:'var(--t4)',marginBottom:'4px'}}>
+                        <span>Outlets used</span>
+                        <span style={{fontFamily:'var(--fm)',fontWeight:'700',color:pct>=100?'var(--red)':planColors[co.plan]}}>{usedO}{maxO!==999?'/'+maxO:''} {maxO===999?'(unlimited)':''}</span>
+                      </div>
+                      <div className="pb" style={{height:'5px'}}>
+                        <div className="pf" style={{width:pct+'%',background:pct>=100?'var(--red)':planColors[co.plan]}}/>
+                      </div>
+                    </div>
+                  );
+                })()}
                 <div className="clc-sts">
                   <div><div className="clc-sv">{coU.length}</div><div className="clc-sl">Users</div></div>
                   <div><div className="clc-sv">{co.totalItems}</div><div className="clc-sl">SKUs</div></div>
                   <div><div className="clc-sv" style={{color:'var(--green)',fontSize:'13px'}}>{INR(co.monthlySpend)}</div><div className="clc-sl">Monthly</div></div>
                 </div>
                 <div style={{display:'flex',gap:'7px',marginTop:'12px'}}>
+                  <button className="btn bs btn-sm" style={{flex:1,fontSize:'11px'}} onClick={function(){setF({name:co.name,emoji:co.emoji,outlets:co.outlets.slice(),plan:co.plan,adminName:'',adminEmail:'',adminPassword:''});setShow(true);}}>✏️ Edit</button>
                   <button className="btn bs btn-sm" style={{flex:1,fontSize:'11.5px'}} onClick={function(){setResetTarget(co);setResetConfirm('');}}>🔄 Reset Data</button>
                   <button className="btn bd btn-sm" style={{flex:1,fontSize:'11.5px'}} onClick={function(){if(window.confirm('Permanently remove '+co.name+'?')){setCompanies(function(p){return p.filter(function(c){return c.id!==co.id;});});setAllUsers(function(p){return p.filter(function(u){return u.companyId!==co.id;});});toast('Company removed');}}}>Remove</button>
                 </div>
