@@ -502,7 +502,7 @@ const PLANS = {
   Professional: { outlets: 10, users: 25,  label: 'Professional', color: '#D97706', price: '₹7,999/mo' },
   Enterprise:   { outlets: 999,users: 999, label: 'Enterprise',   color: '#059669', price: '₹19,999/mo' },
 };
-const planLimit = (co, field) => PLANS[co?.plan]?.[field] ?? 2;
+const planLimit = (co, field) => PLANS[co && co.plan] ? (PLANS[co.plan][field] || 2) : 2;
 
 const INR = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(n);
 const uid = () => Math.random().toString(36).slice(2,9);
@@ -719,7 +719,7 @@ const Sidebar = ({user, co, page, setPage, onLogout, companies, onCoChange}) => 
       {user.role === 'super_admin' ? (
         <div className="sb-co">
           <div className="sb-co-lbl">Viewing Company</div>
-          <select className="sb-co-sel" value={co?.id||''} onChange={e => { const c=companies.find(x=>x.id===e.target.value); if(c) onCoChange(c); }}>
+          <select className="sb-co-sel" value={(co && co.id)||''} onChange={e => { const c=companies.find(x=>x.id===e.target.value); if(c) onCoChange(c); }}>
             {companies.map(c => <option key={c.id} value={c.id}>{c.emoji} {c.name}</option>)}
           </select>
         </div>
@@ -808,7 +808,7 @@ const BarChart = ({data, color='#2563EB'}) => {
 /* ── EOD MODAL ──────────────────────────────────────────────── */
 const EODModal = ({inventory, co, setInventory, onClose}) => {
   const toast = useToast();
-  const inv = inventory.filter(i=>i.companyId===co?.id);
+  const inv = inventory.filter(i=>i.companyId===(co && co.id));
   const [upd,setUpd] = useState({});
   const changed = Object.keys(upd).filter(k=>upd[k]!==undefined).length;
 
@@ -1127,12 +1127,12 @@ const Inventory = ({user, co, inventory, setInventory}) => {
 /* ── ITEM MODAL ─────────────────────────────────────────────── */
 const ItemModal = ({item, co, onSave, onClose}) => {
   const [f,setF] = useState({
-    name:item?.name||'',category:item?.category||'Proteins',unit:item?.unit||'kg',
-    currentQty:item?.currentQty||'',price:item?.price||'',parLevel:item?.parLevel||'',
-    reorderLevel:item?.reorderLevel||'',supplier:item?.supplier||'',outlet:item?.outlet||'All'
+    name:(item && item.name)||'',category:(item && item.category)||'Proteins',unit:(item && item.unit)||'kg',
+    currentQty:(item && item.currentQty)||'',price:(item && item.price)||'',parLevel:(item && item.parLevel)||'',
+    reorderLevel:(item && item.reorderLevel)||'',supplier:(item && item.supplier)||'',outlet:(item && item.outlet)||'All'
   });
   const s = (k,v) => setF(p=>({...p,[k]:v}));
-  const outlets = ['All',...(co?.outlets||[])];
+  const outlets = ['All',...((co && co.outlets)||[])];
   const valid = f.name && f.price && f.currentQty;
   return (
     <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
@@ -1260,7 +1260,7 @@ const CreatePO = ({inventory, co, user, count, onSave, onClose}) => {
   const [notes,setNotes] = useState('');
   const [outlet,setOutlet] = useState('All');
   const [delivery,setDelivery] = useState('');
-  const outlets = ['All',...(co?.outlets||[])];
+  const outlets = ['All',...((co && co.outlets)||[])];
   const addRow = () => setItems(p=>[...p,{itemId:'',name:'',qty:'',unit:'kg',price:0,total:0}]);
   const remRow = i => setItems(p=>p.filter((_,idx)=>idx!==i));
   const upd = (i,field,val) => setItems(p=>p.map((item,idx)=>{
@@ -1319,7 +1319,7 @@ const CreatePO = ({inventory, co, user, count, onSave, onClose}) => {
 
 /* ── PO DETAIL ──────────────────────────────────────────────── */
 const PODetail = ({po, onClose, canApprove, onApprove, onReject, onReceive, inventory}) => {
-  const getStock = itemId => inventory?.find(i=>i.id===itemId)?.currentQty ?? '—';
+  const getStock = itemId => (inventory && inventory.find(i=>i.id===itemId) ? inventory.find(i=>i.id===itemId).currentQty : '—');
   const sc = {pending:'b-pend',approved:'b-appr',rejected:'b-rej',received:'b-recv'};
   return (
     <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
@@ -1649,10 +1649,10 @@ const AdminCenter = ({user, co, allUsers, setAllUsers}) => {
 
 /* ── USER MODAL ─────────────────────────────────────────────── */
 const UserModal = ({u, co, onSave, onClose}) => {
-  const [f,setF] = useState({name:u?.name||'',email:u?.email||'',password:u?.password||'',role:u?.role||'kitchen_staff',outlet:u?.outlet||'',permissions:u?.permissions||ROLE_PERMS.kitchen_staff});
+  const [f,setF] = useState({name:(u && u.name)||'',email:(u && u.email)||'',password:(u && u.password)||'',role:(u && u.role)||'kitchen_staff',outlet:(u && u.outlet)||'',permissions:(u && u.permissions)||ROLE_PERMS.kitchen_staff});
   const s = (k,v) => setF(p=>({...p,[k]:v}));
   const toggle = key => setF(p=>({...p,permissions:p.permissions.includes(key)?p.permissions.filter(x=>x!==key):[...p.permissions,key]}));
-  const outlets = ['All',...(co?.outlets||[])];
+  const outlets = ['All',...((co && co.outlets)||[])];
   return (
     <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
       <div className="modal modal-md">
@@ -1663,7 +1663,7 @@ const UserModal = ({u, co, onSave, onClose}) => {
             <div className="fg"><label className="fl">Email</label><input className="fi" type="email" value={f.email} onChange={e=>s('email',e.target.value)}/></div>
             <div className="fg"><label className="fl">Password</label><input className="fi" value={f.password} onChange={e=>s('password',e.target.value)}/></div>
             <div className="fg"><label className="fl">Role</label><select className="fs" value={f.role} onChange={e=>{s('role',e.target.value);s('permissions',ROLE_PERMS[e.target.value]||[]);}}><option value="company_admin">Admin</option><option value="manager">Manager</option><option value="kitchen_staff">Kitchen Staff</option></select></div>
-            <div className="fg full"><label className="fl">Assigned Outlet</label><select className="fs" value={f.outlet} onChange={e=>s('outlet',e.target.value)}><option value="">All Outlets</option>{(co?.outlets||[]).map(o=><option key={o}>{o}</option>)}</select></div>
+            <div className="fg full"><label className="fl">Assigned Outlet</label><select className="fs" value={f.outlet} onChange={e=>s('outlet',e.target.value)}><option value="">All Outlets</option>{((co && co.outlets)||[]).map(o=><option key={o}>{o}</option>)}</select></div>
           </div>
           <div className="dvd"/>
           <div style={{fontSize:'11px',fontWeight:'700',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'9px'}}>Permissions</div>
@@ -1686,7 +1686,7 @@ const Credentials = ({allUsers, setAllUsers, companies}) => {
   const rc = ROLE_COLORS;
   const rb = {company_admin:'b-blue',manager:'b-appr',kitchen_staff:'b-grey'};
   const co = id => companies.find(c=>c.id===id);
-  const copyToClip = text => { navigator.clipboard?.writeText(text); toast('Copied to clipboard 📋'); };
+  const copyToClip = text => { navigator.clipboard && navigator.clipboard.writeText(text); toast('Copied to clipboard 📋'); };
   const saveUser = d => {
     if(editing) { setAllUsers(p=>p.map(u=>u.id===editing.id?{...editing,...d}:u)); toast('Credentials updated ✅'); }
     else { setAllUsers(p=>[...p,{id:'u'+uid(),...d}]); toast('Login created 👤'); }
@@ -1743,7 +1743,7 @@ const Credentials = ({allUsers, setAllUsers, companies}) => {
 
 /* ── CRED MODAL ─────────────────────────────────────────────── */
 const CredModal = ({u, companies, onSave, onClose}) => {
-  const [f,setF] = useState({name:u?.name||'',email:u?.email||'',password:u?.password||'',role:u?.role||'kitchen_staff',companyId:u?.companyId||companies[0]?.id||'',outlet:u?.outlet||'',permissions:u?.permissions||ROLE_PERMS.kitchen_staff});
+  const [f,setF] = useState({name:(u && u.name)||'',email:(u && u.email)||'',password:(u && u.password)||'',role:(u && u.role)||'kitchen_staff',companyId:(u && u.companyId)||companies[0] && companies[0].id||'',outlet:(u && u.outlet)||'',permissions:(u && u.permissions)||ROLE_PERMS.kitchen_staff});
   const s = (k,v) => setF(p=>({...p,[k]:v}));
   const co = companies.find(c=>c.id===f.companyId);
   const [showPw,setShowPw] = useState(false);
@@ -1763,7 +1763,7 @@ const CredModal = ({u, companies, onSave, onClose}) => {
             </div>
             <div className="fg"><label className="fl">Role</label><select className="fs" value={f.role} onChange={e=>{s('role',e.target.value);s('permissions',ROLE_PERMS[e.target.value]||[]);}}><option value="company_admin">Company Admin</option><option value="manager">Manager</option><option value="kitchen_staff">Kitchen Staff</option></select></div>
             <div className="fg"><label className="fl">Company</label><select className="fs" value={f.companyId} onChange={e=>s('companyId',e.target.value)}>{companies.map(c=><option key={c.id} value={c.id}>{c.emoji} {c.name}</option>)}</select></div>
-            <div className="fg"><label className="fl">Outlet</label><select className="fs" value={f.outlet} onChange={e=>s('outlet',e.target.value)}><option value="">All Outlets</option>{(co?.outlets||[]).map(o=><option key={o}>{o}</option>)}</select></div>
+            <div className="fg"><label className="fl">Outlet</label><select className="fs" value={f.outlet} onChange={e=>s('outlet',e.target.value)}><option value="">All Outlets</option>{((co && co.outlets)||[]).map(o=><option key={o}>{o}</option>)}</select></div>
           </div>
         </div>
         <div className="m-ft"><button className="btn bs" onClick={onClose}>Cancel</button><button className="btn bp" disabled={!f.name||!f.email||!f.password} onClick={()=>onSave(f)}>{u?'Update Login':'Create Login'}</button></div>
@@ -2169,7 +2169,7 @@ const App = () => {
         </div>
       </div>
 
-    {showTutorial && user?.role==='kitchen_staff' && <KitchenTutorial user={user} onClose={()=>setShowTutorial(false)}/>}
+    {showTutorial && user && user.role==='kitchen_staff' && <KitchenTutorial user={user} onClose={()=>setShowTutorial(false)}/>}
     </div>
   );
 };
