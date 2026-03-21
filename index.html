@@ -58,7 +58,9 @@
   --hh:          60px;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body, #root { height: 100%; overflow: hidden; }
+html, body { height: 100%; overflow: hidden; }
+#root { height: 100%; overflow: hidden; }
+.app { height: 100vh; overflow: hidden; }
 body { background: var(--bg); color: var(--t1); font-family: var(--fb); font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -67,11 +69,11 @@ input, select, textarea, button { font-family: var(--fb); }
 
 /* ══ LAYOUT ══════════════════════════════════════════════════ */
 .app { display: flex; height: 100vh; }
-.sidebar { width: var(--sb); flex-shrink: 0; background: var(--navy); display: flex; flex-direction: column; overflow: hidden; position: relative; }
+.sidebar { width: var(--sb); flex-shrink: 0; background: var(--navy); display: flex; flex-direction: column; overflow: hidden; min-height:0; position: relative; }
 .sidebar::after { content:''; position:absolute; top:-60px; right:-60px; width:180px; height:180px; border-radius:50%; background:radial-gradient(circle, rgba(37,99,235,0.12), transparent 70%); pointer-events:none; }
-.main { flex:1; display:flex; flex-direction:column; overflow:hidden; background:var(--bg); }
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; min-height:0; background:var(--bg); }
 .topbar { height:var(--hh); background:var(--white); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 24px; gap:12px; flex-shrink:0; box-shadow:var(--sh1); }
-.page { flex:1; overflow-y:auto; padding:24px; background:var(--bg); }
+.page { flex:1; overflow-y:auto; overflow-x:hidden; padding:24px; background:var(--bg); min-height:0; -webkit-overflow-scrolling:touch; }
 
 /* ══ SIDEBAR ══════════════════════════════════════════════════ */
 .sb-hd { padding:18px 16px 14px; border-bottom:1px solid rgba(255,255,255,0.07); }
@@ -85,7 +87,7 @@ input, select, textarea, button { font-family: var(--fb); }
 .sb-co-nm { font-size:13px; font-weight:600; color:#fff; }
 .sb-co-sel { width:100%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1); border-radius:var(--r1); color:#fff; font-family:var(--fb); font-size:12.5px; padding:7px 10px; margin-top:4px; outline:none; cursor:pointer; }
 .sb-co-sel option { background:#1E293B; }
-.sb-nav { flex:1; overflow-y:auto; padding:6px 8px 8px; }
+.sb-nav { flex:1; overflow-y:auto; overflow-x:hidden; padding:6px 8px 8px; min-height:0; }
 .sb-sec { font-size:9px; font-weight:700; color:rgba(255,255,255,0.25); letter-spacing:1.2px; text-transform:uppercase; padding:12px 8px 4px; }
 .sb-item { display:flex; align-items:center; gap:9px; padding:8.5px 10px; border-radius:var(--r2); cursor:pointer; color:rgba(255,255,255,0.55); font-size:13px; font-weight:500; margin-bottom:1px; transition:all .15s; position:relative; }
 .sb-item:hover { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.9); }
@@ -1183,7 +1185,7 @@ const UploadModal = ({onUpload, onClose}) => {
 };
 
 /* ── PURCHASE ORDERS ────────────────────────────────────────── */
-const Orders = ({user, co, inventory, pos, setPos}) => {
+const Orders = ({user, co, inventory, setInventory, pos, setPos, setCompanies}) => {
   const toast = useToast();
   const [tab,setTab] = useState('all');
   const [showCreate,setShowCreate] = useState(false);
@@ -1194,7 +1196,25 @@ const Orders = ({user, co, inventory, pos, setPos}) => {
   const canApprove = user.permissions.includes('po.a') || user.role==='super_admin';
   const approve = po => { setPos(p=>p.map(x=>x.id===po.id?{...x,status:'approved',approvedAt:TODAY()}:x)); toast('Order approved ✅'); setDetail(null); };
   const reject = po => { setPos(p=>p.map(x=>x.id===po.id?{...x,status:'rejected'}:x)); toast('Order rejected','warning'); setDetail(null); };
-  const receive = po => { setPos(p=>p.map(x=>x.id===po.id?{...x,status:'received'}:x)); toast('Order received! 📦'); setDetail(null); };
+  const receive = po => {
+    // 1. Mark PO as received
+    setPos(p => p.map(x => x.id===po.id ? {...x, status:'received', receivedAt:TODAY()} : x));
+    // 2. Add received quantities back into inventory
+    setInventory(inv => {
+      let updated = [...inv];
+      po.items.forEach(item => {
+        const idx = updated.findIndex(i => i.id===item.itemId && i.companyId===po.companyId);
+        if(idx >= 0) {
+          updated[idx] = {...updated[idx], currentQty: (updated[idx].currentQty||0) + (parseFloat(item.qty)||0), updatedAt:TODAY()};
+        }
+      });
+      return updated;
+    });
+    // 3. Add to company monthly spend
+    setCompanies(cos => cos.map(c => c.id===po.companyId ? {...c, monthlySpend:(c.monthlySpend||0)+po.totalAmount} : c));
+    toast(`📦 Received! ${po.items.length} item${po.items.length>1?'s':''} added to inventory. Spend updated.`);
+    setDetail(null);
+  };
   const sbMap = {pending:'b-pend',approved:'b-appr',rejected:'b-rej',received:'b-recv'};
   return (
     <div>
@@ -1229,7 +1249,7 @@ const Orders = ({user, co, inventory, pos, setPos}) => {
         )}
       </div>
       {showCreate && <CreatePO inventory={cinv} co={co} user={user} count={cpos.length} onSave={po=>{setPos(p=>[...p,po]);toast('PO created 📋');setShowCreate(false);}} onClose={()=>setShowCreate(false)}/>}
-      {detail && <PODetail po={detail} onClose={()=>setDetail(null)} canApprove={canApprove} onApprove={approve} onReject={reject} onReceive={receive}/>}
+      {detail && <PODetail po={detail} onClose={()=>setDetail(null)} canApprove={canApprove} onApprove={approve} onReject={reject} onReceive={receive} inventory={inventory}/>}
     </div>
   );
 };
@@ -1298,7 +1318,8 @@ const CreatePO = ({inventory, co, user, count, onSave, onClose}) => {
 };
 
 /* ── PO DETAIL ──────────────────────────────────────────────── */
-const PODetail = ({po, onClose, canApprove, onApprove, onReject, onReceive}) => {
+const PODetail = ({po, onClose, canApprove, onApprove, onReject, onReceive, inventory}) => {
+  const getStock = itemId => inventory?.find(i=>i.id===itemId)?.currentQty ?? '—';
   const sc = {pending:'b-pend',approved:'b-appr',rejected:'b-rej',received:'b-recv'};
   return (
     <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
@@ -1312,10 +1333,27 @@ const PODetail = ({po, onClose, canApprove, onApprove, onReject, onReceive}) => 
           </div>
           {po.notes && <div className="alert-box ab-amber" style={{marginBottom:'12px',fontStyle:'italic',fontSize:'12.5px'}}>"{po.notes}"</div>}
           <div className="tw" style={{marginBottom:'12px'}}>
-            <table><thead><tr><th>Item</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead>
-            <tbody>{po.items.map((item,i)=><tr key={i}><td style={{fontWeight:600}}>{item.name}</td><td className="num" style={{fontWeight:'700'}}>{item.qty} {item.unit}</td><td className="num">₹{item.price}</td><td className="num" style={{fontWeight:'700',color:'var(--blue)'}}>{INR(item.total)}</td></tr>)}</tbody>
+            <table>
+              <thead><tr><th>Item</th><th>Ordered Qty</th><th>Current Stock</th><th>Unit Price</th><th>Total</th></tr></thead>
+              <tbody>{po.items.map((item,i)=>(
+                <tr key={i}>
+                  <td style={{fontWeight:600}}>{item.name}</td>
+                  <td className="num" style={{fontWeight:'700',color:'var(--blue)'}}>{item.qty} {item.unit}</td>
+                  <td className="num" style={{color:'var(--t3)'}}>{getStock(item.itemId)} {item.unit}</td>
+                  <td className="num">₹{item.price}</td>
+                  <td className="num" style={{fontWeight:'700',color:'var(--blue)'}}>{INR(item.total)}</td>
+                </tr>
+              ))}</tbody>
             </table>
           </div>
+          {po.status==='approved' && (
+            <div className="alert-box ab-blue" style={{marginBottom:'8px'}}>
+              <span style={{fontSize:'16px'}}>📦</span>
+              <span style={{fontSize:'12.5px',color:'var(--blue)'}}>
+                <strong>On marking received:</strong> Stock quantities will be automatically added to inventory and spend will update.
+              </span>
+            </div>
+          )}
           <div style={{textAlign:'right',fontFamily:'var(--fd)',fontSize:'17px',fontWeight:'800',color:'var(--blue)'}}>Total: {INR(po.totalAmount)}</div>
         </div>
         <div className="m-ft">
@@ -1384,12 +1422,72 @@ const Expenditure = ({co, pos, inventory}) => {
   );
 };
 
+/* ── KITCHEN STAFF TUTORIAL ──────────────────────────────────── */
+const KitchenTutorial = ({user, onClose}) => {
+  const steps = [
+    {ic:'👋', title:'Welcome to InventoryPro!', body:"You're set up as Kitchen Staff. Your job is simple — update stock quantities at the end of each shift so the management always has accurate numbers.", color:'#2563EB'},
+    {ic:'📋', title:'Your Main Page: Update Stock', body:"Tap 'Update Stock' in the menu. You'll see all ingredients and supplies. Use the − and + buttons to set the current quantity for each item.", color:'#059669'},
+    {ic:'🔢', title:'How to Count Stock', body:"Walk through your kitchen and count every item. Tap the number and type the exact quantity, or use + / − to adjust. Work top to bottom, fridge by fridge.", color:'#7C3AED'},
+    {ic:'🔴', title:'Red = Critical, Yellow = Low', body:"Items in red are critically low — tell your manager immediately. Yellow means it's getting low. Green is fine. You don't need to order anything — just count and submit.", color:'#DC2626'},
+    {ic:'💾', title:'Always Save Before Leaving', body:"When you're done counting, tap the big blue 'Save Changes' button at the bottom. If you close the app without saving, your counts will be lost.", color:'#D97706'},
+    {ic:'🌙', title:'End-of-Day Reminder', body:"At 9 PM you'll get a reminder to do a closing count. This helps your manager know exactly what's available for the next morning's prep. It takes less than 5 minutes.", color:'#059669'},
+  ];
+  const [step, setStep] = React.useState(0);
+  const cur = steps[step];
+  const isLast = step === steps.length - 1;
+
+  return (
+    <div className="ov" style={{zIndex:1100}}>
+      <div className="modal" style={{maxWidth:'420px'}}>
+        {/* Progress dots */}
+        <div style={{display:'flex',gap:'6px',justifyContent:'center',padding:'16px 22px 0'}}>
+          {steps.map((_,i) => (
+            <div key={i} style={{width:i===step?20:7,height:7,borderRadius:'99px',background:i===step?cur.color:i<step?cur.color+'66':'var(--border-2)',transition:'all .3s',cursor:'pointer'}} onClick={()=>setStep(i)}/>
+          ))}
+        </div>
+        <div className="m-hd" style={{border:'none',paddingBottom:'8px'}}>
+          <div style={{width:'100%',textAlign:'center'}}>
+            <div style={{fontSize:'48px',marginBottom:'10px',lineHeight:1}}>{cur.ic}</div>
+            <div style={{fontFamily:'var(--fd)',fontSize:'18px',fontWeight:'800',color:'var(--t1)',letterSpacing:'-.3px'}}>{cur.title}</div>
+            <div style={{fontSize:'11px',color:'var(--t4)',marginTop:'4px',fontWeight:'600',letterSpacing:'.5px',textTransform:'uppercase'}}>Step {step+1} of {steps.length}</div>
+          </div>
+        </div>
+        <div className="m-bd" style={{paddingTop:'0',textAlign:'center'}}>
+          <div style={{fontSize:'14px',color:'var(--t2)',lineHeight:'1.7',background:'var(--bg)',padding:'16px',borderRadius:'var(--r2)',border:'1.5px solid var(--border)'}}>{cur.body}</div>
+          {/* Quick reference card on last step */}
+          {isLast && (
+            <div style={{marginTop:'14px',padding:'14px',background:'var(--blue-lt)',border:'1.5px solid var(--blue-bd)',borderRadius:'var(--r2)',textAlign:'left'}}>
+              <div style={{fontWeight:'700',fontSize:'12px',color:'var(--blue)',marginBottom:'8px'}}>📌 Quick Reference</div>
+              {[['🔄','Update Stock','Your main job — count & submit'],['🔴','Red badge','Tell manager immediately'],['💾','Save button','Always tap before leaving'],['🌙','9 PM alert','Do your closing count']].map(([ic,k,v]) => (
+                <div key={k} style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'5px',fontSize:'12px'}}>
+                  <span>{ic}</span><strong style={{color:'var(--t1)'}}>{k}:</strong><span style={{color:'var(--t3)'}}>{v}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="m-ft" style={{justifyContent:'space-between'}}>
+          <button className="btn bg btn-sm" onClick={onClose} style={{color:'var(--t4)'}}>Skip tutorial</button>
+          <div style={{display:'flex',gap:'8px'}}>
+            {step > 0 && <button className="btn bs btn-sm" onClick={()=>setStep(s=>s-1)}>← Back</button>}
+            {!isLast
+              ? <button className="btn bp btn-sm" onClick={()=>setStep(s=>s+1)} style={{background:cur.color,borderColor:cur.color}}>Next →</button>
+              : <button className="btn bp btn-sm" onClick={onClose} style={{background:cur.color,borderColor:cur.color}}>Let's go! 🚀</button>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /* ── STOCK UPDATE ───────────────────────────────────────────── */
 const StockUpdate = ({user, co, inventory, setInventory}) => {
   const toast = useToast();
   const [q,setQ] = useState('');
   const [upd,setUpd] = useState({});
   const [saving,setSaving] = useState(false);
+  const [showTutHere, setShowTutHere] = useState(false);
   const inv = inventory.filter(i=>i.companyId===co.id && i.name.toLowerCase().includes(q.toLowerCase()));
   const getQty = item => upd[item.id]!==undefined ? upd[item.id] : item.currentQty;
   const setQty = (id,v) => setUpd(p=>({...p,[id]:v}));
@@ -1406,7 +1504,7 @@ const StockUpdate = ({user, co, inventory, setInventory}) => {
   };
   return (
     <div>
-      <Topbar title="Update Stock" sub={`${co.emoji} ${co.name} · Daily Stock Count`}/>
+      <Topbar title="Update Stock" sub={`${co.emoji} ${co.name} · Daily Stock Count`} actions={<button className="btn bs btn-sm" onClick={()=>setShowTutHere(true)}>📖 How it works</button>}/>
       <div className="page">
         <div style={{background:'linear-gradient(135deg,var(--navy),var(--navy-2))',borderRadius:'var(--r3)',padding:'20px 24px',marginBottom:'18px',display:'flex',alignItems:'center',justifyContent:'space-between',boxShadow:'var(--sh2)'}}>
           <div>
@@ -1445,6 +1543,7 @@ const StockUpdate = ({user, co, inventory, setInventory}) => {
           </button>
         </div>
       </div>
+    {showTutHere && <KitchenTutorial user={user} onClose={()=>setShowTutHere(false)}/>}
     </div>
   );
 };
@@ -1682,10 +1781,54 @@ const CredModal = ({u, companies, onSave, onClose}) => {
   );
 };
 
+/* ── RESET MODAL ─────────────────────────────────────────────── */
+const ResetModal = ({co, onClose, onReset}) => {
+  const [confirm, setConfirm] = useState('');
+  const match = confirm.trim().toLowerCase() === co.name.toLowerCase();
+  return (
+    <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="modal">
+        <div className="m-hd">
+          <div>
+            <div className="m-tt" style={{color:'var(--amber)'}}>⚠️ Reset Company Data</div>
+            <div className="m-sub">{co.emoji} {co.name}</div>
+          </div>
+          <div className="cls" onClick={onClose}><Ic n="x" s={13}/></div>
+        </div>
+        <div className="m-bd">
+          <div className="alert-box ab-red" style={{marginBottom:'14px'}}>
+            <Ic n="warn" s={17}/>
+            <div>
+              <strong style={{color:'var(--red)'}}>This cannot be undone.</strong>
+              <div style={{fontSize:'12px',marginTop:'5px',color:'var(--red)',lineHeight:'1.7'}}>
+                Will permanently delete all inventory items, purchase orders, and stock history for this company.
+              </div>
+            </div>
+          </div>
+          <div style={{padding:'12px 14px',background:'var(--green-lt)',border:'1.5px solid var(--green-bd)',borderRadius:'var(--r2)',fontSize:'12.5px',color:'var(--t2)',marginBottom:'14px'}}>
+            <strong>What is preserved:</strong> Company profile, plan, outlets, and all user logins.
+          </div>
+          <div className="fg">
+            <label className="fl">Type <strong>{co.name}</strong> to confirm reset:</label>
+            <input className="fi" placeholder={co.name} value={confirm} onChange={e=>setConfirm(e.target.value)}/>
+          </div>
+        </div>
+        <div className="m-ft">
+          <button className="btn bs" onClick={onClose}>Cancel</button>
+          <button className="btn" style={{background:match?'var(--amber)':'var(--bg)',color:match?'#fff':'var(--t4)',border:'1.5px solid '+(match?'var(--amber)':'var(--border)'),padding:'9px 16px',fontSize:'13px',fontWeight:'600',borderRadius:'var(--r2)',cursor:match?'pointer':'not-allowed',transition:'all .15s'}} disabled={!match} onClick={()=>onReset(co.id)}>
+            Reset All Data
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /* ── CLIENT MANAGEMENT ──────────────────────────────────────── */
-const Clients = ({companies, setCompanies, allUsers, setAllUsers}) => {
+const Clients = ({companies, setCompanies, allUsers, setAllUsers, onResetData}) => {
   const toast = useToast();
   const [show, setShow] = useState(false);
+  const [resetTarget, setResetTarget] = useState(null);
   const [editCo, setEditCo] = useState(null); // for editing existing company
   const emojis = ['🍔','🍕','🌮','🍜','🥩','🍗','🌯','🧆','🍣','🥗','🍛','🔥','🥢','🫕','🍖','☕','🧋','🍱'];
   const planColors = {Starter:'#2563EB', Professional:'#D97706', Enterprise:'#059669'};
@@ -1799,13 +1942,17 @@ const Clients = ({companies, setCompanies, allUsers, setAllUsers}) => {
                 </div>
                 <div style={{display:'flex',gap:'7px',marginTop:'12px'}}>
                   <button className="btn bs btn-sm" style={{flex:1}} onClick={()=>openEdit(co)}><Ic n="edit" s={12}/>Manage</button>
-                  <button className="btn bd btn-sm" onClick={()=>{if(window.confirm('Remove this company?')){setCompanies(p=>p.filter(c=>c.id!==co.id));toast('Company removed');}}}><Ic n="del" s={12}/></button>
+                  <button className="btn" style={{background:'var(--amber-lt)',color:'var(--amber)',border:'1.5px solid var(--amber-bd)',padding:'5px 10px',fontSize:'12px',fontWeight:'600',borderRadius:'var(--r2)',cursor:'pointer',gap:'5px',display:'flex',alignItems:'center'}} onClick={()=>setResetTarget(co)} title="Reset all company data"><Ic n="refresh" s={12}/>Reset</button>
+                  <button className="btn bd btn-sm" onClick={()=>{if(window.confirm(`Permanently remove ${co.name} and all its data?`)){setCompanies(p=>p.filter(c=>c.id!==co.id));setAllUsers(p=>p.filter(u=>u.companyId!==co.id));toast('Company removed');}}}}><Ic n="del" s={12}/></button>
                 </div>
               </div>
             );
           })}
         </div>
       </div>
+
+      {/* Reset Company Data Modal */}
+      {resetTarget && <ResetModal co={resetTarget} onClose={()=>setResetTarget(null)} onReset={(cid)=>{ onResetData(cid); setResetTarget(null); }}/>}
 
       {/* Add / Edit Company Modal */}
       {show && (
@@ -1945,11 +2092,18 @@ const App = () => {
     })));
   }, [inventory]);
 
+  const [showTutorial, setShowTutorial] = useState(false);
   const login = u => {
     setUser(u);
     const c = u.role==='super_admin' ? companies[0] : companies.find(x=>x.id===u.companyId);
     setCo(c || null);
-    setPage('dashboard');
+    if(u.role === 'kitchen_staff') {
+      const seen = LS.get('tutorial_seen_'+u.id, false);
+      if(!seen) { setShowTutorial(true); LS.set('tutorial_seen_'+u.id, true); }
+      setPage('stock'); // take kitchen staff straight to stock page
+    } else {
+      setPage('dashboard');
+    }
   };
   const logout = () => { LS.set('user',null); setUser(null); setCo(null); };
 
@@ -1960,12 +2114,17 @@ const App = () => {
   const pageMap = {
     dashboard:   co && <Dashboard   user={user} co={co} inventory={inventory} pos={pos} setInventory={setInventory} eodAlert={eodAlert} setEodAlert={setEodAlert}/>,
     inventory:   co && <Inventory   user={user} co={co} inventory={inventory} setInventory={setInventory}/>,
-    orders:      co && <Orders      user={user} co={co} inventory={inventory} pos={pos} setPos={setPos}/>,
+    orders:      co && <Orders      user={user} co={co} inventory={inventory} setInventory={setInventory} pos={pos} setPos={setPos} setCompanies={setCompanies}/>,
     expenditure: co && <Expenditure co={co} pos={pos} inventory={inventory}/>,
     stock:       co && <StockUpdate user={user} co={co} inventory={inventory} setInventory={setInventory}/>,
     admin:       co && <AdminCenter user={user} co={co} allUsers={allUsers} setAllUsers={setAllUsers}/>,
     credentials: <Credentials allUsers={allUsers} setAllUsers={setAllUsers} companies={companies}/>,
-    clients:     <Clients companies={companies} setCompanies={setCompanies} allUsers={allUsers} setAllUsers={setAllUsers}/>,
+    clients:     <Clients companies={companies} setCompanies={setCompanies} allUsers={allUsers} setAllUsers={setAllUsers} onResetData={cid=>{
+      setInventory(p=>p.filter(i=>i.companyId!==cid));
+      setPos(p=>p.filter(po=>po.companyId!==cid));
+      setCompanies(p=>p.map(c=>c.id===cid?{...c,totalItems:0,monthlySpend:0}:c));
+      toast('Company data reset. All inventory and orders cleared.','warning');
+    }}/>,
   };
 
   const [mobMenuOpen, setMobMenuOpen] = useState(false);
@@ -2019,6 +2178,7 @@ const App = () => {
         </div>
       </div>
 
+    {showTutorial && user?.role==='kitchen_staff' && <KitchenTutorial user={user} onClose={()=>setShowTutorial(false)}/>}
     </div>
   );
 };
