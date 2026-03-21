@@ -1602,33 +1602,25 @@ const AdminCenter = ({user, co, allUsers, setAllUsers}) => {
           const planCfg = PLANS[co.plan] || PLANS.Starter;
           const maxO = planCfg.outlets;
           const usedO = (co.outlets||[]).length;
-          const pct = maxO===999?0:Math.min(100,Math.round((usedO/maxO)*100));
-          const [newOutlet, setNewOutlet] = React.useState('');
+          const pct = maxO===999 ? 0 : Math.min(100, Math.round((usedO/maxO)*100));
           const canAdd = usedO < maxO;
-          const addO = () => {
-            if(!newOutlet.trim()) return;
-            if(!canAdd) { return; }
-            setAllUsers(pu => pu); // trigger re-render trick
-            // Update via setAllUsers isn't right here — we need setCompanies
-            // This is handled in AdminCenter props
-          };
           return (
             <div>
-              {/* Plan info */}
               <div className="alert-box ab-blue" style={{marginBottom:'14px'}}>
                 <Ic n="lock" s={15}/>
                 <div>
                   <strong style={{color:'var(--blue)'}}>{co.plan} Plan</strong>
-                  <span style={{color:'var(--t2)',fontSize:'12.5px'}}> — {maxO===999?'Unlimited outlets included':'Outlets: '+usedO+' used of '+maxO+' allowed'}</span>
-                  {maxO!==999 && <div style={{marginTop:'6px'}}><div className="pb" style={{height:'5px',width:'200px'}}><div className="pf" style={{width:`${pct}%`,background:pct>=100?'var(--red)':'var(--blue)'}}/></div></div>}
+                  <span style={{color:'var(--t2)',fontSize:'12.5px'}}> — {maxO===999?'Unlimited outlets':'Outlets: '+usedO+' of '+maxO+' used'}</span>
+                  {maxO!==999 && <div style={{marginTop:'6px'}}><div className="pb" style={{height:'5px',maxWidth:'200px'}}><div className="pf" style={{width:`${pct}%`,background:pct>=100?'var(--red)':'var(--blue)'}}/></div></div>}
                 </div>
               </div>
               <div className="card">
                 <div className="card-hd">
-                  <span className="card-tt">Outlets ({usedO}{maxO!==999?'/'+maxO:''})</span>
-                  {!canAdd && <span className="bdg b-red" style={{fontSize:'10px'}}>Plan limit reached</span>}
+                  <span className="card-tt">Outlets ({usedO}{maxO!==999?' / '+maxO:''})</span>
+                  {!canAdd && <span className="bdg b-crit" style={{fontSize:'10px'}}>Plan limit reached</span>}
                 </div>
                 <div className="card-bd">
+                  {(co.outlets||[]).length === 0 && <div style={{textAlign:'center',padding:'20px',color:'var(--t4)',fontSize:'13px'}}>No outlets configured. Ask Super Admin to add outlets.</div>}
                   {(co.outlets||[]).map((o,i) =>
                     <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0',borderBottom:'1px solid var(--border)'}}>
                       <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
@@ -1638,13 +1630,12 @@ const AdminCenter = ({user, co, allUsers, setAllUsers}) => {
                       <span className="bdg b-ok">Active</span>
                     </div>
                   )}
-                  {co.outlets.length===0 && <div style={{textAlign:'center',padding:'20px',color:'var(--t4)',fontSize:'13px'}}>No outlets configured yet</div>}
                 </div>
               </div>
               {!canAdd && (
                 <div className="alert-box ab-amber" style={{marginTop:'12px'}}>
                   <Ic n="warn" s={15}/>
-                  <span style={{fontSize:'12.5px',color:'var(--amber)'}}>Outlet limit reached for <strong>{co.plan}</strong> plan. Ask your Super Admin to upgrade to Professional or Enterprise to add more outlets.</span>
+                  <span style={{fontSize:'12.5px',color:'var(--amber)'}}>Outlet limit reached for <strong>{co.plan}</strong>. Ask your Super Admin to upgrade the plan to add more outlets.</span>
                 </div>
               )}
             </div>
@@ -1943,7 +1934,7 @@ const Clients = ({companies, setCompanies, allUsers, setAllUsers, onResetData}) 
                 <div style={{display:'flex',gap:'7px',marginTop:'12px'}}>
                   <button className="btn bs btn-sm" style={{flex:1}} onClick={()=>openEdit(co)}><Ic n="edit" s={12}/>Manage</button>
                   <button className="btn" style={{background:'var(--amber-lt)',color:'var(--amber)',border:'1.5px solid var(--amber-bd)',padding:'5px 10px',fontSize:'12px',fontWeight:'600',borderRadius:'var(--r2)',cursor:'pointer',gap:'5px',display:'flex',alignItems:'center'}} onClick={()=>setResetTarget(co)} title="Reset all company data"><Ic n="refresh" s={12}/>Reset</button>
-                  <button className="btn bd btn-sm" onClick={()=>{if(window.confirm(`Permanently remove ${co.name} and all its data?`)){setCompanies(p=>p.filter(c=>c.id!==co.id));setAllUsers(p=>p.filter(u=>u.companyId!==co.id));toast('Company removed');}}}}><Ic n="del" s={12}/></button>
+                  <button className="btn bd btn-sm" onClick={()=>{if(window.confirm(`Permanently remove ${co.name} and all its data?`)){setCompanies(p=>p.filter(c=>c.id!==co.id));setAllUsers(p=>p.filter(u=>u.companyId!==co.id));toast('Company removed');}}}><Ic n="del" s={12}/></button>
                 </div>
               </div>
             );
