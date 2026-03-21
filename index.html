@@ -58,9 +58,7 @@
   --hh:          60px;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; overflow: hidden; }
-#root { height: 100%; overflow: hidden; }
-.app { height: 100vh; overflow: hidden; }
+html, body, #root { height: 100%; overflow: hidden; }
 body { background: var(--bg); color: var(--t1); font-family: var(--fb); font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -69,7 +67,7 @@ input, select, textarea, button { font-family: var(--fb); }
 
 /* ══ LAYOUT ══════════════════════════════════════════════════ */
 .app { display: flex; height: 100vh; }
-.sidebar { width: var(--sb); flex-shrink: 0; background: var(--navy); display: flex; flex-direction: column; overflow: hidden; min-height:0; position: relative; }
+.sidebar { width: var(--sb); flex-shrink: 0; background: var(--navy); display: flex; flex-direction: column; overflow: hidden; position: relative; }
 .sidebar::after { content:''; position:absolute; top:-60px; right:-60px; width:180px; height:180px; border-radius:50%; background:radial-gradient(circle, rgba(37,99,235,0.12), transparent 70%); pointer-events:none; }
 .main { flex:1; display:flex; flex-direction:column; overflow:hidden; min-height:0; background:var(--bg); }
 .topbar { height:var(--hh); background:var(--white); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 24px; gap:12px; flex-shrink:0; box-shadow:var(--sh1); }
@@ -87,7 +85,7 @@ input, select, textarea, button { font-family: var(--fb); }
 .sb-co-nm { font-size:13px; font-weight:600; color:#fff; }
 .sb-co-sel { width:100%; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1); border-radius:var(--r1); color:#fff; font-family:var(--fb); font-size:12.5px; padding:7px 10px; margin-top:4px; outline:none; cursor:pointer; }
 .sb-co-sel option { background:#1E293B; }
-.sb-nav { flex:1; overflow-y:auto; overflow-x:hidden; padding:6px 8px 8px; min-height:0; }
+.sb-nav { flex:1; overflow-y:auto; padding:6px 8px 8px; min-height:0; }
 .sb-sec { font-size:9px; font-weight:700; color:rgba(255,255,255,0.25); letter-spacing:1.2px; text-transform:uppercase; padding:12px 8px 4px; }
 .sb-item { display:flex; align-items:center; gap:9px; padding:8.5px 10px; border-radius:var(--r2); cursor:pointer; color:rgba(255,255,255,0.55); font-size:13px; font-weight:500; margin-bottom:1px; transition:all .15s; position:relative; }
 .sb-item:hover { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.9); }
@@ -361,85 +359,46 @@ tbody td { padding:11px 14px; font-size:13px; color:var(--t2); vertical-align:mi
 .spin { width:16px; height:16px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:sp .7s linear infinite; display:inline-block; flex-shrink:0; }
 @keyframes sp { to{transform:rotate(360deg)} }
 
-.g2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
-.g3 { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-/* ══ MOBILE BOTTOM NAV ════════════════════════════════════════ */
-.mob-nav { display:none; position:fixed; bottom:0; left:0; right:0; background:var(--white); border-top:1px solid var(--border); z-index:800; box-shadow:0 -4px 20px rgba(15,23,41,0.08); padding:6px 0 max(6px, env(safe-area-inset-bottom)); }
-.mob-nav-inner { display:flex; align-items:center; justify-content:space-around; }
-.mob-nav-item { display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 12px; cursor:pointer; border-radius:var(--r2); transition:all .15s; min-width:52px; }
-.mob-nav-item:hover,.mob-nav-item.on { background:var(--blue-lt); }
-.mob-nav-ic { font-size:20px; line-height:1; }
-.mob-nav-lbl { font-size:9.5px; font-weight:600; color:var(--t3); }
-.mob-nav-item.on .mob-nav-lbl { color:var(--blue); }
-.mob-nav-more { position:relative; }
-
-/* ══ MOBILE SIDEBAR OVERLAY ═══════════════════════════════════ */
-.mob-overlay { display:none; position:fixed; inset:0; background:rgba(15,23,41,0.5); z-index:700; backdrop-filter:blur(3px); }
-.mob-overlay.show { display:block; }
-.mob-topbar { display:none; height:56px; background:var(--white); border-bottom:1px solid var(--border); align-items:center; padding:0 16px; gap:12px; flex-shrink:0; box-shadow:var(--sh1); position:sticky; top:0; z-index:10; }
-.mob-topbar-logo { font-family:var(--fd); font-size:16px; font-weight:800; color:var(--t1); flex:1; }
-.mob-topbar-logo span { color:#818CF8; }
-.mob-menu-btn { width:36px; height:36px; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--r2); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; }
-.mob-sidebar { position:fixed; left:-280px; top:0; bottom:0; width:280px; background:var(--navy); z-index:750; transition:left .25s cubic-bezier(.4,0,.2,1); overflow-y:auto; box-shadow:var(--sh4); }
-.mob-sidebar.open { left:0; }
-
 /* ══ RESPONSIVE ═══════════════════════════════════════════════ */
+/* ── MOBILE ══════════════════════════════════════════════════ */
+.mob-nav { display:none; position:fixed; bottom:0; left:0; right:0; background:var(--white); border-top:1px solid var(--border); z-index:800; box-shadow:0 -2px 12px rgba(15,23,41,0.08); padding:4px 0 max(4px,env(safe-area-inset-bottom)); }
+.mob-nav-inner { display:flex; justify-content:space-around; }
+.mob-nav-item { display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 10px; cursor:pointer; border-radius:var(--r2); min-width:50px; }
+.mob-nav-ic { font-size:20px; line-height:1; }
+.mob-nav-lbl { font-size:9px; font-weight:600; color:var(--t3); }
+.mob-nav-item.on .mob-nav-lbl { color:var(--blue); }
+.mob-ov { display:none; position:fixed; inset:0; background:rgba(15,23,41,0.5); z-index:700; }
+.mob-ov.open { display:block; }
+.mob-sb { position:fixed; left:-280px; top:0; bottom:0; width:280px; background:var(--navy); z-index:750; transition:left .25s; overflow-y:auto; box-shadow:var(--sh4); }
+.mob-sb.open { left:0; }
+.mob-topbar { display:none; height:54px; background:var(--white); border-bottom:1px solid var(--border); align-items:center; padding:0 14px; gap:10px; flex-shrink:0; box-shadow:var(--sh1); }
+.mob-logo { font-family:var(--fd); font-size:16px; font-weight:800; color:var(--t1); flex:1; }
+.mob-logo span { color:#818CF8; }
+.mob-hbtn { width:34px; height:34px; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--r2); display:flex; align-items:center; justify-content:center; cursor:pointer; }
+
 @media(max-width:1200px) { .stats{grid-template-columns:repeat(2,1fr);} }
-@media(max-width:900px) {
-  .stats{grid-template-columns:1fr 1fr;} .fgrid{grid-template-columns:1fr;}
-}
+@media(max-width:900px) { .stats{grid-template-columns:1fr 1fr;} .fgrid{grid-template-columns:1fr;} }
 @media(max-width:768px) {
-  /* Hide desktop sidebar */
   .sidebar { display:none !important; }
-  /* Show mobile elements */
   .mob-nav { display:block; }
   .mob-topbar { display:flex; }
-  /* Page padding for bottom nav */
-  .page { padding:16px 14px 80px; }
-  /* Topbar hidden on mobile - replaced by mob-topbar */
   .topbar { display:none; }
-  /* Login page - stack vertically */
+  .page { padding:14px 12px 80px; }
   .login-wrap { grid-template-columns:1fr; }
   .login-l { display:none; }
-  .login-r { padding:28px 20px; min-height:100vh; background:var(--bg); align-items:flex-start; padding-top:48px; }
+  .login-r { padding:28px 18px; min-height:100vh; align-items:flex-start; padding-top:44px; }
   .login-form { max-width:100%; }
-  .login-h1 { font-size:22px; }
-  /* Stats 2-col on phone */
   .stats { grid-template-columns:1fr 1fr; gap:10px; }
   .sc { padding:14px 14px 12px; }
   .sc-val { font-size:19px; }
-  /* Tables - horizontal scroll */
   .tw { overflow-x:auto; -webkit-overflow-scrolling:touch; }
-  table { min-width:520px; }
-  /* Cards full width */
-  .g2,.g3 { grid-template-columns:1fr !important; }
-  /* Modal full screen on mobile */
+  table { min-width:500px; }
   .ov { padding:0; align-items:flex-end; }
   .modal,.modal-md,.modal-lg { max-width:100% !important; width:100%; border-radius:var(--r4) var(--r4) 0 0; max-height:92vh; }
-  /* PO cards */
-  .poc { padding:12px 14px; }
-  /* Staff cards */
-  .stf-c { flex-wrap:wrap; gap:10px; }
-  .stpr { width:100%; justify-content:flex-end; }
-  /* Filters scroll horizontal */
-  .fbar { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; }
+  .fbar { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; }
   .fbar::-webkit-scrollbar { display:none; }
-  /* Topbar actions wrap */
-  .tb-r { gap:6px; }
-  /* Bottom nav safe area */
-  .main { padding-bottom:0; }
-  /* PO stats grid 2col */
-  [style*="grid-template-columns:repeat(4,1fr)"] { grid-template-columns:1fr 1fr !important; }
-  /* EOD banner */
-  .eod-banner { flex-wrap:wrap; gap:8px; }
-  /* Cred cards on mobile */
-  .cred-c { flex-wrap:wrap; }
-  /* Login card mobile */
-  .login-mob-card { background:var(--white); border-radius:var(--r3); padding:24px 20px; box-shadow:var(--sh3); margin:0 4px; }
-}
-@media(max-width:400px) {
-  .stats { grid-template-columns:1fr; }
-  .mob-nav-item { min-width:44px; padding:5px 8px; }
+  .stf-c { flex-wrap:wrap; }
+  .stpr { width:100%; justify-content:flex-end; }
 }
 
 /* ══ LOGIN ════════════════════════════════════════════════════ */
@@ -495,14 +454,11 @@ const ROLE_PERMS = {
 const ROLE_LABELS = {super_admin:'Super Admin',company_admin:'Admin',manager:'Manager',kitchen_staff:'Kitchen Staff'};
 const ROLE_COLORS = {super_admin:'#7C3AED',company_admin:'#2563EB',manager:'#059669',kitchen_staff:'#D97706'};
 const CAT_EMOJI = {Proteins:'🥩',Vegetables:'🥬',Dairy:'🧀',Beverages:'🥤',Packaging:'📦',Sauces:'🫙',Bakery:'🍞',Pantry:'🥫',Sides:'🍟'};
-
-/* ── PLAN CONFIGURATION ─────────────────────────────────────── */
 const PLANS = {
-  Starter:      { outlets: 2,  users: 5,   label: 'Starter',      color: '#2563EB', price: '₹2,999/mo' },
-  Professional: { outlets: 10, users: 25,  label: 'Professional', color: '#D97706', price: '₹7,999/mo' },
-  Enterprise:   { outlets: 999,users: 999, label: 'Enterprise',   color: '#059669', price: '₹19,999/mo' },
+  Starter:      { outlets:2,   users:5,   label:'Starter',      color:'#2563EB', price:'2,999' },
+  Professional: { outlets:10,  users:25,  label:'Professional', color:'#D97706', price:'7,999' },
+  Enterprise:   { outlets:999, users:999, label:'Enterprise',   color:'#059669', price:'19,999' },
 };
-const planLimit = (co, field) => PLANS[co && co.plan] ? (PLANS[co.plan][field] || 2) : 2;
 
 const INR = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(n);
 const uid = () => Math.random().toString(36).slice(2,9);
@@ -616,7 +572,6 @@ const stockPct = i => Math.min(100, Math.round((i.currentQty / (i.reorderLevel *
 const Login = ({onLogin, users}) => {
   const [email,setEmail] = useState('');
   const [pw,setPw] = useState('');
-  const [showPw,setShowPw] = useState(false);
   const [err,setErr] = useState('');
   const [loading,setLoading] = useState(false);
   const toast = useToast();
@@ -632,9 +587,11 @@ const Login = ({onLogin, users}) => {
     }, 600);
   };
 
+
+
+  const [showPw, setShowPw] = useState(false);
   return (
     <div className="login-wrap">
-      {/* Left panel — branding (hidden on mobile) */}
       <div className="login-l">
         <div className="login-l-bg"/><div className="login-l-grid"/>
         <div className="login-brand" style={{position:'relative'}}>
@@ -644,36 +601,27 @@ const Login = ({onLogin, users}) => {
         <div style={{position:'relative'}}>
           <div className="login-hero-tag">✦ QSR Intelligence Platform</div>
           <div className="login-h1-hero">Your kitchen,<br/><em>perfectly managed.</em></div>
-          <div className="login-sub-hero">Real-time inventory, smart purchasing, and role-based team access — built for QSR brands that scale fast.</div>
+          <div className="login-sub-hero">Real-time inventory, smart purchasing, and team access control — built for QSR brands that scale fast.</div>
         </div>
         <div className="login-feat" style={{position:'relative'}}>
-          {[['📊','Live inventory value & low stock alerts'],['🛒','End-to-end purchase order workflow'],['👥','Role-based access for your entire team'],['🔔','End-of-day stock update reminders']].map(([ic,t]) =>
+          {[['📊','Live inventory & low stock alerts'],['🛒','End-to-end purchase order workflow'],['👥','Role-based access for every team member'],['🔔','End-of-day stock update reminders']].map(([ic,t]) =>
             <div key={t} className="lf-item"><span className="lf-ic">{ic}</span><span className="lf-txt">{t}</span></div>
           )}
         </div>
       </div>
-      {/* Right panel — form */}
       <div className="login-r">
         <div className="login-form">
-          {/* Logo — visible on mobile only via CSS */}
-          <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'28px',paddingBottom:'20px',borderBottom:'1px solid var(--border)'}}>
-            <div style={{width:'36px',height:'36px',background:'linear-gradient(135deg,#3B82F6,#818CF8)',borderRadius:'10px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'17px',boxShadow:'0 3px 12px rgba(59,130,246,0.3)',flexShrink:0}}>📦</div>
-            <div>
-              <div style={{fontFamily:'var(--fd)',fontSize:'18px',fontWeight:'800',color:'var(--t1)',letterSpacing:'-.3px',lineHeight:1}}>Inventory<span style={{color:'#818CF8'}}>Pro</span></div>
-              <div style={{fontSize:'10.5px',color:'var(--t4)',letterSpacing:'.5px',textTransform:'uppercase',marginTop:'2px'}}>QSR Intelligence Platform</div>
-            </div>
+          <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'24px',paddingBottom:'20px',borderBottom:'1px solid var(--border)'}}>
+            <div style={{width:'36px',height:'36px',background:'linear-gradient(135deg,#3B82F6,#818CF8)',borderRadius:'10px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'17px',boxShadow:'0 2px 10px rgba(59,130,246,0.3)',flexShrink:0}}>📦</div>
+            <div style={{fontFamily:'var(--fd)',fontSize:'18px',fontWeight:'800',color:'var(--t1)',letterSpacing:'-.3px'}}>Inventory<span style={{color:'#818CF8'}}>Pro</span></div>
           </div>
           <div className="login-h1">Welcome back</div>
-          <div className="login-sub-t" style={{marginBottom:'22px'}}>Sign in to continue to your account</div>
-          <div className="fg">
-            <label className="fl">Email Address</label>
-            <input className="fi" type="email" placeholder="you@company.com" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go()} autoComplete="email" autoCapitalize="none"/>
-          </div>
-          <div className="fg">
-            <label className="fl">Password</label>
+          <div className="login-sub-t">Sign in to continue to your account</div>
+          <div className="fg"><label className="fl">Email Address</label><input className="fi" type="email" placeholder="you@company.com" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go()} autoCapitalize="none"/></div>
+          <div className="fg"><label className="fl">Password</label>
             <div style={{position:'relative'}}>
-              <input className="fi" type={showPw?'text':'password'} placeholder="Enter your password" value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go()} style={{paddingRight:'40px'}} autoComplete="current-password"/>
-              <div style={{position:'absolute',right:'11px',top:'50%',transform:'translateY(-50%)',cursor:'pointer',color:'var(--t4)',display:'flex'}} onClick={()=>setShowPw(p=>!p)}>
+              <input className="fi" type={showPw?'text':'password'} placeholder="Enter your password" value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go()} style={{paddingRight:'40px'}}/>
+              <div style={{position:'absolute',right:'11px',top:'50%',transform:'translateY(-50%)',cursor:'pointer',color:'var(--t4)',display:'flex',alignItems:'center'}} onClick={()=>setShowPw(function(p){return !p;})}>
                 <Ic n={showPw?'eyeoff':'eye'} s={15}/>
               </div>
             </div>
@@ -682,9 +630,7 @@ const Login = ({onLogin, users}) => {
           <button className="btn bp btn-lg btn-w" onClick={go} disabled={loading} style={{marginTop:'4px'}}>
             {loading ? <><span className="spin" style={{borderColor:'rgba(255,255,255,0.3)',borderTopColor:'#fff'}}/>&nbsp;Signing in…</> : 'Sign In →'}
           </button>
-          <div style={{marginTop:'20px',textAlign:'center',fontSize:'12px',color:'var(--t4)'}}>
-            Contact your administrator if you need access.
-          </div>
+          <div style={{marginTop:'18px',textAlign:'center',fontSize:'12px',color:'var(--t4)'}}>Contact your administrator if you need access.</div>
         </div>
       </div>
     </div>
@@ -719,7 +665,7 @@ const Sidebar = ({user, co, page, setPage, onLogout, companies, onCoChange}) => 
       {user.role === 'super_admin' ? (
         <div className="sb-co">
           <div className="sb-co-lbl">Viewing Company</div>
-          <select className="sb-co-sel" value={(co && co.id)||''} onChange={e => { const c=companies.find(x=>x.id===e.target.value); if(c) onCoChange(c); }}>
+          <select className="sb-co-sel" value={(co&&co.id)||''} onChange={e => { const c=companies.find(x=>x.id===e.target.value); if(c) onCoChange(c); }}>
             {companies.map(c => <option key={c.id} value={c.id}>{c.emoji} {c.name}</option>)}
           </select>
         </div>
@@ -808,7 +754,7 @@ const BarChart = ({data, color='#2563EB'}) => {
 /* ── EOD MODAL ──────────────────────────────────────────────── */
 const EODModal = ({inventory, co, setInventory, onClose}) => {
   const toast = useToast();
-  const inv = inventory.filter(i=>i.companyId===(co && co.id));
+  const inv = inventory.filter(i=>i.companyId===(co&&co.id));
   const [upd,setUpd] = useState({});
   const changed = Object.keys(upd).filter(k=>upd[k]!==undefined).length;
 
@@ -927,7 +873,7 @@ const Dashboard = ({user, co, inventory, pos, setInventory, eodAlert, setEodAler
             </div>
           )}
         </div>
-        <div className="g2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px',marginBottom:'14px'}}>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px',marginBottom:'14px'}}>
           <div className="card">
             <div className="card-hd"><span className="card-tt">Weekly Spend (₹ thousands)</span><span className="tag">Mar 2024</span></div>
             <div className="card-bd" style={{paddingTop:'8px'}}><BarChart data={spendData} color="#2563EB"/></div>
@@ -952,7 +898,7 @@ const Dashboard = ({user, co, inventory, pos, setInventory, eodAlert, setEodAler
             </div>
           </div>
         </div>
-        <div className="g2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px',marginBottom:'14px'}}>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px',marginBottom:'14px'}}>
           <div className="card">
             <div className="card-hd"><span className="card-tt">Items to Reorder</span><span className="bdg b-low">{low.length}</span></div>
             {low.length===0 ? <div className="empty"><div className="empty-ic">✅</div><h3>All stocks healthy</h3><p>Nothing needs ordering right now</p></div> :
@@ -993,6 +939,7 @@ const Dashboard = ({user, co, inventory, pos, setInventory, eodAlert, setEodAler
           )}
         </div>
       </div>
+      {showTutBtn && <KitchenTutorial onClose={function(){setShowTutBtn(false);}}/> }
       {showEOD && <EODModal inventory={inventory} co={co} setInventory={setInventory} onClose={()=>{setShowEOD(false);setEodAlert(false);}}/>}
     </div>
   );
@@ -1127,12 +1074,12 @@ const Inventory = ({user, co, inventory, setInventory}) => {
 /* ── ITEM MODAL ─────────────────────────────────────────────── */
 const ItemModal = ({item, co, onSave, onClose}) => {
   const [f,setF] = useState({
-    name:(item && item.name)||'',category:(item && item.category)||'Proteins',unit:(item && item.unit)||'kg',
-    currentQty:(item && item.currentQty)||'',price:(item && item.price)||'',parLevel:(item && item.parLevel)||'',
-    reorderLevel:(item && item.reorderLevel)||'',supplier:(item && item.supplier)||'',outlet:(item && item.outlet)||'All'
+    name:(item&&item.name)||'',category:(item&&item.category)||'Proteins',unit:(item&&item.unit)||'kg',
+    currentQty:(item&&item.currentQty)||'',price:(item&&item.price)||'',parLevel:(item&&item.parLevel)||'',
+    reorderLevel:(item&&item.reorderLevel)||'',supplier:(item&&item.supplier)||'',outlet:(item&&item.outlet)||'All'
   });
   const s = (k,v) => setF(p=>({...p,[k]:v}));
-  const outlets = ['All',...((co && co.outlets)||[])];
+  const outlets = ['All',...((co&&co.outlets)||[])];
   const valid = f.name && f.price && f.currentQty;
   return (
     <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
@@ -1196,23 +1143,20 @@ const Orders = ({user, co, inventory, setInventory, pos, setPos, setCompanies}) 
   const canApprove = user.permissions.includes('po.a') || user.role==='super_admin';
   const approve = po => { setPos(p=>p.map(x=>x.id===po.id?{...x,status:'approved',approvedAt:TODAY()}:x)); toast('Order approved ✅'); setDetail(null); };
   const reject = po => { setPos(p=>p.map(x=>x.id===po.id?{...x,status:'rejected'}:x)); toast('Order rejected','warning'); setDetail(null); };
-  const receive = po => {
-    // 1. Mark PO as received
-    setPos(p => p.map(x => x.id===po.id ? {...x, status:'received', receivedAt:TODAY()} : x));
-    // 2. Add received quantities back into inventory
-    setInventory(inv => {
-      let updated = [...inv];
-      po.items.forEach(item => {
-        const idx = updated.findIndex(i => i.id===item.itemId && i.companyId===po.companyId);
+  const receive = function(po) {
+    setPos(function(p) { return p.map(function(x) { return x.id===po.id ? Object.assign({},x,{status:'received',receivedAt:TODAY()}) : x; }); });
+    setInventory(function(inv) {
+      var updated = inv.slice();
+      po.items.forEach(function(item) {
+        var idx = updated.findIndex(function(i) { return i.id===item.itemId && i.companyId===po.companyId; });
         if(idx >= 0) {
-          updated[idx] = {...updated[idx], currentQty: (updated[idx].currentQty||0) + (parseFloat(item.qty)||0), updatedAt:TODAY()};
+          updated[idx] = Object.assign({},updated[idx],{currentQty:(updated[idx].currentQty||0)+(parseFloat(item.qty)||0),updatedAt:TODAY()});
         }
       });
       return updated;
     });
-    // 3. Add to company monthly spend
-    setCompanies(cos => cos.map(c => c.id===po.companyId ? {...c, monthlySpend:(c.monthlySpend||0)+po.totalAmount} : c));
-    toast(`📦 Received! ${po.items.length} item${po.items.length>1?'s':''} added to inventory. Spend updated.`);
+    setCompanies(function(cos) { return cos.map(function(c) { return c.id===po.companyId ? Object.assign({},c,{monthlySpend:(c.monthlySpend||0)+po.totalAmount}) : c; }); });
+    toast('Received! Inventory & spend updated 📦');
     setDetail(null);
   };
   const sbMap = {pending:'b-pend',approved:'b-appr',rejected:'b-rej',received:'b-recv'};
@@ -1249,7 +1193,7 @@ const Orders = ({user, co, inventory, setInventory, pos, setPos, setCompanies}) 
         )}
       </div>
       {showCreate && <CreatePO inventory={cinv} co={co} user={user} count={cpos.length} onSave={po=>{setPos(p=>[...p,po]);toast('PO created 📋');setShowCreate(false);}} onClose={()=>setShowCreate(false)}/>}
-      {detail && <PODetail po={detail} onClose={()=>setDetail(null)} canApprove={canApprove} onApprove={approve} onReject={reject} onReceive={receive} inventory={inventory}/>}
+      {detail && <PODetail po={detail} inventory={inventory} onClose={function(){setDetail(null);}} canApprove={canApprove} onApprove={approve} onReject={reject} onReceive={receive}/>}
     </div>
   );
 };
@@ -1260,7 +1204,7 @@ const CreatePO = ({inventory, co, user, count, onSave, onClose}) => {
   const [notes,setNotes] = useState('');
   const [outlet,setOutlet] = useState('All');
   const [delivery,setDelivery] = useState('');
-  const outlets = ['All',...((co && co.outlets)||[])];
+  const outlets = ['All',...((co&&co.outlets)||[])];
   const addRow = () => setItems(p=>[...p,{itemId:'',name:'',qty:'',unit:'kg',price:0,total:0}]);
   const remRow = i => setItems(p=>p.filter((_,idx)=>idx!==i));
   const upd = (i,field,val) => setItems(p=>p.map((item,idx)=>{
@@ -1318,8 +1262,8 @@ const CreatePO = ({inventory, co, user, count, onSave, onClose}) => {
 };
 
 /* ── PO DETAIL ──────────────────────────────────────────────── */
-const PODetail = ({po, onClose, canApprove, onApprove, onReject, onReceive, inventory}) => {
-  const getStock = itemId => (inventory && inventory.find(i=>i.id===itemId) ? inventory.find(i=>i.id===itemId).currentQty : '—');
+const PODetail = ({po, inventory, onClose, canApprove, onApprove, onReject, onReceive}) => {
+  var getStock = function(itemId) { var found = inventory && inventory.find(function(i){return i.id===itemId;}); return found ? found.currentQty : '—'; };
   const sc = {pending:'b-pend',approved:'b-appr',rejected:'b-rej',received:'b-recv'};
   return (
     <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
@@ -1333,33 +1277,21 @@ const PODetail = ({po, onClose, canApprove, onApprove, onReject, onReceive, inve
           </div>
           {po.notes && <div className="alert-box ab-amber" style={{marginBottom:'12px',fontStyle:'italic',fontSize:'12.5px'}}>"{po.notes}"</div>}
           <div className="tw" style={{marginBottom:'12px'}}>
-            <table>
-              <thead><tr><th>Item</th><th>Ordered Qty</th><th>Current Stock</th><th>Unit Price</th><th>Total</th></tr></thead>
-              <tbody>{po.items.map((item,i)=>(
-                <tr key={i}>
-                  <td style={{fontWeight:600}}>{item.name}</td>
-                  <td className="num" style={{fontWeight:'700',color:'var(--blue)'}}>{item.qty} {item.unit}</td>
-                  <td className="num" style={{color:'var(--t3)'}}>{getStock(item.itemId)} {item.unit}</td>
-                  <td className="num">₹{item.price}</td>
-                  <td className="num" style={{fontWeight:'700',color:'var(--blue)'}}>{INR(item.total)}</td>
-                </tr>
-              ))}</tbody>
+            <table><thead><tr><th>Item</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead>
+            <tbody>{po.items.map((item,i)=><tr key={i}><td style={{fontWeight:600}}>{item.name}</td><td className="num" style={{fontWeight:'700'}}>{item.qty} {item.unit}</td><td className="num">₹{item.price}</td><td className="num" style={{fontWeight:'700',color:'var(--blue)'}}>{INR(item.total)}</td></tr>)}</tbody>
             </table>
           </div>
-          {po.status==='approved' && (
-            <div className="alert-box ab-blue" style={{marginBottom:'8px'}}>
-              <span style={{fontSize:'16px'}}>📦</span>
-              <span style={{fontSize:'12.5px',color:'var(--blue)'}}>
-                <strong>On marking received:</strong> Stock quantities will be automatically added to inventory and spend will update.
-              </span>
-            </div>
-          )}
           <div style={{textAlign:'right',fontFamily:'var(--fd)',fontSize:'17px',fontWeight:'800',color:'var(--blue)'}}>Total: {INR(po.totalAmount)}</div>
         </div>
+        {po.status==='approved' && (
+          <div style={{margin:'0 22px 12px',padding:'10px 14px',background:'var(--blue-lt)',border:'1.5px solid var(--blue-bd)',borderRadius:'var(--r2)',fontSize:'12.5px',color:'var(--blue)'}}>
+            📦 <strong>On marking received:</strong> Quantities below will be added to inventory automatically.
+          </div>
+        )}
         <div className="m-ft">
           <button className="btn bs" onClick={onClose}>Close</button>
-          {canApprove && po.status==='pending' && <><button className="btn bd" onClick={()=>onReject(po)}>Reject</button><button className="btn bsuc" onClick={()=>onApprove(po)}>Approve</button></>}
-          {po.status==='approved' && <button className="btn bp" onClick={()=>onReceive(po)}>Mark Received</button>}
+          {canApprove && po.status==='pending' && <><button className="btn bd" onClick={function(){onReject(po);}}>Reject</button><button className="btn bsuc" onClick={function(){onApprove(po);}}>Approve</button></>}
+          {po.status==='approved' && <button className="btn bp" onClick={function(){onReceive(po);}}>Mark Received</button>}
         </div>
       </div>
     </div>
@@ -1394,7 +1326,7 @@ const Expenditure = ({co, pos, inventory}) => {
             </div>
           )}
         </div>
-        <div className="g2" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px',marginBottom:'14px'}}>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px',marginBottom:'14px'}}>
           <div className="card"><div className="card-hd"><span className="card-tt">Monthly Trend (₹ thousands)</span></div><div className="card-bd" style={{paddingTop:'8px'}}><BarChart data={monthly} color="#7C3AED"/></div></div>
           <div className="card"><div className="card-hd"><span className="card-tt">Spend by Category</span></div>
             <div className="card-bd">{Object.entries(allCats).slice(0,5).map(([cat,val],i)=>{ const mx=Math.max(...Object.values(allCats)); return (
@@ -1422,72 +1354,13 @@ const Expenditure = ({co, pos, inventory}) => {
   );
 };
 
-/* ── KITCHEN STAFF TUTORIAL ──────────────────────────────────── */
-const KitchenTutorial = ({user, onClose}) => {
-  const steps = [
-    {ic:'👋', title:'Welcome to InventoryPro!', body:"You're set up as Kitchen Staff. Your job is simple — update stock quantities at the end of each shift so the management always has accurate numbers.", color:'#2563EB'},
-    {ic:'📋', title:'Your Main Page: Update Stock', body:"Tap 'Update Stock' in the menu. You'll see all ingredients and supplies. Use the − and + buttons to set the current quantity for each item.", color:'#059669'},
-    {ic:'🔢', title:'How to Count Stock', body:"Walk through your kitchen and count every item. Tap the number and type the exact quantity, or use + / − to adjust. Work top to bottom, fridge by fridge.", color:'#7C3AED'},
-    {ic:'🔴', title:'Red = Critical, Yellow = Low', body:"Items in red are critically low — tell your manager immediately. Yellow means it's getting low. Green is fine. You don't need to order anything — just count and submit.", color:'#DC2626'},
-    {ic:'💾', title:'Always Save Before Leaving', body:"When you're done counting, tap the big blue 'Save Changes' button at the bottom. If you close the app without saving, your counts will be lost.", color:'#D97706'},
-    {ic:'🌙', title:'End-of-Day Reminder', body:"At 9 PM you'll get a reminder to do a closing count. This helps your manager know exactly what's available for the next morning's prep. It takes less than 5 minutes.", color:'#059669'},
-  ];
-  const [step, setStep] = React.useState(0);
-  const cur = steps[step];
-  const isLast = step === steps.length - 1;
-
-  return (
-    <div className="ov" style={{zIndex:1100}}>
-      <div className="modal" style={{maxWidth:'420px'}}>
-        {/* Progress dots */}
-        <div style={{display:'flex',gap:'6px',justifyContent:'center',padding:'16px 22px 0'}}>
-          {steps.map((_,i) => (
-            <div key={i} style={{width:i===step?20:7,height:7,borderRadius:'99px',background:i===step?cur.color:i<step?cur.color+'66':'var(--border-2)',transition:'all .3s',cursor:'pointer'}} onClick={()=>setStep(i)}/>
-          ))}
-        </div>
-        <div className="m-hd" style={{border:'none',paddingBottom:'8px'}}>
-          <div style={{width:'100%',textAlign:'center'}}>
-            <div style={{fontSize:'48px',marginBottom:'10px',lineHeight:1}}>{cur.ic}</div>
-            <div style={{fontFamily:'var(--fd)',fontSize:'18px',fontWeight:'800',color:'var(--t1)',letterSpacing:'-.3px'}}>{cur.title}</div>
-            <div style={{fontSize:'11px',color:'var(--t4)',marginTop:'4px',fontWeight:'600',letterSpacing:'.5px',textTransform:'uppercase'}}>Step {step+1} of {steps.length}</div>
-          </div>
-        </div>
-        <div className="m-bd" style={{paddingTop:'0',textAlign:'center'}}>
-          <div style={{fontSize:'14px',color:'var(--t2)',lineHeight:'1.7',background:'var(--bg)',padding:'16px',borderRadius:'var(--r2)',border:'1.5px solid var(--border)'}}>{cur.body}</div>
-          {/* Quick reference card on last step */}
-          {isLast && (
-            <div style={{marginTop:'14px',padding:'14px',background:'var(--blue-lt)',border:'1.5px solid var(--blue-bd)',borderRadius:'var(--r2)',textAlign:'left'}}>
-              <div style={{fontWeight:'700',fontSize:'12px',color:'var(--blue)',marginBottom:'8px'}}>📌 Quick Reference</div>
-              {[['🔄','Update Stock','Your main job — count & submit'],['🔴','Red badge','Tell manager immediately'],['💾','Save button','Always tap before leaving'],['🌙','9 PM alert','Do your closing count']].map(([ic,k,v]) => (
-                <div key={k} style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'5px',fontSize:'12px'}}>
-                  <span>{ic}</span><strong style={{color:'var(--t1)'}}>{k}:</strong><span style={{color:'var(--t3)'}}>{v}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-        <div className="m-ft" style={{justifyContent:'space-between'}}>
-          <button className="btn bg btn-sm" onClick={onClose} style={{color:'var(--t4)'}}>Skip tutorial</button>
-          <div style={{display:'flex',gap:'8px'}}>
-            {step > 0 && <button className="btn bs btn-sm" onClick={()=>setStep(s=>s-1)}>← Back</button>}
-            {!isLast
-              ? <button className="btn bp btn-sm" onClick={()=>setStep(s=>s+1)} style={{background:cur.color,borderColor:cur.color}}>Next →</button>
-              : <button className="btn bp btn-sm" onClick={onClose} style={{background:cur.color,borderColor:cur.color}}>Let's go! 🚀</button>
-            }
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 /* ── STOCK UPDATE ───────────────────────────────────────────── */
 const StockUpdate = ({user, co, inventory, setInventory}) => {
   const toast = useToast();
+  const [showTutBtn, setShowTutBtn] = useState(false);
   const [q,setQ] = useState('');
   const [upd,setUpd] = useState({});
   const [saving,setSaving] = useState(false);
-  const [showTutHere, setShowTutHere] = useState(false);
   const inv = inventory.filter(i=>i.companyId===co.id && i.name.toLowerCase().includes(q.toLowerCase()));
   const getQty = item => upd[item.id]!==undefined ? upd[item.id] : item.currentQty;
   const setQty = (id,v) => setUpd(p=>({...p,[id]:v}));
@@ -1504,7 +1377,9 @@ const StockUpdate = ({user, co, inventory, setInventory}) => {
   };
   return (
     <div>
-      <Topbar title="Update Stock" sub={`${co.emoji} ${co.name} · Daily Stock Count`} actions={<button className="btn bs btn-sm" onClick={()=>setShowTutHere(true)}>📖 How it works</button>}/>
+      <Topbar title="Update Stock" sub={co.emoji+' '+co.name+' · Daily Stock Count'} actions={
+        <button className="btn bs btn-sm" onClick={function(){setShowTutBtn(true);}}>📖 How it works</button>
+      }/>
       <div className="page">
         <div style={{background:'linear-gradient(135deg,var(--navy),var(--navy-2))',borderRadius:'var(--r3)',padding:'20px 24px',marginBottom:'18px',display:'flex',alignItems:'center',justifyContent:'space-between',boxShadow:'var(--sh2)'}}>
           <div>
@@ -1543,7 +1418,6 @@ const StockUpdate = ({user, co, inventory, setInventory}) => {
           </button>
         </div>
       </div>
-    {showTutHere && <KitchenTutorial user={user} onClose={()=>setShowTutHere(false)}/>}
     </div>
   );
 };
@@ -1598,49 +1472,19 @@ const AdminCenter = ({user, co, allUsers, setAllUsers}) => {
             <div className="card-bd"><div className="pg">{PERMS_DEF.map(p => { const on=(ROLE_PERMS[role]||[]).includes(p.k); return <div key={p.k} className={`pi ${on?'on':''}`}><div className="pi-ck">{on&&<Ic n="chk" s={9} c="#fff"/>}</div><div className="pi-lbl">{p.l}</div></div>; })}</div></div>
           </div>
         )}
-        {tab==='outlets' && (() => {
-          const planCfg = PLANS[co.plan] || PLANS.Starter;
-          const maxO = planCfg.outlets;
-          const usedO = (co.outlets||[]).length;
-          const pct = maxO===999 ? 0 : Math.min(100, Math.round((usedO/maxO)*100));
-          const canAdd = usedO < maxO;
-          return (
-            <div>
-              <div className="alert-box ab-blue" style={{marginBottom:'14px'}}>
-                <Ic n="lock" s={15}/>
-                <div>
-                  <strong style={{color:'var(--blue)'}}>{co.plan} Plan</strong>
-                  <span style={{color:'var(--t2)',fontSize:'12.5px'}}> — {maxO===999?'Unlimited outlets':'Outlets: '+usedO+' of '+maxO+' used'}</span>
-                  {maxO!==999 && <div style={{marginTop:'6px'}}><div className="pb" style={{height:'5px',maxWidth:'200px'}}><div className="pf" style={{width:`${pct}%`,background:pct>=100?'var(--red)':'var(--blue)'}}/></div></div>}
+        {tab==='outlets' &&
+          <div className="card"><div className="card-hd"><span className="card-tt">Company Outlets</span></div>
+            <div className="card-bd">{(co.outlets||[]).map((o,i) =>
+              <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 0',borderBottom:'1px solid var(--border)'}}>
+                <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+                  <div style={{width:'34px',height:'34px',background:'var(--blue-lt)',borderRadius:'9px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'17px'}}>🏪</div>
+                  <div><div style={{fontWeight:700,fontSize:'13px'}}>{o}</div><div style={{fontSize:'11px',color:'var(--t3)'}}>Active</div></div>
                 </div>
+                <span className="bdg b-ok">Active</span>
               </div>
-              <div className="card">
-                <div className="card-hd">
-                  <span className="card-tt">Outlets ({usedO}{maxO!==999?' / '+maxO:''})</span>
-                  {!canAdd && <span className="bdg b-crit" style={{fontSize:'10px'}}>Plan limit reached</span>}
-                </div>
-                <div className="card-bd">
-                  {(co.outlets||[]).length === 0 && <div style={{textAlign:'center',padding:'20px',color:'var(--t4)',fontSize:'13px'}}>No outlets configured. Ask Super Admin to add outlets.</div>}
-                  {(co.outlets||[]).map((o,i) =>
-                    <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0',borderBottom:'1px solid var(--border)'}}>
-                      <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
-                        <div style={{width:'34px',height:'34px',background:'var(--blue-lt)',borderRadius:'9px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'17px'}}>🏪</div>
-                        <div><div style={{fontWeight:700,fontSize:'13px'}}>{o}</div><div style={{fontSize:'11px',color:'var(--t3)'}}>Active outlet</div></div>
-                      </div>
-                      <span className="bdg b-ok">Active</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              {!canAdd && (
-                <div className="alert-box ab-amber" style={{marginTop:'12px'}}>
-                  <Ic n="warn" s={15}/>
-                  <span style={{fontSize:'12.5px',color:'var(--amber)'}}>Outlet limit reached for <strong>{co.plan}</strong>. Ask your Super Admin to upgrade the plan to add more outlets.</span>
-                </div>
-              )}
-            </div>
-          );
-        })()}
+            )}</div>
+          </div>
+        }
       </div>
       {showAdd && <UserModal u={editing} co={co} onSave={saveUser} onClose={()=>{setShowAdd(false);setEditing(null);}}/>}
     </div>
@@ -1649,10 +1493,10 @@ const AdminCenter = ({user, co, allUsers, setAllUsers}) => {
 
 /* ── USER MODAL ─────────────────────────────────────────────── */
 const UserModal = ({u, co, onSave, onClose}) => {
-  const [f,setF] = useState({name:(u && u.name)||'',email:(u && u.email)||'',password:(u && u.password)||'',role:(u && u.role)||'kitchen_staff',outlet:(u && u.outlet)||'',permissions:(u && u.permissions)||ROLE_PERMS.kitchen_staff});
+  const [f,setF] = useState({name:(u&&u.name)||'',email:(u&&u.email)||'',password:(u&&u.password)||'',role:(u&&u.role)||'kitchen_staff',outlet:(u&&u.outlet)||'',permissions:(u&&u.permissions)||ROLE_PERMS.kitchen_staff});
   const s = (k,v) => setF(p=>({...p,[k]:v}));
   const toggle = key => setF(p=>({...p,permissions:p.permissions.includes(key)?p.permissions.filter(x=>x!==key):[...p.permissions,key]}));
-  const outlets = ['All',...((co && co.outlets)||[])];
+  const outlets = ['All',...((co&&co.outlets)||[])];
   return (
     <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
       <div className="modal modal-md">
@@ -1663,7 +1507,7 @@ const UserModal = ({u, co, onSave, onClose}) => {
             <div className="fg"><label className="fl">Email</label><input className="fi" type="email" value={f.email} onChange={e=>s('email',e.target.value)}/></div>
             <div className="fg"><label className="fl">Password</label><input className="fi" value={f.password} onChange={e=>s('password',e.target.value)}/></div>
             <div className="fg"><label className="fl">Role</label><select className="fs" value={f.role} onChange={e=>{s('role',e.target.value);s('permissions',ROLE_PERMS[e.target.value]||[]);}}><option value="company_admin">Admin</option><option value="manager">Manager</option><option value="kitchen_staff">Kitchen Staff</option></select></div>
-            <div className="fg full"><label className="fl">Assigned Outlet</label><select className="fs" value={f.outlet} onChange={e=>s('outlet',e.target.value)}><option value="">All Outlets</option>{((co && co.outlets)||[]).map(o=><option key={o}>{o}</option>)}</select></div>
+            <div className="fg full"><label className="fl">Assigned Outlet</label><select className="fs" value={f.outlet} onChange={e=>s('outlet',e.target.value)}><option value="">All Outlets</option>{((co&&co.outlets)||[]).map(o=><option key={o}>{o}</option>)}</select></div>
           </div>
           <div className="dvd"/>
           <div style={{fontSize:'11px',fontWeight:'700',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'9px'}}>Permissions</div>
@@ -1686,7 +1530,7 @@ const Credentials = ({allUsers, setAllUsers, companies}) => {
   const rc = ROLE_COLORS;
   const rb = {company_admin:'b-blue',manager:'b-appr',kitchen_staff:'b-grey'};
   const co = id => companies.find(c=>c.id===id);
-  const copyToClip = text => { navigator.clipboard && navigator.clipboard.writeText(text); toast('Copied to clipboard 📋'); };
+  const copyToClip = text => { navigator.clipboard&&navigator.clipboard.writeText(text); toast('Copied to clipboard 📋'); };
   const saveUser = d => {
     if(editing) { setAllUsers(p=>p.map(u=>u.id===editing.id?{...editing,...d}:u)); toast('Credentials updated ✅'); }
     else { setAllUsers(p=>[...p,{id:'u'+uid(),...d}]); toast('Login created 👤'); }
@@ -1743,7 +1587,7 @@ const Credentials = ({allUsers, setAllUsers, companies}) => {
 
 /* ── CRED MODAL ─────────────────────────────────────────────── */
 const CredModal = ({u, companies, onSave, onClose}) => {
-  const [f,setF] = useState({name:(u && u.name)||'',email:(u && u.email)||'',password:(u && u.password)||'',role:(u && u.role)||'kitchen_staff',companyId:(u && u.companyId)||companies[0] && companies[0].id||'',outlet:(u && u.outlet)||'',permissions:(u && u.permissions)||ROLE_PERMS.kitchen_staff});
+  const [f,setF] = useState({name:(u&&u.name)||'',email:(u&&u.email)||'',password:(u&&u.password)||'',role:(u&&u.role)||'kitchen_staff',companyId:(u&&u.companyId)||companies[0]?.id||'',outlet:(u&&u.outlet)||'',permissions:(u&&u.permissions)||ROLE_PERMS.kitchen_staff});
   const s = (k,v) => setF(p=>({...p,[k]:v}));
   const co = companies.find(c=>c.id===f.companyId);
   const [showPw,setShowPw] = useState(false);
@@ -1763,7 +1607,7 @@ const CredModal = ({u, companies, onSave, onClose}) => {
             </div>
             <div className="fg"><label className="fl">Role</label><select className="fs" value={f.role} onChange={e=>{s('role',e.target.value);s('permissions',ROLE_PERMS[e.target.value]||[]);}}><option value="company_admin">Company Admin</option><option value="manager">Manager</option><option value="kitchen_staff">Kitchen Staff</option></select></div>
             <div className="fg"><label className="fl">Company</label><select className="fs" value={f.companyId} onChange={e=>s('companyId',e.target.value)}>{companies.map(c=><option key={c.id} value={c.id}>{c.emoji} {c.name}</option>)}</select></div>
-            <div className="fg"><label className="fl">Outlet</label><select className="fs" value={f.outlet} onChange={e=>s('outlet',e.target.value)}><option value="">All Outlets</option>{((co && co.outlets)||[]).map(o=><option key={o}>{o}</option>)}</select></div>
+            <div className="fg"><label className="fl">Outlet</label><select className="fs" value={f.outlet} onChange={e=>s('outlet',e.target.value)}><option value="">All Outlets</option>{((co&&co.outlets)||[]).map(o=><option key={o}>{o}</option>)}</select></div>
           </div>
         </div>
         <div className="m-ft"><button className="btn bs" onClick={onClose}>Cancel</button><button className="btn bp" disabled={!f.name||!f.email||!f.password} onClick={()=>onSave(f)}>{u?'Update Login':'Create Login'}</button></div>
@@ -1772,269 +1616,176 @@ const CredModal = ({u, companies, onSave, onClose}) => {
   );
 };
 
-/* ── RESET MODAL ─────────────────────────────────────────────── */
-const ResetModal = ({co, onClose, onReset}) => {
-  const [confirm, setConfirm] = useState('');
-  const match = confirm.trim().toLowerCase() === co.name.toLowerCase();
-  return (
-    <div className="ov" onClick={e=>e.target===e.currentTarget&&onClose()}>
-      <div className="modal">
-        <div className="m-hd">
-          <div>
-            <div className="m-tt" style={{color:'var(--amber)'}}>⚠️ Reset Company Data</div>
-            <div className="m-sub">{co.emoji} {co.name}</div>
-          </div>
-          <div className="cls" onClick={onClose}><Ic n="x" s={13}/></div>
-        </div>
-        <div className="m-bd">
-          <div className="alert-box ab-red" style={{marginBottom:'14px'}}>
-            <Ic n="warn" s={17}/>
-            <div>
-              <strong style={{color:'var(--red)'}}>This cannot be undone.</strong>
-              <div style={{fontSize:'12px',marginTop:'5px',color:'var(--red)',lineHeight:'1.7'}}>
-                Will permanently delete all inventory items, purchase orders, and stock history for this company.
-              </div>
-            </div>
-          </div>
-          <div style={{padding:'12px 14px',background:'var(--green-lt)',border:'1.5px solid var(--green-bd)',borderRadius:'var(--r2)',fontSize:'12.5px',color:'var(--t2)',marginBottom:'14px'}}>
-            <strong>What is preserved:</strong> Company profile, plan, outlets, and all user logins.
-          </div>
-          <div className="fg">
-            <label className="fl">Type <strong>{co.name}</strong> to confirm reset:</label>
-            <input className="fi" placeholder={co.name} value={confirm} onChange={e=>setConfirm(e.target.value)}/>
-          </div>
-        </div>
-        <div className="m-ft">
-          <button className="btn bs" onClick={onClose}>Cancel</button>
-          <button className="btn" style={{background:match?'var(--amber)':'var(--bg)',color:match?'#fff':'var(--t4)',border:'1.5px solid '+(match?'var(--amber)':'var(--border)'),padding:'9px 16px',fontSize:'13px',fontWeight:'600',borderRadius:'var(--r2)',cursor:match?'pointer':'not-allowed',transition:'all .15s'}} disabled={!match} onClick={()=>onReset(co.id)}>
-            Reset All Data
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 /* ── CLIENT MANAGEMENT ──────────────────────────────────────── */
 const Clients = ({companies, setCompanies, allUsers, setAllUsers, onResetData}) => {
+  var [resetTarget, setResetTarget] = useState(null);
+  var [resetConfirm, setResetConfirm] = useState('');
   const toast = useToast();
-  const [show, setShow] = useState(false);
-  const [resetTarget, setResetTarget] = useState(null);
-  const [editCo, setEditCo] = useState(null); // for editing existing company
-  const emojis = ['🍔','🍕','🌮','🍜','🥩','🍗','🌯','🧆','🍣','🥗','🍛','🔥','🥢','🫕','🍖','☕','🧋','🍱'];
-  const planColors = {Starter:'#2563EB', Professional:'#D97706', Enterprise:'#059669'};
-  const topColors = ['#2563EB','#059669','#7C3AED','#D97706','#DC2626'];
-  const blank = {name:'',emoji:'🍔',outlets:[],plan:'Starter',adminName:'',adminEmail:'',adminPassword:''};
-  const [f, setF] = useState(blank);
+  const [show,setShow] = useState(false);
+  const [f,setF] = useState({name:'',emoji:'🍔',outlets:'',plan:'Starter',adminName:'',adminEmail:'',adminPassword:''});
   const sf = (k,v) => setF(p=>({...p,[k]:v}));
-
-  const openAdd = () => { setEditCo(null); setF(blank); setShow(true); };
-  const openEdit = co => { setEditCo(co); setF({...co, adminName:'', adminEmail:'', adminPassword:''}); setShow(true); };
-
-  const maxOutlets = f.plan ? PLANS[f.plan]?.outlets : 2;
-  const canAddOutlet = (f.outlets||[]).length < maxOutlets;
-
-  const addOutlet = () => {
-    if(!canAddOutlet) { toast(`${f.plan} plan allows max ${maxOutlets} outlet${maxOutlets===1?'':'s'}. Upgrade to add more.`, 'warning'); return; }
-    setF(p => ({...p, outlets: [...(p.outlets||[]), '']}));
-  };
-  const updateOutlet = (i, val) => setF(p => ({...p, outlets: p.outlets.map((o,idx) => idx===i ? val : o)}));
-  const removeOutlet = i => setF(p => ({...p, outlets: p.outlets.filter((_,idx) => idx!==i)}));
-
-  const save = () => {
-    const cleanOutlets = (f.outlets||[]).map(o=>o.trim()).filter(Boolean);
-    if(editCo) {
-      setCompanies(p => p.map(c => c.id===editCo.id ? {...c, ...f, outlets:cleanOutlets} : c));
-      toast(`${f.emoji} ${f.name} updated ✏️`);
-    } else {
-      const nc = {id:'c'+uid(), name:f.name, emoji:f.emoji, outlets:cleanOutlets, plan:f.plan, status:'active', createdAt:TODAY(), totalItems:0, monthlySpend:0};
-      setCompanies(p => [...p, nc]);
-      if(f.adminEmail) setAllUsers(p => [...p, {id:'u'+uid(), name:f.adminName||f.name+' Admin', email:f.adminEmail, password:f.adminPassword||'admin123', role:'company_admin', companyId:nc.id, outlet:null, permissions:ROLE_PERMS.company_admin}]);
-      toast(`${f.emoji} ${f.name} onboarded! 🎉`);
-    }
+  const emojis = ['🍔','🍕','🌮','🍜','🥩','🍗','🌯','🧆','🍣','🥗','🍛','🔥','🥢','🫕','🍖'];
+  const planColors = {Starter:'#2563EB',Professional:'#D97706',Enterprise:'#059669'};
+  const topColors = ['#2563EB','#059669','#7C3AED','#D97706','#DC2626'];
+  const add = () => {
+    const nc = {id:'c'+uid(),name:f.name,emoji:f.emoji,outlets:f.outlets.split(',').map(s=>s.trim()).filter(Boolean),plan:f.plan,status:'active',createdAt:TODAY(),totalItems:0,monthlySpend:0};
+    setCompanies(p=>[...p,nc]);
+    if(f.adminEmail) setAllUsers(p=>[...p,{id:'u'+uid(),name:f.adminName||f.name+' Admin',email:f.adminEmail,password:f.adminPassword||'admin123',role:'company_admin',companyId:nc.id,outlet:null,permissions:ROLE_PERMS.company_admin}]);
+    toast(`${f.emoji} ${f.name} onboarded! 🎉`);
     setShow(false);
+    setF({name:'',emoji:'🍔',outlets:'',plan:'Starter',adminName:'',adminEmail:'',adminPassword:''});
   };
-
   return (
     <div>
-      <Topbar title="Client Management" sub="Super Admin · All Companies on Platform"
-        actions={<button className="btn bp btn-sm" onClick={openAdd}><Ic n="plus" s={12}/>Add Company</button>}
-      />
+      <Topbar title="Client Management" sub="Super Admin · All Companies on Platform" actions={<button className="btn bp btn-sm" onClick={()=>setShow(true)}><Ic n="plus" s={12}/>Add Company</button>}/>
       <div className="page">
-        {/* Summary stats */}
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'12px',marginBottom:'20px'}}>
           {[{l:'Total Companies',v:companies.length,c:'var(--blue)'},{l:'Total Users',v:allUsers.filter(u=>u.role!=='super_admin').length,c:'var(--green)'},{l:'Platform Revenue',v:'₹24,500/mo',c:'var(--violet)'}].map(s =>
             <div key={s.l} style={{background:'var(--white)',border:'1px solid var(--border)',borderRadius:'var(--r3)',padding:'16px 18px',boxShadow:'var(--sh1)'}}>
               <div style={{fontSize:'10.5px',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'5px',fontWeight:'700'}}>{s.l}</div>
-              <div style={{fontFamily:'var(--fd)',fontSize:'22px',fontWeight:'800',color:s.c,letterSpacing:'-.3px'}}>{s.v}</div>
+              <div style={{fontFamily:'var(--fd)',fontSize:'24px',fontWeight:'800',color:s.c,letterSpacing:'-.3px'}}>{s.v}</div>
             </div>
           )}
         </div>
-
-        {/* Plan limits info strip */}
-        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'10px',marginBottom:'20px'}}>
-          {Object.entries(PLANS).map(([plan, cfg]) => (
-            <div key={plan} style={{background:'var(--white)',border:`1.5px solid ${cfg.color}33`,borderRadius:'var(--r3)',padding:'12px 16px',boxShadow:'var(--sh1)'}}>
-              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'6px'}}>
-                <span style={{fontWeight:'700',fontSize:'12.5px',color:cfg.color}}>{plan}</span>
-                <span style={{fontFamily:'var(--fm)',fontSize:'11px',color:'var(--t3)',fontWeight:'600'}}>{cfg.price}</span>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'8px',marginBottom:'18px'}}>
+          {Object.entries(PLANS).map(function(entry){var plan=entry[0];var cfg=entry[1];return (
+            <div key={plan} style={{background:'var(--white)',border:'1.5px solid '+cfg.color+'33',borderRadius:'var(--r3)',padding:'12px 14px',boxShadow:'var(--sh1)'}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'5px'}}>
+                <span style={{fontWeight:'700',fontSize:'12px',color:cfg.color}}>{plan}</span>
+                <span style={{fontFamily:'var(--fm)',fontSize:'10.5px',color:'var(--t3)'}}>₹{cfg.price}/mo</span>
               </div>
-              <div style={{fontSize:'11.5px',color:'var(--t2)',lineHeight:'1.6'}}>
-                <div>🏪 {cfg.outlets===999?'Unlimited':cfg.outlets} outlet{cfg.outlets===1?'':'s'}</div>
-                <div>👤 {cfg.users===999?'Unlimited':cfg.users} users</div>
-              </div>
+              <div style={{fontSize:'11px',color:'var(--t2)'}}>🏪 {cfg.outlets===999?'Unlimited':cfg.outlets} outlets &nbsp;·&nbsp; 👤 {cfg.users===999?'Unlimited':cfg.users} users</div>
             </div>
-          ))}
+          );})}
         </div>
-
-        {/* Company cards */}
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:'14px'}}>
-          {companies.map((co, i) => {
+          {companies.map((co,i) => {
             const coU = allUsers.filter(u=>u.companyId===co.id);
-            const planCfg = PLANS[co.plan] || PLANS.Starter;
-            const outletPct = Math.min(100, Math.round((co.outlets.length / planCfg.outlets) * 100));
             return (
-              <div key={co.id} style={{background:'var(--white)',border:'1.5px solid var(--border)',borderRadius:'20px',padding:'20px',boxShadow:'var(--sh1)',transition:'all .2s',position:'relative',overflow:'hidden'}}>
-                <div style={{height:'3px',position:'absolute',top:0,left:0,right:0,background:`linear-gradient(90deg,${topColors[i%5]},${topColors[(i+2)%5]})`}}/>
+              <div key={co.id} className="clc">
+                <div className="clc-top" style={{background:`linear-gradient(90deg,${topColors[i%5]},${topColors[(i+2)%5]})`}}/>
                 <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginTop:'6px',marginBottom:'8px'}}>
-                  <div style={{fontSize:'30px'}}>{co.emoji}</div>
-                  <div style={{display:'flex',gap:'5px',alignItems:'center',flexWrap:'wrap',justifyContent:'flex-end'}}>
+                  <div className="clc-em">{co.emoji}</div>
+                  <div style={{display:'flex',gap:'5px',alignItems:'center'}}>
                     <span className="bdg" style={{background:planColors[co.plan]+'18',color:planColors[co.plan],borderColor:planColors[co.plan]+'33',fontSize:'10px'}}>{co.plan}</span>
                     <span className={`bdg ${co.status==='active'?'b-ok':'b-pend'}`} style={{fontSize:'10px'}}>{co.status}</span>
                   </div>
                 </div>
-                <div style={{fontFamily:'var(--fd)',fontSize:'16px',fontWeight:'800',color:'var(--t1)',letterSpacing:'-.2px',marginBottom:'2px'}}>{co.name}</div>
-                <div style={{fontSize:'12px',color:'var(--t3)',marginBottom:'12px'}}>{co.outlets.length} outlet{co.outlets.length!==1?'s':''} · Since {co.createdAt}</div>
-
-                {/* Outlet usage bar */}
-                {planCfg.outlets !== 999 && (
-                  <div style={{marginBottom:'12px'}}>
-                    <div style={{display:'flex',justifyContent:'space-between',fontSize:'10.5px',color:'var(--t4)',marginBottom:'4px'}}>
-                      <span>Outlets used</span>
-                      <span style={{fontFamily:'var(--fm)',fontWeight:'700',color:outletPct>=100?'var(--red)':planColors[co.plan]}}>{co.outlets.length}/{planCfg.outlets}</span>
-                    </div>
-                    <div className="pb" style={{height:'5px'}}>
-                      <div className="pf" style={{width:`${outletPct}%`,background:outletPct>=100?'var(--red)':planColors[co.plan]}}/>
-                    </div>
-                    {outletPct >= 100 && <div style={{fontSize:'10px',color:'var(--red)',marginTop:'3px',fontWeight:'600'}}>At outlet limit — upgrade plan to add more</div>}
-                  </div>
-                )}
-
-                {/* Outlets list */}
-                <div style={{display:'flex',flexWrap:'wrap',gap:'4px',marginBottom:'12px'}}>
-                  {co.outlets.map((o,i) => <span key={i} className="tag" style={{fontSize:'10.5px'}}>🏪 {o}</span>)}
-                  {co.outlets.length === 0 && <span style={{fontSize:'11px',color:'var(--t4)'}}>No outlets added yet</span>}
-                </div>
-
-                <div style={{display:'flex',gap:'8px',paddingTop:'12px',borderTop:'1px solid var(--border)'}}>
-                  <div style={{flex:1}}><div style={{fontFamily:'var(--fd)',fontSize:'17px',fontWeight:'800',color:'var(--t1)'}}>{coU.length}</div><div style={{fontSize:'10px',color:'var(--t4)'}}>Users</div></div>
-                  <div style={{flex:1}}><div style={{fontFamily:'var(--fd)',fontSize:'17px',fontWeight:'800',color:'var(--t1)'}}>{co.totalItems}</div><div style={{fontSize:'10px',color:'var(--t4)'}}>SKUs</div></div>
-                  <div style={{flex:1}}><div style={{fontFamily:'var(--fd)',fontSize:'13px',fontWeight:'800',color:'var(--green)'}}>{INR(co.monthlySpend)}</div><div style={{fontSize:'10px',color:'var(--t4)'}}>Monthly</div></div>
+                <div className="clc-nm">{co.name}</div>
+                <div className="clc-mt">{co.outlets.length} outlet{co.outlets.length!==1?'s':''} · Since {co.createdAt}</div>
+                <div className="clc-sts">
+                  <div><div className="clc-sv">{coU.length}</div><div className="clc-sl">Users</div></div>
+                  <div><div className="clc-sv">{co.totalItems}</div><div className="clc-sl">SKUs</div></div>
+                  <div><div className="clc-sv" style={{color:'var(--green)',fontSize:'13px'}}>{INR(co.monthlySpend)}</div><div className="clc-sl">Monthly</div></div>
                 </div>
                 <div style={{display:'flex',gap:'7px',marginTop:'12px'}}>
-                  <button className="btn bs btn-sm" style={{flex:1}} onClick={()=>openEdit(co)}><Ic n="edit" s={12}/>Manage</button>
-                  <button className="btn" style={{background:'var(--amber-lt)',color:'var(--amber)',border:'1.5px solid var(--amber-bd)',padding:'5px 10px',fontSize:'12px',fontWeight:'600',borderRadius:'var(--r2)',cursor:'pointer',gap:'5px',display:'flex',alignItems:'center'}} onClick={()=>setResetTarget(co)} title="Reset all company data"><Ic n="refresh" s={12}/>Reset</button>
-                  <button className="btn bd btn-sm" onClick={()=>{if(window.confirm(`Permanently remove ${co.name} and all its data?`)){setCompanies(p=>p.filter(c=>c.id!==co.id));setAllUsers(p=>p.filter(u=>u.companyId!==co.id));toast('Company removed');}}}><Ic n="del" s={12}/></button>
+                  <button className="btn bs btn-sm" style={{flex:1,fontSize:'11.5px'}} onClick={function(){setResetTarget(co);setResetConfirm('');}}>🔄 Reset Data</button>
+                  <button className="btn bd btn-sm" style={{flex:1,fontSize:'11.5px'}} onClick={function(){if(window.confirm('Permanently remove '+co.name+'?')){setCompanies(function(p){return p.filter(function(c){return c.id!==co.id;});});setAllUsers(function(p){return p.filter(function(u){return u.companyId!==co.id;});});toast('Company removed');}}}>Remove</button>
                 </div>
               </div>
             );
           })}
         </div>
       </div>
-
-      {/* Reset Company Data Modal */}
-      {resetTarget && <ResetModal co={resetTarget} onClose={()=>setResetTarget(null)} onReset={(cid)=>{ onResetData(cid); setResetTarget(null); }}/>}
-
-      {/* Add / Edit Company Modal */}
-      {show && (
-        <div className="ov" onClick={e=>e.target===e.currentTarget&&setShow(false)}>
-          <div className="modal modal-md">
+      {resetTarget && (
+        <div className="ov" onClick={function(e){if(e.target===e.currentTarget){setResetTarget(null);}}}>
+          <div className="modal">
             <div className="m-hd">
-              <div>
-                <div className="m-tt">{editCo ? `Edit: ${editCo.name}` : 'Add New Company'}</div>
-                <div className="m-sub">{editCo ? 'Update company details and outlet configuration' : 'Set up a new client on the platform'}</div>
-              </div>
-              <div className="cls" onClick={()=>setShow(false)}><Ic n="x" s={13}/></div>
+              <div><div className="m-tt" style={{color:'var(--amber)'}}>⚠️ Reset Company Data</div><div className="m-sub">{resetTarget.emoji} {resetTarget.name}</div></div>
+              <div className="cls" onClick={function(){setResetTarget(null);}}><Ic n="x" s={13}/></div>
             </div>
-            <div className="m-bd" style={{maxHeight:'72vh',overflowY:'auto'}}>
-
-              {/* Company Info */}
-              <div style={{fontSize:'10.5px',fontWeight:'700',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'10px'}}>Company Details</div>
-              <div className="fgrid">
-                <div className="fg"><label className="fl">Company Name</label><input className="fi" placeholder="e.g. Pizza Hub" value={f.name} onChange={e=>sf('name',e.target.value)}/></div>
-                <div className="fg"><label className="fl">Brand Emoji</label><select className="fs" value={f.emoji} onChange={e=>sf('emoji',e.target.value)}>{emojis.map(e=><option key={e}>{e}</option>)}</select></div>
+            <div className="m-bd">
+              <div className="alert-box ab-red" style={{marginBottom:'12px'}}>
+                <Ic n="warn" s={16}/>
+                <div><strong style={{color:'var(--red)'}}>Cannot be undone.</strong><div style={{fontSize:'12px',color:'var(--red)',marginTop:'4px'}}>Deletes all inventory and purchase orders for this company.</div></div>
               </div>
-
-              {/* Plan Selection */}
-              <div className="fg">
-                <label className="fl">Subscription Plan</label>
-                <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'8px'}}>
-                  {Object.entries(PLANS).map(([plan, cfg]) => (
-                    <div key={plan} onClick={()=>sf('plan',plan)} style={{padding:'10px 12px',background:f.plan===plan?cfg.color+'12':'var(--bg)',border:`1.5px solid ${f.plan===plan?cfg.color:' var(--border)'}`,borderRadius:'var(--r2)',cursor:'pointer',transition:'all .15s'}}>
-                      <div style={{fontWeight:'700',fontSize:'12px',color:f.plan===plan?cfg.color:'var(--t2)',marginBottom:'2px'}}>{plan}</div>
-                      <div style={{fontSize:'10.5px',color:'var(--t3)'}}>🏪 {cfg.outlets===999?'∞':cfg.outlets} outlets</div>
-                      <div style={{fontSize:'10.5px',color:'var(--t3)'}}>👤 {cfg.users===999?'∞':cfg.users} users</div>
-                      <div style={{fontFamily:'var(--fm)',fontSize:'10px',color:f.plan===plan?cfg.color:'var(--t4)',marginTop:'4px',fontWeight:'600'}}>{cfg.price}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="dvd"/>
-
-              {/* Outlets */}
-              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'10px'}}>
-                <div>
-                  <div style={{fontSize:'10.5px',fontWeight:'700',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px'}}>Outlets</div>
-                  <div style={{fontSize:'10.5px',color:'var(--t4)',marginTop:'2px'}}>{(f.outlets||[]).length} of {maxOutlets===999?'unlimited':maxOutlets} used on {f.plan} plan</div>
-                </div>
-                <button className="btn bs btn-sm" onClick={addOutlet} disabled={!canAddOutlet} style={{opacity:canAddOutlet?1:.5}}>
-                  <Ic n="plus" s={12}/>Add Outlet
-                </button>
-              </div>
-
-              {!canAddOutlet && (
-                <div className="alert-box ab-amber" style={{marginBottom:'10px'}}>
-                  <Ic n="warn" s={15}/>
-                  <span style={{fontSize:'12.5px'}}>
-                    <strong>{f.plan} plan limit reached ({maxOutlets} outlets).</strong> Select Professional or Enterprise to add more.
-                  </span>
-                </div>
-              )}
-
-              {(f.outlets||[]).length === 0 && (
-                <div style={{padding:'16px',background:'var(--bg)',borderRadius:'var(--r2)',border:'1.5px dashed var(--border)',textAlign:'center',fontSize:'12.5px',color:'var(--t4)',marginBottom:'10px'}}>
-                  No outlets added yet. Click "Add Outlet" to begin.
-                </div>
-              )}
-
-              {(f.outlets||[]).map((o, i) => (
-                <div key={i} style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'7px'}}>
-                  <span style={{width:'20px',fontSize:'14px',flexShrink:0,textAlign:'center'}}>🏪</span>
-                  <input className="fi" style={{flex:1}} placeholder={`Outlet ${i+1} name (e.g. Koramangala)`} value={o} onChange={e=>updateOutlet(i,e.target.value)}/>
-                  <div className="ib ib-d" onClick={()=>removeOutlet(i)}><Ic n="x" s={12}/></div>
-                </div>
-              ))}
-
-              {!editCo && <>
-                <div className="dvd"/>
-                <div style={{fontSize:'10.5px',fontWeight:'700',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'10px'}}>Admin Login</div>
-                <div className="fgrid">
-                  <div className="fg"><label className="fl">Admin Name</label><input className="fi" placeholder="Full name" value={f.adminName} onChange={e=>sf('adminName',e.target.value)}/></div>
-                  <div className="fg"><label className="fl">Admin Email</label><input className="fi" type="email" placeholder="admin@company.com" value={f.adminEmail} onChange={e=>sf('adminEmail',e.target.value)}/></div>
-                  <div className="fg full"><label className="fl">Temporary Password</label><input className="fi" placeholder="Set a password" value={f.adminPassword} onChange={e=>sf('adminPassword',e.target.value)}/></div>
-                </div>
-              </>}
+              <div style={{padding:'10px 14px',background:'var(--green-lt)',border:'1.5px solid var(--green-bd)',borderRadius:'var(--r2)',fontSize:'12.5px',marginBottom:'12px'}}>Kept: Company profile, plan, outlets, and user logins.</div>
+              <div className="fg"><label className="fl">Type <strong>{resetTarget.name}</strong> to confirm:</label><input className="fi" value={resetConfirm} onChange={function(e){setResetConfirm(e.target.value);}}/></div>
             </div>
             <div className="m-ft">
-              <button className="btn bs" onClick={()=>setShow(false)}>Cancel</button>
-              <button className="btn bp" disabled={!f.name} onClick={save}>
-                {editCo ? 'Save Changes' : 'Create Company'}
-              </button>
+              <button className="btn bs" onClick={function(){setResetTarget(null);}}>Cancel</button>
+              <button className="btn" style={{background:resetConfirm.trim().toLowerCase()===resetTarget.name.toLowerCase()?'var(--amber)':'var(--bg)',color:resetConfirm.trim().toLowerCase()===resetTarget.name.toLowerCase()?'#fff':'var(--t4)',border:'1.5px solid '+(resetConfirm.trim().toLowerCase()===resetTarget.name.toLowerCase()?'var(--amber)':'var(--border)'),padding:'9px 16px',fontSize:'13px',fontWeight:'600',borderRadius:'var(--r2)',cursor:'pointer',transition:'all .2s'}} onClick={function(){if(resetConfirm.trim().toLowerCase()===resetTarget.name.toLowerCase()){onResetData(resetTarget.id);setResetTarget(null);setResetConfirm('');}}}>Reset All Data</button>
             </div>
           </div>
         </div>
       )}
+      {show && (
+        <div className="ov" onClick={e=>e.target===e.currentTarget&&setShow(false)}>
+          <div className="modal modal-md">
+            <div className="m-hd"><div><div className="m-tt">Add New Company</div></div><div className="cls" onClick={()=>setShow(false)}><Ic n="x" s={13}/></div></div>
+            <div className="m-bd">
+              <div style={{fontSize:'11px',fontWeight:'700',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'10px'}}>Company Details</div>
+              <div className="fgrid">
+                <div className="fg"><label className="fl">Company Name</label><input className="fi" placeholder="e.g. Pizza Hub" value={f.name} onChange={e=>sf('name',e.target.value)}/></div>
+                <div className="fg"><label className="fl">Brand Emoji</label><select className="fs" value={f.emoji} onChange={e=>sf('emoji',e.target.value)}>{emojis.map(e=><option key={e}>{e}</option>)}</select></div>
+                <div className="fg full"><label className="fl">Outlets (comma-separated)</label><input className="fi" placeholder="Connaught Place, Koramangala" value={f.outlets} onChange={e=>sf('outlets',e.target.value)}/></div>
+                <div className="fg"><label className="fl">Plan</label><select className="fs" value={f.plan} onChange={e=>sf('plan',e.target.value)}><option>Starter</option><option>Professional</option><option>Enterprise</option></select></div>
+              </div>
+              <div className="dvd"/>
+              <div style={{fontSize:'11px',fontWeight:'700',color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.5px',marginBottom:'10px'}}>Admin User</div>
+              <div className="fgrid">
+                <div className="fg"><label className="fl">Admin Name</label><input className="fi" placeholder="Admin name" value={f.adminName} onChange={e=>sf('adminName',e.target.value)}/></div>
+                <div className="fg"><label className="fl">Admin Email</label><input className="fi" type="email" placeholder="admin@company.com" value={f.adminEmail} onChange={e=>sf('adminEmail',e.target.value)}/></div>
+                <div className="fg"><label className="fl">Password</label><input className="fi" placeholder="Temporary password" value={f.adminPassword} onChange={e=>sf('adminPassword',e.target.value)}/></div>
+              </div>
+            </div>
+            <div className="m-ft"><button className="btn bs" onClick={()=>setShow(false)}>Cancel</button><button className="btn bp" disabled={!f.name} onClick={add}>Create Company</button></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+/* ── KITCHEN TUTORIAL ────────────────────────────────────────── */
+const KitchenTutorial = function({onClose}) {
+  var steps = [
+    {ic:'👋', tt:'Welcome to InventoryPro!', bd:"You are set up as Kitchen Staff. Your job is simple — count stock quantities at the end of each shift so management always has accurate numbers."},
+    {ic:'📋', tt:'Your Main Page: Update Stock', bd:"Tap Update Stock in the menu. You will see all ingredients listed. Use the minus and plus buttons to set the current quantity for each item."},
+    {ic:'🔢', tt:'How to Count Stock', bd:"Walk through your kitchen and count each item. Tap the number and type the exact quantity, or use + and - to adjust. Work shelf by shelf, fridge by fridge."},
+    {ic:'🔴', tt:'Red = Critical, Yellow = Low', bd:"Items in red are critically low — tell your manager immediately. Yellow means it is getting low. Green is healthy. You don't need to place orders, just count."},
+    {ic:'💾', tt:'Always Save Before Leaving', bd:"When done counting, tap the big blue Save button at the bottom. If you close the app without saving, your counts will be lost."},
+    {ic:'🌙', tt:'End-of-Day Reminder', bd:"At 9 PM you will get a reminder for a closing count. It helps your manager know what is available for next morning. Takes less than 5 minutes."},
+  ];
+  var [step, setStep] = useState(0);
+  var cur = steps[step];
+  var isLast = step === steps.length - 1;
+  return (
+    <div className="ov" style={{zIndex:1100}}>
+      <div className="modal" style={{maxWidth:'400px'}}>
+        <div style={{display:'flex',gap:'5px',justifyContent:'center',padding:'16px 20px 0'}}>
+          {steps.map(function(_,i){
+            return <div key={i} style={{width:i===step?18:6,height:6,borderRadius:'99px',background:i===step?'var(--blue)':i<step?'var(--blue-bd)':'var(--border-2)',transition:'all .25s',cursor:'pointer'}} onClick={function(){setStep(i);}}/>;
+          })}
+        </div>
+        <div className="m-hd" style={{border:'none',flexDirection:'column',alignItems:'center',textAlign:'center',paddingBottom:'8px'}}>
+          <div style={{fontSize:'44px',marginBottom:'8px',lineHeight:1}}>{cur.ic}</div>
+          <div className="m-tt">{cur.tt}</div>
+          <div style={{fontSize:'11px',color:'var(--t4)',marginTop:'3px'}}>Step {step+1} of {steps.length}</div>
+        </div>
+        <div className="m-bd" style={{paddingTop:0}}>
+          <div style={{fontSize:'13.5px',color:'var(--t2)',lineHeight:'1.7',background:'var(--bg)',padding:'14px',borderRadius:'var(--r2)',border:'1.5px solid var(--border)',textAlign:'center'}}>{cur.bd}</div>
+          {isLast && (
+            <div style={{marginTop:'12px',padding:'12px',background:'var(--blue-lt)',border:'1.5px solid var(--blue-bd)',borderRadius:'var(--r2)'}}>
+              <div style={{fontWeight:'700',fontSize:'12px',color:'var(--blue)',marginBottom:'7px'}}>📌 Quick Reference</div>
+              {[['🔄','Update Stock — your main job'],['🔴','Red badge — tell manager now'],['💾','Save button — always tap before leaving'],['🌙','9 PM — do your closing count']].map(function(item){
+                return <div key={item[0]} style={{fontSize:'12px',color:'var(--t2)',marginBottom:'4px'}}>{item[0]} {item[1]}</div>;
+              })}
+            </div>
+          )}
+        </div>
+        <div className="m-ft" style={{justifyContent:'space-between'}}>
+          <button className="btn bg btn-sm" style={{color:'var(--t4)'}} onClick={onClose}>Skip</button>
+          <div style={{display:'flex',gap:'7px'}}>
+            {step > 0 && <button className="btn bs btn-sm" onClick={function(){setStep(function(s){return s-1;});}}>← Back</button>}
+            {!isLast
+              ? <button className="btn bp btn-sm" onClick={function(){setStep(function(s){return s+1;});}}>Next →</button>
+              : <button className="btn bp btn-sm" onClick={onClose}>Let's go! 🚀</button>
+            }
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -2083,15 +1834,16 @@ const App = () => {
     })));
   }, [inventory]);
 
-  const [showTutorial, setShowTutorial] = useState(false);
-  const login = u => {
+  const [showTut, setShowTut] = useState(false);
+  const [mobOpen, setMobOpen] = useState(false);
+  const login = function(u) {
     setUser(u);
-    const c = u.role==='super_admin' ? companies[0] : companies.find(x=>x.id===u.companyId);
+    var c = u.role==='super_admin' ? companies[0] : companies.find(function(x){return x.id===u.companyId;});
     setCo(c || null);
     if(u.role === 'kitchen_staff') {
-      const seen = LS.get('tutorial_seen_'+u.id, false);
-      if(!seen) { setShowTutorial(true); LS.set('tutorial_seen_'+u.id, true); }
-      setPage('stock'); // take kitchen staff straight to stock page
+      var seen = LS.get('tut_'+u.id, false);
+      if(!seen) { setShowTut(true); LS.set('tut_'+u.id, true); }
+      setPage('stock');
     } else {
       setPage('dashboard');
     }
@@ -2110,25 +1862,21 @@ const App = () => {
     stock:       co && <StockUpdate user={user} co={co} inventory={inventory} setInventory={setInventory}/>,
     admin:       co && <AdminCenter user={user} co={co} allUsers={allUsers} setAllUsers={setAllUsers}/>,
     credentials: <Credentials allUsers={allUsers} setAllUsers={setAllUsers} companies={companies}/>,
-    clients:     <Clients companies={companies} setCompanies={setCompanies} allUsers={allUsers} setAllUsers={setAllUsers} onResetData={cid=>{
-      setInventory(p=>p.filter(i=>i.companyId!==cid));
-      setPos(p=>p.filter(po=>po.companyId!==cid));
-      setCompanies(p=>p.map(c=>c.id===cid?{...c,totalItems:0,monthlySpend:0}:c));
-      toast('Company data reset. All inventory and orders cleared.','warning');
+    clients:     <Clients companies={companies} setCompanies={setCompanies} allUsers={allUsers} setAllUsers={setAllUsers} onResetData={function(cid){
+      setInventory(function(p){return p.filter(function(i){return i.companyId!==cid;});});
+      setPos(function(p){return p.filter(function(po){return po.companyId!==cid;});});
+      setCompanies(function(p){return p.map(function(c){return c.id===cid?Object.assign({},c,{totalItems:0,monthlySpend:0}):c;});});
+      toast('Company data has been reset','warning');
     }}/>,
   };
 
-  const [mobMenuOpen, setMobMenuOpen] = useState(false);
-  const closeMob = () => setMobMenuOpen(false);
-
-  // Mobile nav pages (most used)
-  const mobNavItems = [
+  var mobNavItems = [
     {id:'dashboard', ic:'🏠', lbl:'Home'},
-    {id:'inventory', ic:'📦', lbl:'Inventory'},
+    {id:'inventory', ic:'📦', lbl:'Stock'},
     {id:'orders',    ic:'📋', lbl:'Orders'},
-    {id:'stock',     ic:'🔄', lbl:'Stock'},
-    {id:'menu',      ic:'☰',  lbl:'More', isMenu:true},
-  ].filter(it => {
+    {id:'stock',     ic:'🔄', lbl:'Update'},
+    {id:'more',      ic:'☰',  lbl:'More', isMenu:true},
+  ].filter(function(it) {
     if(it.isMenu) return true;
     if(it.id==='stock') return user.permissions.includes('inv.q')||user.role==='super_admin';
     return true;
@@ -2136,40 +1884,33 @@ const App = () => {
 
   return (
     <div className="app">
-      {/* Desktop sidebar */}
       <Sidebar user={user} co={co} page={page} setPage={setPage} onLogout={logout} companies={companies} onCoChange={setCo}/>
-      {/* Mobile overlay + slide-in sidebar */}
-      <div className={`mob-overlay ${mobMenuOpen?'show':''}`} onClick={closeMob}/>
-      <div className={`mob-sidebar ${mobMenuOpen?'open':''}`}>
-        <Sidebar user={user} co={co} page={p=>{setPage(p);closeMob();}} setPage={p=>{setPage(p);closeMob();}} onLogout={logout} companies={companies} onCoChange={c=>{setCo(c);closeMob();}}/>
+      <div className={'mob-ov'+(mobOpen?' open':'')} onClick={function(){setMobOpen(false);}}/>
+      <div className={'mob-sb'+(mobOpen?' open':'')}>
+        <Sidebar user={user} co={co} page={page} setPage={function(p){setPage(p);setMobOpen(false);}} onLogout={logout} companies={companies} onCoChange={function(c){setCo(c);setMobOpen(false);}}/>
       </div>
       <div className="main">
-        {/* Mobile topbar */}
         <div className="mob-topbar">
-          <div className="mob-menu-btn" onClick={()=>setMobMenuOpen(o=>!o)}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          <div className="mob-hbtn" onClick={function(){setMobOpen(function(o){return !o;});}}>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
           </div>
-          <div className="mob-topbar-logo">Inventory<span>Pro</span></div>
-          {low > 0 && <div style={{width:'28px',height:'28px',background:'var(--red-lt)',border:'1px solid var(--red-bd)',borderRadius:'var(--r2)',display:'flex',alignItems:'center',justifyContent:'center',position:'relative'}}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--red)" strokeWidth="1.8"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-            <div style={{position:'absolute',top:'4px',right:'4px',width:'7px',height:'7px',background:'var(--red)',borderRadius:'50%',border:'1.5px solid var(--white)'}}/>
-          </div>}
+          <div className="mob-logo">Inventory<span>Pro</span></div>
         </div>
         {pageMap[page] || pageMap['dashboard']}
-        {/* Mobile bottom nav */}
         <div className="mob-nav">
           <div className="mob-nav-inner">
-            {mobNavItems.map(it => (
-              <div key={it.id} className={`mob-nav-item ${it.isMenu?'mob-nav-more':''}${page===it.id?'on':''}`} onClick={()=>it.isMenu?setMobMenuOpen(o=>!o):setPage(it.id)}>
-                <span className="mob-nav-ic">{it.ic}</span>
-                <span className="mob-nav-lbl" style={page===it.id&&!it.isMenu?{color:'var(--blue)'}:{}}>{it.lbl}</span>
-              </div>
-            ))}
+            {mobNavItems.map(function(it) {
+              return (
+                <div key={it.id} className={'mob-nav-item'+(page===it.id&&!it.isMenu?' on':'')} onClick={function(){if(it.isMenu){setMobOpen(function(o){return !o;});}else{setPage(it.id);}}}>
+                  <span className="mob-nav-ic">{it.ic}</span>
+                  <span className="mob-nav-lbl">{it.lbl}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
-
-    {showTutorial && user && user.role==='kitchen_staff' && <KitchenTutorial user={user} onClose={()=>setShowTutorial(false)}/>}
+      {showTut && user && user.role==='kitchen_staff' && <KitchenTutorial onClose={function(){setShowTut(false);}}/>}
     </div>
   );
 };
